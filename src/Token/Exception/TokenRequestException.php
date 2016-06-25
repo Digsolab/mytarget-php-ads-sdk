@@ -1,10 +1,11 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl\Exception;
+namespace MyTarget\Token\Exception;
 
 use MyTarget\Exception\MyTargetException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 
 class TokenRequestException extends \RuntimeException
     implements MyTargetException
@@ -30,6 +31,19 @@ class TokenRequestException extends \RuntimeException
 
         $this->request = $request;
         $this->response = $response;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     *
+     * @return TokenRequestException
+     */
+    public static function refreshFailed(RequestInterface $request, ResponseInterface $response)
+    {
+        $message = sprintf("Couldn't refresh token, response code: %d", $response->getStatusCode());
+
+        return new TokenRequestException($message, $request, $response);
     }
 
     /**

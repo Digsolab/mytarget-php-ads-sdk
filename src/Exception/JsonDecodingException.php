@@ -2,8 +2,6 @@
 
 namespace MyTarget\Exception;
 
-use Exception;
-
 class JsonDecodingException extends \RuntimeException
     implements MyTargetException
 {

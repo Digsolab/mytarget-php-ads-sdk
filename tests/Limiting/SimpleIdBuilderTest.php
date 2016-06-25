@@ -22,15 +22,15 @@ class SimpleIdBuilderTest extends \PHPUnit_Framework_TestCase
     public function provideData()
     {
         return [
-            'it builds id' => [
-                'campaigns-all',
-                '12345@agency_client',
-                'campaigns-all#12345@agency_client'
+            "it builds id" => [
+                "campaigns-all",
+                "12345@agency_client",
+                "campaigns-all#12345@agency_client"
             ],
-            'it accepts null as username' => [
-                'campaigns-all',
+            "it accepts null as username" => [
+                "campaigns-all",
                 null,
-                'campaigns-all#'
+                "campaigns-all#"
             ]
         ];
     }

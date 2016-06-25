@@ -22,7 +22,7 @@ class GuzzleHttpTransport implements HttpTransport
      *
      * @inheritdoc
      */
-    public function request(RequestInterface $request, $context = null)
+    public function request(RequestInterface $request, array $context = null)
     {
         return $this->guzzle->send($request, ["http_errors" => false]);
     }

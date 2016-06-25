@@ -22,11 +22,8 @@ interface HttpMiddleware
      *
      * @param RequestInterface $request
      * @param HttpMiddlewareStack $stack
-     * @param string|null $username
      * @param array|null $context
-     *
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null,
-                            array $context = null);
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null);
 }

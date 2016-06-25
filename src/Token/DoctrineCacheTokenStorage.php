@@ -31,7 +31,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function getToken(RequestInterface $request, $context = null)
+    public function getToken(RequestInterface $request, array $context = null)
     {
         return $this->fetch("_token", $request, $context);
     }
@@ -39,7 +39,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function updateToken(Token $token, RequestInterface $request, $context = null)
+    public function updateToken(Token $token, RequestInterface $request, array $context = null)
     {
         $this->save("_token", $token, $request, $context);
     }
@@ -47,7 +47,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function getClientToken($username, RequestInterface $request, $context = null)
+    public function getClientToken($username, RequestInterface $request, array $context = null)
     {
         return $this->fetch(sprintf("_token_%s", $username), $request, $context);
     }
@@ -55,7 +55,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function updateClientToken($username, Token $token, RequestInterface $request, $context = null)
+    public function updateClientToken($username, Token $token, RequestInterface $request, array $context = null)
     {
         $this->save(sprintf("_token_%s", $username), $token, $request, $context);
     }

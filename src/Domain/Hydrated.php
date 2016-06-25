@@ -2,7 +2,6 @@
 
 namespace MyTarget\Domain;
 
-use Doctrine\Instantiator\InstantiatorInterface as Instantiator;
 use MyTarget\DomainFactory;
 use MyTarget\Util\DataAccess\DataAccess;
 
