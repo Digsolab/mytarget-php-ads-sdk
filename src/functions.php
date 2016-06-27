@@ -74,15 +74,6 @@ function simpleMapper($debug = false)
 }
 
 /**
- * @param \DateTime $date
- * @return string
- */
-function stringFromDate(\DateTime $date)
-{
-    return $date->format("Y-m-d H:i:s");
-}
-
-/**
  * @param string $json
  * @return mixed
  * @throws DecodingException

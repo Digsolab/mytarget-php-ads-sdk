@@ -5,7 +5,7 @@ namespace MyTarget\Mapper\Exception;
 use MyTarget\Exception\MyTargetException;
 
 class ClassNotFoundException extends \RuntimeException
-    implements MyTargetException
+    implements MyTargetException, ContextUnawareException
 {
     /**
      * @var string
