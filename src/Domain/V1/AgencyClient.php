@@ -138,7 +138,7 @@ class AgencyClient
     /**
      * @return boolean
      */
-    public function isIsRedClient()
+    public function isRedClient()
     {
         return $this->isRedClient;
     }
@@ -146,7 +146,7 @@ class AgencyClient
     /**
      * @param boolean $isRedClient
      */
-    public function setIsRedClient($isRedClient)
+    public function setRedClient($isRedClient)
     {
         $this->isRedClient = $isRedClient;
     }
@@ -154,7 +154,7 @@ class AgencyClient
     /**
      * @return boolean
      */
-    public function isIsMskAllowed()
+    public function isMskAllowed()
     {
         return $this->isMskAllowed;
     }
@@ -162,7 +162,7 @@ class AgencyClient
     /**
      * @param boolean $isMskAllowed
      */
-    public function setIsMskAllowed($isMskAllowed)
+    public function setMskAllowed($isMskAllowed)
     {
         $this->isMskAllowed = $isMskAllowed;
     }
@@ -170,7 +170,7 @@ class AgencyClient
     /**
      * @return boolean
      */
-    public function isIsSpbAllowed()
+    public function isSpbAllowed()
     {
         return $this->isSpbAllowed;
     }
@@ -178,7 +178,7 @@ class AgencyClient
     /**
      * @param boolean $isSpbAllowed
      */
-    public function setIsSpbAllowed($isSpbAllowed)
+    public function setSpbAllowed($isSpbAllowed)
     {
         $this->isSpbAllowed = $isSpbAllowed;
     }

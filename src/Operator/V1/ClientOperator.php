@@ -36,4 +36,19 @@ class ClientOperator
             return $this->mapper->hydrateNew(AgencyClient::class, $json);
         }, $json);
     }
+
+    /**
+     * @param AgencyClient $client
+     * @param array|null $context
+     *
+     * @return AgencyClient
+     */
+    public function create(AgencyClient $client, array $context = null)
+    {
+        $rawClient = $this->mapper->snapshot($client);
+
+        $json = $this->client->post("/api/v1/clients.json", null, $rawClient, $context);
+
+        return $this->mapper->hydrateNew(AgencyClient::class, $json);
+    }
 }

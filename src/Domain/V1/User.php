@@ -52,7 +52,7 @@ class User
 
     /**
      * @var AdditionalUserInfo
-     * @Field(name="additional_info", type="AdditionalUserInfo")
+     * @Field(name="additional_info", type="MyTarget\Domain\V1\AdditionalUserInfo")
      */
     private $additionalInfo;
 
@@ -70,13 +70,13 @@ class User
 
     /**
      * @var UserAccount
-     * @Field(name="account", type="UserAccount")
+     * @Field(name="account", type="MyTarget\Domain\V1\UserAccount")
      */
     private $account;
 
     /**
      * @var Agency
-     * @Field(name="agency", type="Agency")
+     * @Field(name="agency", type="MyTarget\Domain\V1\Agency")
      */
     private $agency;
 
