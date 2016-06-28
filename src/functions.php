@@ -75,6 +75,12 @@ function arraySubtract(array $left, array $right)
     return $result;
 }
 
+/**
+ * @param array $left
+ * @param array $right
+ *
+ * @return bool
+ */
 function leftArrayIsNewer(array $left, array $right)
 {
     if (count($left) !== count($right)) {
