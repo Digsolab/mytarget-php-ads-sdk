@@ -7,22 +7,6 @@ use MyTarget\Exception\JsonDecodingException;
 use MyTarget\Util\DataAccess\SomeData;
 
 /**
- * @param Instantiator $instantiator
- * @param string $class
- * @return \Closure callable(array): Hydrated
- */
-function factorize(Instantiator $instantiator, $class)
-{
-    $instance = $instantiator->instantiate($class);
-
-    return function ($data) use ($instantiator, $instance) {
-        $instance->load(new SomeData($data), $instantiator);
-
-        return $instance;
-    };
-}
-
-/**
  * @param string $string
  * @return \DateTime
  */

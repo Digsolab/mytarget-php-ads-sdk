@@ -22,6 +22,7 @@ class RequestFactory
      * @param string $method
      * @param string $path
      * @param array|null $query
+     *
      * @return RequestInterface
      */
     public function create($method, $path, array $query = null)

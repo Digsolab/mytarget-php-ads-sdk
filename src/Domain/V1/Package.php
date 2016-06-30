@@ -5,6 +5,7 @@ namespace MyTarget\Domain\V1;
 use MyTarget\Domain\Hydrated;
 use MyTarget\Domain\V1\Enum\Status;
 use Doctrine\Instantiator\InstantiatorInterface as Instantiator;
+use MyTarget\DomainFactory;
 use MyTarget\Util\DataAccess\DataAccess;
 
 class Package extends Hydrated
@@ -57,10 +58,10 @@ class Package extends Hydrated
     /**
      * @inheritdoc
      */
-    public function load(DataAccess $data, Instantiator $instantiator)
+    public function load(DataAccess $data, DomainFactory $factory)
     {
         $this->targetings = $data->peek("targetings")
-            ->map(\MyTarget\factorize($instantiator, Targeting::class))->unwrap();
+            ->map($factory->factorize(Targeting::class))->unwrap();
 
         $this->id = $data->getOrNull("id");
         $this->name = $data->getOrNull("name");
