@@ -13,6 +13,9 @@ abstract class AbstractEnum
     /** @var AbstractEnum[][] */
     private static $registry;
 
+    /**
+     * @var string
+     */
     private $value;
 
     private final function __construct($value)
@@ -42,7 +45,17 @@ abstract class AbstractEnum
      */
     public static function fromValue($value)
     {
-        $class = get_called_class();
+        return self::fromValueForClass(get_called_class(), $value);
+    }
+
+    /**
+     * @param string $class
+     * @param string|int|float $value
+     *
+     * @return AbstractEnum|static
+     */
+    public static function fromValueForClass($class, $value)
+    {
         $consts = self::getConstants($class);
 
         $key = array_search($value, $consts, true);
@@ -51,7 +64,7 @@ abstract class AbstractEnum
         }
 
         if ( ! isset(self::$registry[$class][$key])) {
-            return self::$registry[$class][$key] = new static($value);
+            return self::$registry[$class][$key] = new $class($value);
         }
 
         return self::$registry[$class][$key];
@@ -75,6 +88,19 @@ abstract class AbstractEnum
         }
 
         return self::$registry[$class][$name];
+    }
+
+    /**
+     * @param string $class
+     * @param string|int|float $value
+     *
+     * @return bool
+     */
+    public static function isValidValueForClass($class, $value)
+    {
+        $consts = self::getConstants($class);
+
+        return in_array($value, $consts, true);
     }
 
     /**

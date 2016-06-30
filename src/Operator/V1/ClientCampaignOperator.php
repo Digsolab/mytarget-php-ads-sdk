@@ -3,7 +3,7 @@
 namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
-use MyTarget\DomainFactory;
+use MyTarget\Mapper\Mapper;
 use MyTarget\Operator\V1\Fields\CampaignFields;
 
 class ClientCampaignOperator extends CampaignOperator
@@ -16,11 +16,11 @@ class ClientCampaignOperator extends CampaignOperator
     /**
      * @param string $username
      * @param Client $client
-     * @param DomainFactory $domainFactory
+     * @param Mapper $mapper
      */
-    public function __construct($username, Client $client, DomainFactory $domainFactory)
+    public function __construct($username, Client $client, Mapper $mapper)
     {
-        parent::__construct($client, $domainFactory);
+        parent::__construct($client, $mapper);
 
         $this->username = $username;
     }

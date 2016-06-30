@@ -14,18 +14,18 @@ class DoctrineCacheTokenStorage implements TokenStorage
     private $cache;
 
     /**
-     * @var callable(RequestInterface, $context): string
+     * @var callable(string $id, RequestInterface, $context): string
      */
     private $hashFunction;
 
     /**
      * @param Cache $cache
-     * @param callable $hashFunction callable(RequestInterface, $context): string
+     * @param callable $hashFunction callable(string $id, RequestInterface, $context): string Identity function used as a default
      */
-    public function __construct(Cache $cache, callable $hashFunction)
+    public function __construct(Cache $cache, callable $hashFunction = null)
     {
         $this->cache = $cache;
-        $this->hashFunction = $hashFunction;
+        $this->hashFunction = $hashFunction ?: function ($v) { return $v; };
     }
 
     /**
@@ -33,7 +33,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function getToken(RequestInterface $request, array $context = null)
     {
-        return $this->fetch("_token", $request, $context);
+        return $this->fetch("target_token", $request, $context);
     }
 
     /**
@@ -41,7 +41,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function updateToken(Token $token, RequestInterface $request, array $context = null)
     {
-        $this->save("_token", $token, $request, $context);
+        $this->save("target_token", $token, $request, $context);
     }
 
     /**
@@ -49,7 +49,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function getClientToken($username, RequestInterface $request, array $context = null)
     {
-        return $this->fetch(sprintf("_token_%s", $username), $request, $context);
+        return $this->fetch(sprintf("target_token_%s", $username), $request, $context);
     }
 
     /**
@@ -57,7 +57,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function updateClientToken($username, Token $token, RequestInterface $request, array $context = null)
     {
-        $this->save(sprintf("_token_%s", $username), $token, $request, $context);
+        $this->save(sprintf("target_token_%s", $username), $token, $request, $context);
     }
 
     /**
@@ -69,7 +69,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     protected function fetch($id, RequestInterface $request, array $context = null)
     {
-        $json = $this->cache->fetch($this->hash($request, $context) . $id);
+        $json = $this->cache->fetch($this->hash($id, $request, $context) . $id);
 
         if ( ! $json) {
             return null;
@@ -90,18 +90,19 @@ class DoctrineCacheTokenStorage implements TokenStorage
     {
         $serialized = \json_encode($token->toArray());
 
-        $this->cache->save($this->hash($request, $context) . $id, $serialized);
+        $this->cache->save($this->hash($id, $request, $context), $serialized);
     }
 
     /**
+     * @param string $id
      * @param RequestInterface $request
      * @param array|null $context
      * @return string
      */
-    protected function hash(RequestInterface $request, array $context = null)
+    protected function hash($id, RequestInterface $request, array $context = null)
     {
         $f = $this->hashFunction;
 
-        return $f($request, $context);
+        return $f($id, $request, $context);
     }
 }

@@ -2,15 +2,15 @@
 
 namespace MyTarget\Limiting;
 
-use MyTarget\Transport\Middleware\Impl\Exception\ThrottleException;
+use MyTarget\Limiting\Exception\ThrottleException;
 use MyTarget\Transport\Middleware\HttpMiddleware;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
+use MyTarget\Exception\DecodingException;
+use MyTarget as f;
 
 class LimitingMiddleware implements HttpMiddleware
 {
-    private static $contextKey = "limit-by";
-
     /**
      * @var RateLimitProvider
      */
@@ -26,22 +26,32 @@ class LimitingMiddleware implements HttpMiddleware
      */
     public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
     {
-        if (!is_array($context) || !array_key_exists(self::$contextKey, $context)) {
+        if ( ! is_array($context) || ! isset($context["limit-by"])) {
             return $stack->request($request, $context);
         }
-        
-        $limitBy = $context[self::$contextKey];
+
+        $limitBy = $context["limit-by"];
         $username = isset($context["username"]) ? $context["username"] : null;
 
         $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $username);
 
         if ($isLimitReached) {
-            throw new ThrottleException();
+            throw new ThrottleException("Preventively throttled: limit had been reached", $request);
         }
 
         $response = $stack->request($request, $context);
 
         $this->rateLimitProvider->refreshLimits($response, $limitBy, $username);
+
+        if ($response->getStatusCode() === 429) {
+            try {
+                $decoded = f\json_decode((string)$response->getBody());
+            } catch (DecodingException $e) { }
+
+            if (isset($decoded["remaining"], $decoded["limits"])) {
+                throw new ThrottleException("Throttled after request: limit had been reached", $request, $response);
+            }
+        }
 
         return $response;
     }

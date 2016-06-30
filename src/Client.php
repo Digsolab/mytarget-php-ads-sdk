@@ -21,10 +21,10 @@ class Client
      */
     private $http;
 
-    public function __construct(RequestFactory $requestFactory, HttpMiddlewareStackPrototype $http)
+    public function __construct(RequestFactory $requestFactory, HttpMiddlewareStackPrototype $httpStack)
     {
         $this->requestFactory = $requestFactory;
-        $this->http = $http;
+        $this->http = $httpStack;
     }
 
     /**

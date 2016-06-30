@@ -33,7 +33,7 @@ class RequestFactory
             $uri = $uri->withQuery(http_build_query($query));
         }
 
-        $request = new Request($method, $uri, ['accept-encoding' => 'gzip, deflate, compress']);
+        $request = new Request($method, $uri, ['Accept-Encoding' => 'gzip, deflate, compress']);
 
         return $request;
     }

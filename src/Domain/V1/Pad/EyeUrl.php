@@ -2,14 +2,25 @@
 
 namespace MyTarget\Domain\V1\Pad;
 
+use MyTarget\Mapper\Annotation\Field;
+
 class EyeUrl
 {
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="id", type="int")
+     */
     private $id;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="url", type="string")
+     */
     private $url;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="description", type="string")
+     */
     private $description;
 }

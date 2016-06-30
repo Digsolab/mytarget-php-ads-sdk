@@ -5,7 +5,7 @@ namespace MyTarget\Limiting;
 use GuzzleHttp\Psr7\Request;
 use MyTarget\Limiting\LimitingMiddleware;
 use MyTarget\Limiting\RateLimitProvider;
-use MyTarget\Transport\Middleware\Impl\Exception\ThrottleException;
+use MyTarget\Limiting\Exception\ThrottleException;
 use MyTarget\Transport\HttpTransport;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;

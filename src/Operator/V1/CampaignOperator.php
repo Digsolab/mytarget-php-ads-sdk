@@ -4,7 +4,7 @@ namespace MyTarget\Operator\V1;
 
 use MyTarget\Domain\V1\CampaignStat;
 use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\DomainFactory;
+use MyTarget\Mapper\Mapper;
 use MyTarget\Operator\V1\Fields\CampaignFields;
 use MyTarget\Client;
 
@@ -16,14 +16,14 @@ class CampaignOperator
     private $client;
 
     /**
-     * @var DomainFactory
+     * @var Mapper
      */
-    private $domainFactory;
+    private $mapper;
 
-    public function __construct(Client $client, DomainFactory $domainFactory)
+    public function __construct(Client $client, Mapper $mapper)
     {
         $this->client = $client;
-        $this->domainFactory = $domainFactory;
+        $this->mapper = $mapper;
     }
 
     /**
@@ -32,7 +32,7 @@ class CampaignOperator
      */
     public function forClient($username)
     {
-        return new ClientCampaignOperator($username, $this->client, $this->domainFactory);
+        return new ClientCampaignOperator($username, $this->client, $this->mapper);
     }
 
     /**
@@ -59,9 +59,12 @@ class CampaignOperator
         $context = (array)$context + ["limit-by" => "campaigns-all"];
 
         $json = $this->client->get("/api/v1/campaigns.json", $query, $context);
-        $factory = $this->domainFactory->factorize(CampaignStat::class);
 
-        return array_map($factory, $json);
+        $objects = array_map(function ($json) {
+            return $this->mapper->hydrateNew(CampaignStat::class, $json);
+        }, $json);
+
+        return $objects;
     }
 
     /**
@@ -75,9 +78,8 @@ class CampaignOperator
         $context = (array)$context + ["limit-by" => "campaigns-find"];
 
         $json = $this->client->get(sprintf('/api/v1/campaigns/%d.json', $id), null, $context);
-        $factory = $this->domainFactory->factorize(CampaignStat::class);
 
-        return $factory($json);
+        return $this->mapper->hydrateNew(CampaignStat::class, $json);
     }
 
     /**

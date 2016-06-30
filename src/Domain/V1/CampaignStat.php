@@ -2,30 +2,37 @@
 
 namespace MyTarget\Domain\V1;
 
-use MyTarget\DomainFactory;
-use MyTarget\Util\DataAccess\DataAccess;
+use MyTarget\Mapper\Annotation\Field;
 
 class CampaignStat extends Campaign
 {
-    /** @var PeriodStat */
+    /**
+     * @var PeriodStat
+     * @Field(name="stats", type="MyTarget\Domain\V1\PeriodStat")
+     */
     private $stats;
 
-    /** @var PeriodStat */
+    /**
+     * @var PeriodStat
+     * @Field(name="stats_today", type="MyTarget\Domain\V1\PeriodStat")
+     */
     private $statsToday;
 
-    /** @var PeriodStat */
+    /**
+     * @var PeriodStat
+     * @Field(name="stats_yesterday", type="MyTarget\Domain\V1\PeriodStat")
+     */
     private $statsYesterday;
 
-    /** @var PeriodStat[] */
+    /**
+     * @var PeriodStat[]
+     * @Field(name="stats_full", type="array<MyTarget\Domain\V1\PeriodStat>")
+     */
     private $statsFull;
 
-    /** @var \DateTime */
+    /**
+     * @var \DateTime
+     * @Field(name="last_stats_updated", type="DateTime")
+     */
     private $lastStatsUpdated;
-
-    public function load(DataAccess $data, DomainFactory $factory)
-    {
-        parent::load($data, $factory);
-
-        $this->lastStatsUpdated = $data->peek('last_stats_updated')->map('MyTarget\dateFromString')->unwrap();
-    }
 }

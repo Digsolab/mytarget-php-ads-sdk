@@ -2,107 +2,207 @@
 
 namespace MyTarget\Domain\V1;
 
+use MyTarget\Mapper\Annotation\Field;
 use MyTarget\Domain\V1\Enum\Status;
 use MyTarget\Domain\V1\Enum\ModerationStatus;
 
-class Banner extends AbstractHydratedObject
+class Banner
 {
-    /** @var int|null */
+    /**
+     * @var int
+     * @Field(name="id", type="int")
+     */
     private $id;
 
-    /** @var Status|null */
+    /**
+     * @var Status
+     * @Field(name="status", type="MyTarget\Domain\V1\Enum\Status")
+     */
     private $status;
 
-    /** @var Status|null */
+    /**
+     * @var Status
+     * @Field(name="system_status", type="MyTarget\Domain\V1\Enum\Status")
+     */
     private $systemStatus;
 
-    /** @var \DateTime|null */
+    /**
+     * @var \DateTime
+     * @Field(name="created", type="DateTime")
+     */
     private $created;
 
-    /** @var \DateTime|null */
+    /**
+     * @var \DateTime
+     * @Field(name="updated", type="DateTime")
+     */
     private $updated;
 
-    /** @var ModerationStatus|null */
+    /**
+     * @var ModerationStatus
+     * @Field(name="moderation_status", type="MyTarget\Domain\V1\Enum\ModerationStatus")
+     */
     private $moderationStatus;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="title", type="string")
+     */
     private $title;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="text", type="string")
+     */
     private $text;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="telephone", type="string")
+     */
     private $telephone;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="company_name", type="string")
+     */
     private $companyName;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="url", type="string")
+     */
     private $url;
 
-    /** @var string[]|null */
+    /**
+     * @var string[]
+     * @Field(name="url_types", type="array<string>")
+     */
     private $urlTypes;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="json_url", type="string")
+     */
     private $jsonUrl;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="edit_url", type="string")
+     */
     private $editUrl;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="preview_image_url", type="string")
+     */
     private $previewImageUrl;
 
-    /** @var User|null */
+    /**
+     * @var User
+     * @Field(name="user", type="MyTarget\Domain\V1\User")
+     */
     private $user;
 
-    /** @var Campaign|null */
+    /**
+     * @var Campaign
+     * @Field(name="campaign", type="MyTarget\Domain\V1\Campaign")
+     */
     private $campaign;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="category", type="string")
+     */
     private $category;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="moderation_reason_display", type="string")
+     */
     private $moderationReasonDisplay;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="moderation_reasons_display", type="array<string>")
+     */
     private $moderationReasonsDisplay;
 
-    /** @var BannerModeration|null */
+    /**
+     * @var BannerModeration
+     * @Field(name="banner_moderation", type="MyTarget\Domain\V1\BannerModeration")
+     */
     private $bannerModeration;
 
-    /** @var Image|null */
+    /**
+     * @var Image
+     * @Field(name="image", type="MyTarget\Domain\V1\Image")
+     */
     private $image;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="url_object_id", type="string")
+     */
     private $urlObjectId;
 
-    /** @var Image|null */
+    /**
+     * @var Image
+     * @Field(name="promo_image", type="MyTarget\Domain\V1\Image")
+     */
     private $promoImage;
 
-    /** @var Image|null */
+    /**
+     * @var Image
+     * @Field(name="background_image", type="MyTarget\Domain\V1\Image")
+     */
     private $backgroundImage;
 
-    /** @var Html|null */
+    /**
+     * @var Html
+     * @Field(name="html5", type="MyTarget\Domain\V1\Html")
+     */
     private $html5;
 
-    /** @var VideoParams|null */
+    /**
+     * @var VideoParams
+     * @Field(name="video_params", type="MyTarget\Domain\V1\VideoParams")
+     */
     private $videoParams;
 
-    /** @var Products|null */
+    /**
+     * @var Products
+     * @Field(name="products", type="MyTarget\Domain\V1\Products")
+     */
     private $products;
 
-    /** @var string[]|null */
+    /**
+     * @var string[]
+     * @Field(name="banner_fields", type="array<string>")
+     */
     private $bannerFields;
 
-    /** @var mixed|null */
+    /**
+     * @var mixed
+     * @Field(name="links", type="pass")
+     */
     private $links;
 
-    /** @var mixed|null */
+    /**
+     * @var mixed
+     * @Field(name="pixels", type="mixed")
+     */
     private $pixels;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="deeplink", type="string")
+     */
     private $deeplink;
 
-    /** @var string|null */
+    /**
+     * @var string
+     * @Field(name="call_to_action", type="string")
+     */
     private $callToAction;
 }
