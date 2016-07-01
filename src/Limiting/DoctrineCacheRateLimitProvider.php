@@ -23,7 +23,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function throttleIfNeeded(RequestInterface $request, $username = null)
+    public function isLimitReached(RequestInterface $request, $username = null)
     {
         $id = $this->idBuilder->buildId($request, $username);
         $limits = $this->cache->fetch($id);
@@ -34,15 +34,17 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
 
         foreach ($limits as $type => $limit) {
             if (0 === $limit) {
-                throw new ThrottleException();
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
      * @inheritdoc
      */
-    public function updateLimits(RequestInterface $request, ResponseInterface $response, $username = null)
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $username = null)
     {
         $id = $this->idBuilder->buildId($request, $username);
         $limits = $this->limitExtractor->extractLimits($response);

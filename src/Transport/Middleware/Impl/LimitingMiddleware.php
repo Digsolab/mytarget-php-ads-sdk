@@ -3,7 +3,7 @@
 namespace MyTarget\Transport\Middleware\Impl;
 
 use MyTarget\Limiting\RateLimitProvider;
-use MyTarget\Limiting\Exception\ThrottleException;
+use MyTarget\Transport\Middleware\Impl\Exception\ThrottleException;
 use MyTarget\Transport\HttpTransport;
 use MyTarget\Transport\Middleware\HttpMiddleware;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
@@ -37,10 +37,16 @@ class LimitingMiddleware implements HttpMiddleware
      */
     public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null, $context = null)
     {
-        $this->rateLimitProvider->throttleIfNeeded($request, $username);
+        $isLimitReached = $this->rateLimitProvider->isLimitReached($request, $username);
 
-        $response = $this->http->request($request, $context);
+        if ($isLimitReached) {
+            throw new ThrottleException();
+        }
 
-        $this->rateLimitProvider->updateLimits($request, $response, $username);
+        $response = $stack->request($request, $username, $context);
+
+        $this->rateLimitProvider->refreshLimits($request, $response, $username);
+
+        return $response;
     }
 }

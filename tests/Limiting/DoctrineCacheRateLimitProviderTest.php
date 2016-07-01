@@ -25,7 +25,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
         $this->limitExtractor = $this->getMock(LimitExtractor::class);
     }
 
-    public function testItThrowsThrottleExceptionWhenLimitReached()
+    public function testItPanicsWhenLimitReached()
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
@@ -47,12 +47,12 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
             ->with($id)
             ->willReturn($limits);
 
-        $this->setExpectedException(ThrottleException::class);
+        $result = $limitProvider->isLimitReached($request, $username);
 
-        $limitProvider->throttleIfNeeded($request, $username);
+        $this->assertEquals($result, true);
     }
 
-    public function testItSkipsThrottlingWhenNoLimitsCached()
+    public function testItDoesNotPanicWhenNoLimitsCached()
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
@@ -71,10 +71,12 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with($id)
                     ->willReturn($limits);
 
-        $limitProvider->throttleIfNeeded($request, $username);
+        $result = $limitProvider->isLimitReached($request, $username);
+
+        $this->assertEquals($result, false);
     }
 
-    public function testItDoesNotThrottleWhenNoLimitReached()
+    public function testItDoesNotPanicWhenNoLimitReached()
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
@@ -96,7 +98,9 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with($id)
                     ->willReturn($limits);
 
-        $limitProvider->throttleIfNeeded($request, $username);
+        $result = $limitProvider->isLimitReached($request, $username);
+
+        $this->assertEquals($result, false);
     }
 
     public function testItUpdatesLimits()
@@ -126,6 +130,6 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->method('save')
                     ->with($id, $limits);
 
-        $limitProvider->updateLimits($request, $response, $username);
+        $limitProvider->refreshLimits($request, $response, $username);
     }
 }

@@ -3,9 +3,8 @@
 namespace MyTarget\Transport\Middleware\Impl;
 
 use MyTarget\Limiting\RateLimitProvider;
-use MyTarget\Limiting\Exception\ThrottleException;
+use MyTarget\Transport\Middleware\Impl\Exception\ThrottleException;
 use MyTarget\Transport\HttpTransport;
-use MyTarget\Transport\Middleware\HttpMiddleware;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -31,11 +30,12 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)->disableOriginalConstructor()->getMock();
         $username = '12345@agency_client';
         $context = null;
+        $isLimitReached = true;
 
         $this->rateLimitProvider->expects($this->once())
-            ->method('throttleIfNeeded')
+            ->method('isLimitReached')
             ->with($request, $username)
-            ->willThrowException(new ThrottleException());
+            ->willReturn($isLimitReached);
 
         $this->setExpectedException(ThrottleException::class);
 
@@ -51,18 +51,20 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)->disableOriginalConstructor()->getMock();
         $username = '12345@agency_client';
         $context = null;
+        $isLimitReached = false;
 
         $this->rateLimitProvider->expects($this->once())
-                                ->method('throttleIfNeeded')
-                                ->with($request, $username);
+                                ->method('isLimitReached')
+                                ->with($request, $username)
+                                ->willReturn($isLimitReached);
 
-        $this->http->expects($this->once())
+        $stack->expects($this->once())
                    ->method('request')
-                   ->with($request, $context)
+                   ->with($request, $username, $context)
                    ->willReturn($response);
 
         $this->rateLimitProvider->expects($this->once())
-                                ->method('updateLimits')
+                                ->method('refreshLimits')
                                 ->with($request, $response, $username);
 
         $middleware->request($request, $stack, $username, $context);

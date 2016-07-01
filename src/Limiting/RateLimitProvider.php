@@ -12,14 +12,14 @@ interface RateLimitProvider
      * @param RequestInterface $request
      * @param string|null       $username
      *
-     * @throws ThrottleException
+     * @return boolean
      */
-    public function throttleIfNeeded(RequestInterface $request, $username = null);
+    public function isLimitReached(RequestInterface $request, $username = null);
 
     /**
      * @param RequestInterface  $request
      * @param ResponseInterface $response
      * @param string|null       $username
      */
-    public function updateLimits(RequestInterface $request, ResponseInterface $response, $username = null);
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $username = null);
 }

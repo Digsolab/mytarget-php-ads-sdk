@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Limiting\Exception;
+namespace MyTarget\Transport\Middleware\Impl\Exception;
 
 use MyTarget\Exception\MyTargetException;
 
