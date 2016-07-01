@@ -9,9 +9,9 @@ interface HttpTransport
 {
     /**
      * @param RequestInterface $request
-     * @param null $context
+     * @param array|null $context
      *
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, $context = null);
+    public function request(RequestInterface $request, array $context = null);
 }

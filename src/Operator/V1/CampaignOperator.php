@@ -30,11 +30,11 @@ class CampaignOperator
      * @param string $username
      * @param CampaignFields|null $fields
      * @param Status[]|null $withStatuses
-     * @param mixed|null $context
+     * @param array|null $context
      *
      * @return CampaignStat[]
      */
-    public function all($username, CampaignFields $fields = null, array $withStatuses = null, $context = null)
+    public function all($username, CampaignFields $fields = null, array $withStatuses = null, array $context = null)
     {
         $fields = $fields ?: CampaignFields::create();
 
@@ -48,6 +48,9 @@ class CampaignOperator
             $query["with_banners"] = "1";
         }
 
+        $context = (null === $context) ? [] : $context;
+        $context += ['limit-by' => 'campaigns-all'];
+
         $json = $this->client->get("/api/v1/campaigns.json", $query, $username, $context);
         $factory = $this->domainFactory->factorize(CampaignStat::class);
 
@@ -56,12 +59,15 @@ class CampaignOperator
 
     /**
      * @param int $id
-     * @param mixed|null $context
+     * @param array|null $context
      *
      * @return CampaignStat
      */
-    public function find($id, $context = null)
+    public function find($id, array $context = null)
     {
+        $context = (null === $context) ? [] : $context;
+        $context += ['limit-by' => 'campaigns-find'];
+
         $json = $this->client->get(sprintf('/api/v1/campaigns/%d.json', $id), null, $context);
         $factory = $this->domainFactory->factorize(CampaignStat::class);
 

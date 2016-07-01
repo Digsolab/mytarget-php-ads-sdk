@@ -2,7 +2,6 @@
 
 namespace MyTarget\Limiting;
 
-use MyTarget\Limiting\Exception\ThrottleException;
 use MyTarget\Limiting\IdBuilder;
 use MyTarget\Limiting\LimitExtractor;
 use Doctrine\Common\Cache\Cache;
@@ -29,9 +28,9 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
-        $request = $this->getMock(RequestInterface::class);
         $username = '12345@agency_client';
-        $id = '12345@agency_client#GET:/api/v1/PARAM.json';
+        $context = ['limit-by' => 'campaigns-all'];
+        $id = 'campaigns-all#12345@agency_client';
         $limits = [
             'X-RateLimit-RPS-Limit' => 10,
             'X-RateLimit-RPS-Remaining' => 0
@@ -39,7 +38,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->idBuilder->expects($this->once())
             ->method('buildId')
-            ->with($request, $username)
+            ->with($context['limit-by'], $username)
             ->willReturn($id);
 
         $this->cache->expects($this->once())
@@ -47,7 +46,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
             ->with($id)
             ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($request, $username);
+        $result = $limitProvider->isLimitReached($context['limit-by'], $username);
 
         $this->assertEquals($result, true);
     }
@@ -56,14 +55,14 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
-        $request = $this->getMock(RequestInterface::class);
         $username = '12345@agency_client';
-        $id = '12345@agency_client#GET:/api/v1/PARAM.json';
+        $context = ['limit-by' => 'campaigns-all'];
+        $id = 'campaigns-all#12345@agency_client';
         $limits = false;
 
         $this->idBuilder->expects($this->once())
                         ->method('buildId')
-                        ->with($request, $username)
+                        ->with($context['limit-by'], $username)
                         ->willReturn($id);
 
         $this->cache->expects($this->once())
@@ -71,7 +70,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with($id)
                     ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($request, $username);
+        $result = $limitProvider->isLimitReached($context['limit-by'], $username);
 
         $this->assertEquals($result, false);
     }
@@ -80,9 +79,9 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
-        $request = $this->getMock(RequestInterface::class);
         $username = '12345@agency_client';
-        $id = '12345@agency_client#GET:/api/v1/PARAM.json';
+        $context = ['limit-by' => 'campaigns-all'];
+        $id = 'campaigns-all#12345@agency_client';
         $limits = [
             'X-RateLimit-RPS-Limit' => 10,
             'X-RateLimit-RPS-Remaining' => 20
@@ -90,7 +89,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->idBuilder->expects($this->once())
                         ->method('buildId')
-                        ->with($request, $username)
+                        ->with($context['limit-by'], $username)
                         ->willReturn($id);
 
         $this->cache->expects($this->once())
@@ -98,7 +97,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with($id)
                     ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($request, $username);
+        $result = $limitProvider->isLimitReached($context['limit-by'], $username);
 
         $this->assertEquals($result, false);
     }
@@ -107,10 +106,10 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
-        $request = $this->getMock(RequestInterface::class);
         $response = $this->getMock(ResponseInterface::class);
         $username = '12345@agency_client';
-        $id = '12345@agency_client#GET:/api/v1/PARAM.json';
+        $context = ['limit-by' => 'campaigns-all'];
+        $id = 'campaigns-all#12345@agency_client';
         $limits = [
             'X-RateLimit-RPS-Limit' => 10,
             'X-RateLimit-RPS-Remaining' => 20
@@ -118,7 +117,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->idBuilder->expects($this->once())
                         ->method('buildId')
-                        ->with($request, $username)
+                        ->with($context['limit-by'], $username)
                         ->willReturn($id);
 
         $this->limitExtractor->expects($this->once())
@@ -130,6 +129,6 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->method('save')
                     ->with($id, $limits);
 
-        $limitProvider->refreshLimits($request, $response, $username);
+        $limitProvider->refreshLimits($response, $context['limit-by'], $username);
     }
 }

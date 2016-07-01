@@ -11,6 +11,8 @@ use Psr\Http\Message\RequestInterface;
 
 class LimitingMiddleware implements HttpMiddleware
 {
+    private static $contextKey = 'limit-by';
+    
     /**
      * @var HttpTransport
      */
@@ -29,15 +31,21 @@ class LimitingMiddleware implements HttpMiddleware
 
     /**
      * @param RequestInterface $request
+     * @param HttpMiddlewareStack $stack
      * @param string|null $username
-     * @param mixed|null $context
+     * @param array|null $context
      *
      * @return ResponseInterface
-     * @throws ThrottleException
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null, $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null, array $context = null)
     {
-        $isLimitReached = $this->rateLimitProvider->isLimitReached($request, $username);
+        if (!is_array($context) || !array_key_exists(self::$contextKey, $context)) {
+            return $stack->request($request, $username, $context);
+        }
+        
+        $limitBy = $context[self::$contextKey];
+
+        $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $username);
 
         if ($isLimitReached) {
             throw new ThrottleException();
@@ -45,7 +53,7 @@ class LimitingMiddleware implements HttpMiddleware
 
         $response = $stack->request($request, $username, $context);
 
-        $this->rateLimitProvider->refreshLimits($request, $response, $username);
+        $this->rateLimitProvider->refreshLimits($response, $limitBy, $username);
 
         return $response;
     }

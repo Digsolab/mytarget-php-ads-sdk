@@ -73,7 +73,9 @@ class AgencyClientGrantMiddleware implements HttpMiddleware
      *
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null, $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null,
+                            array $context = null
+    )
     {
         $now = call_user_func($this->momentGenerator);
 

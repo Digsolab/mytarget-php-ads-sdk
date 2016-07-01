@@ -9,17 +9,17 @@ use Psr\Http\Message\ResponseInterface;
 interface RateLimitProvider
 {
     /**
-     * @param RequestInterface $request
+     * @param string            $limitBy
      * @param string|null       $username
      *
      * @return boolean
      */
-    public function isLimitReached(RequestInterface $request, $username = null);
+    public function isLimitReached($limitBy, $username = null);
 
     /**
-     * @param RequestInterface  $request
      * @param ResponseInterface $response
+     * @param string            $limitBy
      * @param string|null       $username
      */
-    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $username = null);
+    public function refreshLimits(ResponseInterface $response, $limitBy, $username = null);
 }

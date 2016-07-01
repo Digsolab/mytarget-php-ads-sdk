@@ -2,9 +2,7 @@
 
 namespace MyTarget\Limiting;
 
-use MyTarget\Limiting\Exception\ThrottleException;
 use Doctrine\Common\Cache\Cache;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class DoctrineCacheRateLimitProvider implements RateLimitProvider
@@ -23,9 +21,9 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function isLimitReached(RequestInterface $request, $username = null)
+    public function isLimitReached($limitBy, $username = null)
     {
-        $id = $this->idBuilder->buildId($request, $username);
+        $id = $this->idBuilder->buildId($limitBy, $username);
         $limits = $this->cache->fetch($id);
 
         if (false === $limits) {
@@ -44,9 +42,9 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $username = null)
+    public function refreshLimits(ResponseInterface $response, $limitBy, $username = null)
     {
-        $id = $this->idBuilder->buildId($request, $username);
+        $id = $this->idBuilder->buildId($limitBy, $username);
         $limits = $this->limitExtractor->extractLimits($response);
         $this->cache->save($id, $limits);
     }
