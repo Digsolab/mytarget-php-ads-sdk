@@ -31,12 +31,12 @@ class Client
      * @param string $path
      * @param array|null $query
      * @param string|null $username
-     * @param mixed|null $context
+     * @param array|null $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function get($path, array $query = null, $username = null, $context = null)
+    public function get($path, array $query = null, $username = null, array $context = null)
     {
         $request = $this->requestFactory->create('GET', $path, $query);
 
@@ -50,12 +50,12 @@ class Client
      * @param array|null $query
      * @param array|null $body
      * @param string|null $username
-     * @param mixed|null $context
+     * @param array|null $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function post($path, array $query = null, array $body = null, $username = null, $context = null)
+    public function post($path, array $query = null, array $body = null, $username = null, array $context = null)
     {
         $request = $this->requestFactory->create('POST', $path, $query);
 

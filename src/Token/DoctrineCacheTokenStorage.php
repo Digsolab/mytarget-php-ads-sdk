@@ -63,11 +63,11 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @param string $id
      * @param RequestInterface $request
-     * @param mixed|null $context
+     * @param array|null $context
      *
      * @return Token|null
      */
-    protected function fetch($id, RequestInterface $request, $context = null)
+    protected function fetch($id, RequestInterface $request, array $context = null)
     {
         $json = $this->cache->fetch($this->hash($request, $context) . $id);
 
@@ -84,9 +84,9 @@ class DoctrineCacheTokenStorage implements TokenStorage
      * @param string $id
      * @param Token $token
      * @param RequestInterface $request
-     * @param mixed|null $context
+     * @param array|null $context
      */
-    protected function save($id, Token $token, RequestInterface $request, $context = null)
+    protected function save($id, Token $token, RequestInterface $request, array $context = null)
     {
         $serialized = \json_encode($token->toArray());
 
@@ -95,10 +95,10 @@ class DoctrineCacheTokenStorage implements TokenStorage
 
     /**
      * @param RequestInterface $request
-     * @param mixed|null $context
+     * @param array|null $context
      * @return string
      */
-    protected function hash(RequestInterface $request, $context = null)
+    protected function hash(RequestInterface $request, array $context = null)
     {
         $f = $this->hashFunction;
 
