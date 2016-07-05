@@ -2,9 +2,7 @@
 
 namespace MyTarget;
 
-use Doctrine\Instantiator\InstantiatorInterface as Instantiator;
 use MyTarget\Exception\JsonDecodingException;
-use MyTarget\Util\DataAccess\SomeData;
 
 /**
  * @param string $string

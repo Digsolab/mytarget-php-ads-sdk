@@ -31,14 +31,13 @@ class HttpMiddlewareStack
 
     /**
      * @param RequestInterface $request
-     * @param string|null $username
      * @param array|null $context
      *
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, $username = null, array $context = null)
+    public function request(RequestInterface $request, array $context = null)
     {
-        return $this->pop()->request($request, $this, $username, $context);
+        return $this->pop()->request($request, $this, $context);
     }
 
     /**

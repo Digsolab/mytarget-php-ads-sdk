@@ -7,15 +7,26 @@ use Psr\Http\Message\ResponseInterface;
 
 class DoctrineCacheRateLimitProvider implements RateLimitProvider
 {
+    /**
+     * @var Cache
+     */
     private $cache;
+
+    /**
+     * @var IdBuilder
+     */
     private $idBuilder;
+
+    /**
+     * @var LimitExtractor
+     */
     private $limitExtractor;
 
     public function __construct(Cache $cache, IdBuilder $idBuilder = null, LimitExtractor $limitExtractor = null)
     {
         $this->cache = $cache;
-        $this->idBuilder = (null !== $idBuilder) ? $idBuilder : new SimpleIdBuilder();
-        $this->limitExtractor = (null !== $limitExtractor) ? $limitExtractor : new HeaderLimitExtractor();
+        $this->idBuilder = $idBuilder ?: new SimpleIdBuilder();
+        $this->limitExtractor = $limitExtractor ?: new HeaderLimitExtractor();
     }
 
     /**
@@ -27,7 +38,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
         $limits = $this->cache->fetch($id);
 
         if (false === $limits) {
-            return;
+            return false;
         }
 
         foreach ($limits as $type => $limit) {

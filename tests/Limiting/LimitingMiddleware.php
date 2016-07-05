@@ -1,49 +1,37 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl;
+namespace MyTarget\Limiting;
 
-use MyTarget\Limiting\RateLimitProvider;
 use MyTarget\Transport\Middleware\Impl\Exception\ThrottleException;
-use MyTarget\Transport\HttpTransport;
 use MyTarget\Transport\Middleware\HttpMiddleware;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
 
 class LimitingMiddleware implements HttpMiddleware
 {
-    private static $contextKey = 'limit-by';
-    
-    /**
-     * @var HttpTransport
-     */
-    private $http;
+    private static $contextKey = "limit-by";
 
     /**
      * @var RateLimitProvider
      */
     private $rateLimitProvider;
 
-    public function __construct(HttpTransport $http, RateLimitProvider $rateLimitProvider)
+    public function __construct(RateLimitProvider $rateLimitProvider)
     {
-        $this->http = $http;
         $this->rateLimitProvider = $rateLimitProvider;
     }
 
     /**
-     * @param RequestInterface $request
-     * @param HttpMiddlewareStack $stack
-     * @param string|null $username
-     * @param array|null $context
-     *
-     * @return ResponseInterface
+     * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null, array $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
     {
         if (!is_array($context) || !array_key_exists(self::$contextKey, $context)) {
-            return $stack->request($request, $username, $context);
+            return $stack->request($request, $context);
         }
         
         $limitBy = $context[self::$contextKey];
+        $username = isset($context["username"]) ? $context["username"] : null;
 
         $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $username);
 
@@ -51,7 +39,7 @@ class LimitingMiddleware implements HttpMiddleware
             throw new ThrottleException();
         }
 
-        $response = $stack->request($request, $username, $context);
+        $response = $stack->request($request, $context);
 
         $this->rateLimitProvider->refreshLimits($response, $limitBy, $username);
 

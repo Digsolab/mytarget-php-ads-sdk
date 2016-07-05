@@ -2,8 +2,6 @@
 
 namespace MyTarget\Limiting;
 
-use MyTarget\Limiting\Exception\ThrottleException;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 interface RateLimitProvider
@@ -12,7 +10,7 @@ interface RateLimitProvider
      * @param string            $limitBy
      * @param string|null       $username
      *
-     * @return boolean
+     * @return bool
      */
     public function isLimitReached($limitBy, $username = null);
 

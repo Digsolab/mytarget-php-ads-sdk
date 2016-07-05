@@ -22,9 +22,7 @@ class TerminatingMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, $username = null,
-                            array $context = null
-    )
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
     {
         return $this->http->request($request, $context);
     }

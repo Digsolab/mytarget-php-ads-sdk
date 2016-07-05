@@ -4,7 +4,6 @@ namespace MyTarget\Domain\V1;
 
 use MyTarget\Domain\Hydrated;
 use MyTarget\Domain\V1\Enum\Status;
-use Doctrine\Instantiator\InstantiatorInterface as Instantiator;
 use MyTarget\DomainFactory;
 use MyTarget\Util\DataAccess\DataAccess;
 

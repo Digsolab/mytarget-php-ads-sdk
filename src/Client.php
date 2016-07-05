@@ -30,17 +30,16 @@ class Client
     /**
      * @param string $path
      * @param array|null $query
-     * @param string|null $username
      * @param array|null $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function get($path, array $query = null, $username = null, array $context = null)
+    public function get($path, array $query = null, array $context = null)
     {
         $request = $this->requestFactory->create('GET', $path, $query);
 
-        $response = $this->http->freeze()->request($request, $username, $context);
+        $response = $this->http->freeze()->request($request, $context);
 
         return f\json_decode((string)$response->getBody());
     }
@@ -49,13 +48,12 @@ class Client
      * @param string $path
      * @param array|null $query
      * @param array|null $body
-     * @param string|null $username
      * @param array|null $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function post($path, array $query = null, array $body = null, $username = null, array $context = null)
+    public function post($path, array $query = null, array $body = null, array $context = null)
     {
         $request = $this->requestFactory->create('POST', $path, $query);
 
@@ -64,7 +62,7 @@ class Client
             $request = $request->withBody(psr\stream_for(json_encode($body)));
         }
 
-        $response = $this->http->freeze()->request($request, $username, $context);
+        $response = $this->http->freeze()->request($request, $context);
 
         return f\json_decode((string)$response->getBody());
     }
