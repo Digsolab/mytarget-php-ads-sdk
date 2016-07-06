@@ -2,6 +2,7 @@
 
 namespace MyTarget\Limiting;
 
+use GuzzleHttp\Psr7\Response;
 use MyTarget\Limiting\IdBuilder;
 use MyTarget\Limiting\LimitExtractor;
 use Doctrine\Common\Cache\Cache;
@@ -24,21 +25,48 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
         $this->limitExtractor = $this->getMock(LimitExtractor::class);
     }
 
-    public function testItPanicsWhenLimitReached()
+    public function limits()
+    {
+        $moment = new \DateTimeImmutable("00:00:00 01/01/2016");
+        $moment2 = new \DateTimeImmutable("12:00:00 01/01/2016");
+
+        return [
+            // 1. Limit ----------------------------------- 2. moment at which this limit should be tested
+            // ---------------------------------------------------- 3. should it fail or not in the end
+
+            [Limits::create($moment, 0, null, null, null), $moment, true], // should fail
+            [Limits::create($moment, 0, null, null, null), $moment->add(new \DateInterval("PT1S")), false], // should not fail nor falter I shall succeed. my perception is altered I do believe
+            [Limits::create($moment, 1, 1, 1, 1), $moment, false],
+            [Limits::create($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT59S")), true],
+            [Limits::create($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT1M")), false],
+            [Limits::create($moment, 0, 0, 1, 1), $moment->add(new \DateInterval("PT1M")), false],
+            [Limits::create($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT59M")), true],
+            [Limits::create($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT1H")), false],
+            [Limits::create($moment, 1, 1, 1, 0), $moment, true],
+            [Limits::create($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("PT23H59M59S")), true],
+            [Limits::create($moment2, 1, 1, 1, 0), $moment2->add(new \DateInterval("PT23H59M59S")), false],
+            [Limits::create($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("P1D")), false],
+            [Limits::create($moment, 0, 0, 0, 0), $moment->sub(new \DateInterval("PT1S")), false] // we went back in time there clearly are no limits for us
+        ];
+    }
+
+    /**
+     * @dataProvider limits
+     */
+    public function testLimits(Limits $limits, \DateTimeImmutable $moment, $shouldFail)
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
+        $limitProvider->setMomentGenerator(function () use ($moment) {
+            return $moment;
+        });
 
-        $username = "12345@agency_client";
-        $context = ["limit-by" => "campaigns-all"];
-        $id = "campaigns-all#12345@agency_client";
-        $limits = [
-            "X-RateLimit-RPS-Limit" => 10,
-            "X-RateLimit-RPS-Remaining" => 0
-        ];
+        $username = "bar";
+        $limitBy = "campaigns-all";
+        $id = "foo";
 
         $this->idBuilder->expects($this->once())
             ->method("buildId")
-            ->with($context["limit-by"], $username)
+            ->with($limitBy, $username)
             ->willReturn($id);
 
         $this->cache->expects($this->once())
@@ -46,23 +74,27 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
             ->with($id)
             ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($context["limit-by"], $username);
+        $result = $limitProvider->isLimitReached($limitBy, $username);
 
-        $this->assertEquals($result, true);
+        if ($shouldFail) {
+            $this->assertTrue($result, "This check should have failed (the limit is reached)");
+        } else {
+            $this->assertFalse($result, "This check should have succeeded (the limit is not reached)");
+        }
     }
 
     public function testItDoesNotPanicWhenNoLimitsCached()
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
-        $username = "12345@agency_client";
-        $context = ["limit-by" => "campaigns-all"];
-        $id = "campaigns-all#12345@agency_client";
+        $username = "bar";
+        $limitBy = "campaigns-all";
+        $id = "foo";
         $limits = false;
 
         $this->idBuilder->expects($this->once())
                         ->method("buildId")
-                        ->with($context["limit-by"], $username)
+                        ->with($limitBy, $username)
                         ->willReturn($id);
 
         $this->cache->expects($this->once())
@@ -70,54 +102,24 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with($id)
                     ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($context["limit-by"], $username);
+        $result = $limitProvider->isLimitReached($limitBy, $username);
 
-        $this->assertEquals($result, false);
-    }
-
-    public function testItDoesNotPanicWhenNoLimitReached()
-    {
-        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
-
-        $username = "12345@agency_client";
-        $context = ["limit-by" => "campaigns-all"];
-        $id = "campaigns-all#12345@agency_client";
-        $limits = [
-            "X-RateLimit-RPS-Limit" => 10,
-            "X-RateLimit-RPS-Remaining" => 20
-        ];
-
-        $this->idBuilder->expects($this->once())
-                        ->method("buildId")
-                        ->with($context["limit-by"], $username)
-                        ->willReturn($id);
-
-        $this->cache->expects($this->once())
-                    ->method("fetch")
-                    ->with($id)
-                    ->willReturn($limits);
-
-        $result = $limitProvider->isLimitReached($context["limit-by"], $username);
-
-        $this->assertEquals($result, false);
+        $this->assertFalse($result);
     }
 
     public function testItUpdatesLimits()
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
 
-        $response = $this->getMock(ResponseInterface::class);
+        $response = new Response();
         $username = "12345@agency_client";
-        $context = ["limit-by" => "campaigns-all"];
+        $limitBy = "campaigns-all";
         $id = "campaigns-all#12345@agency_client";
-        $limits = [
-            "X-RateLimit-RPS-Limit" => 10,
-            "X-RateLimit-RPS-Remaining" => 20
-        ];
+        $limits = Limits::create(new \DateTime(), 1, 1, 1, 1);
 
         $this->idBuilder->expects($this->once())
                         ->method("buildId")
-                        ->with($context["limit-by"], $username)
+                        ->with($limitBy, $username)
                         ->willReturn($id);
 
         $this->limitExtractor->expects($this->once())
@@ -129,6 +131,6 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->method("save")
                     ->with($id, $limits);
 
-        $limitProvider->refreshLimits($response, $context["limit-by"], $username);
+        $limitProvider->refreshLimits($response, $limitBy, $username);
     }
 }

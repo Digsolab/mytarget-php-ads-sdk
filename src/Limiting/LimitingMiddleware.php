@@ -49,7 +49,7 @@ class LimitingMiddleware implements HttpMiddleware
             } catch (DecodingException $e) { }
 
             if (isset($decoded["remaining"], $decoded["limits"])) {
-                throw new ThrottleException("Throttled after request: limit had been reached", $request, $response);
+                throw new ThrottleException("Throttle response: limit had been reached", $request, $response);
             }
         }
 

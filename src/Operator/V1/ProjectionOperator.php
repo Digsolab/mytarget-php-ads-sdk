@@ -25,8 +25,14 @@ class ProjectionOperator
         $this->mapper = $mapper;
     }
 
+    /**
+     * @param ProjectionCampaign $campaign
+     * @param array|null $context
+     * @return Projection
+     */
     public function projection(ProjectionCampaign $campaign, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "projection"];
         $data = $this->mapper->snapshot($campaign);
 
         $json = $this->client->post("/api/v1/projection.json", null, $data, $context);

@@ -6,28 +6,27 @@ use Psr\Http\Message\ResponseInterface;
 
 class HeaderLimitExtractor implements LimitExtractor
 {
-    private $limitHeaders = [
-        'X-RateLimit-RPS-Limit',
-        'X-RateLimit-RPS-Remaining',
-        'X-RateLimit-Minutely-Limit',
-        'X-RateLimit-Minutely-Remaining',
-        'X-RateLimit-Hourly-Limit',
-        'X-RateLimit-Hourly-Remaining',
-        'X-RateLimit-Daily-Limit',
-        'X-RateLimit-Daily-Remaining'
-    ];
-
     /**
      * @inheritdoc
      */
     public function extractLimits(ResponseInterface $response)
     {
-        $limits = [];
+        $limits = new Limits();
 
-        foreach ($this->limitHeaders as $limitHeader) {
-            if ($response->hasHeader($limitHeader)) {
-                $limits[$limitHeader] = (int)$response->getHeader($limitHeader);
-            }
+        if ($header = $response->getHeader('X-RateLimit-RPS-Remaining')) {
+            $limits->bySecond = (int)$header[0];
+        }
+
+        if ($header = $response->getHeader('X-RateLimit-Minutely-Remaining')) {
+            $limits->byMinute = (int)$header[0];
+        }
+
+        if ($header = $response->getHeader('X-RateLimit-Hourly-Remaining')) {
+            $limits->byHour = (int)$header[0];
+        }
+
+        if ($header = $response->getHeader('X-RateLimit-Daily-Remaining')) {
+            $limits->byDay = (int)$header[0];
         }
 
         return $limits;

@@ -6,9 +6,9 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
-use Doctrine\Common\Cache\FilesystemCache as DoctrineFileCache;
 use GuzzleHttp\Psr7 as psr7;
 use GuzzleHttp\Client as GuzzleClient;
+use Doctrine\Common\Cache as DoctrineCache;
 
 use MyTarget\Exception\DecodingException;
 use MyTarget\Limiting as lim;
@@ -39,7 +39,9 @@ function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir,
     $httpStack = mid\HttpMiddlewareStackPrototype::newEmpty($http);
     $httpStack->push(new mid\impl\ResponseValidatingMiddleware());
 
-    $doctrineCache = new DoctrineFileCache($cacheDir);
+    $doctrineCache = new DoctrineCache\ChainCache([
+        new DoctrineCache\ArrayCache(),
+        new DoctrineCache\FilesystemCache($cacheDir)]);
 
     $rateLimitProvider = new lim\DoctrineCacheRateLimitProvider($doctrineCache);
     $httpStack->push(new lim\LimitingMiddleware($rateLimitProvider));
