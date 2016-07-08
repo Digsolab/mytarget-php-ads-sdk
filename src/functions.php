@@ -4,11 +4,10 @@ namespace MyTarget;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache as DoctrineCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
 use GuzzleHttp\Psr7 as psr7;
 use GuzzleHttp\Client as GuzzleClient;
-use Doctrine\Common\Cache as DoctrineCache;
 
 use MyTarget\Exception\DecodingException;
 use MyTarget\Limiting as lim;
@@ -25,11 +24,12 @@ use MyTarget\Mapper\Type as t;
  *
  * @param tok\ClientCredentials\Credentials $credentials
  * @param string $cacheDir
+ * @param tok\TokenStorage $tokenStorage
  * @param psr7\Uri $baseUri
  *
  * @return Client
  */
-function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir, psr7\Uri $baseUri = null)
+function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null)
 {
     $baseUri = $baseUri ?: new psr7\Uri("https://target.my.com");
 
@@ -47,7 +47,6 @@ function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir,
     $httpStack->push(new lim\LimitingMiddleware($rateLimitProvider));
 
     $tokenAcquirer = new tok\TokenAcquirer($baseUri, $http, $credentials);
-    $tokenStorage = new tok\DoctrineCacheTokenStorage($doctrineCache);
     $tokenManager = new tok\TokenManager($tokenAcquirer, $tokenStorage);
     $httpStack->push(new tok\ClientGrantMiddleware($tokenManager));
 
@@ -60,7 +59,7 @@ function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir,
  */
 function simpleMapper($debug = false)
 {
-    $annotationReader = new CachedReader(new AnnotationReader(), new ArrayCache(), $debug);
+    $annotationReader = new CachedReader(new AnnotationReader(), new DoctrineCache\ArrayCache(), $debug);
 
     $mapper = new Mapper([
         "array" => new t\ArrayType(),
