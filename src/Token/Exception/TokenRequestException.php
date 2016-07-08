@@ -2,37 +2,12 @@
 
 namespace MyTarget\Token\Exception;
 
-use MyTarget\Exception\MyTargetException;
+use MyTarget\Transport\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 
-class TokenRequestException extends \RuntimeException
-    implements MyTargetException
+class TokenRequestException extends RequestException
 {
-    /**
-     * @var RequestInterface
-     */
-    private $request;
-
-    /**
-     * @var ResponseInterface|null
-     */
-    private $response;
-
-    /**
-     * @param string $message
-     * @param RequestInterface $request
-     * @param ResponseInterface $response
-     */
-    public function __construct($message, RequestInterface $request, ResponseInterface $response = null)
-    {
-        parent::__construct($message);
-
-        $this->request = $request;
-        $this->response = $response;
-    }
-
     /**
      * @param RequestInterface $request
      * @param ResponseInterface $response
@@ -81,21 +56,5 @@ class TokenRequestException extends \RuntimeException
         }
 
         return new TokenRequestException($message, $request, $response);
-    }
-
-    /**
-     * @return ResponseInterface|null
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * @return RequestInterface
-     */
-    public function getRequest()
-    {
-        return $this->request;
     }
 }

@@ -2,17 +2,31 @@
 
 namespace MyTarget\Domain\V1;
 
+use MyTarget\Mapper\Annotation\Field;
+
 class Location
 {
-    /** @var float */
+    /**
+     * @var float
+     * @Field(name="lng", type="float")
+     */
     private $lng;
 
-    /** @var float */
+    /**
+     * @var float
+     * @Field(name="lat", type="float")
+     */
     private $lat;
 
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="radius", type="int")
+     */
     private $radius;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="label", type="string")
+     */
     private $label;
 }

@@ -4,6 +4,8 @@ namespace MyTarget\Transport;
 
 use GuzzleHttp\ClientInterface as Client;
 use Psr\Http\Message\RequestInterface;
+use GuzzleHttp\Exception as guzzleEx;
+use MyTarget\Transport\Exception as mtEx;
 
 class GuzzleHttpTransport implements HttpTransport
 {
@@ -18,12 +20,20 @@ class GuzzleHttpTransport implements HttpTransport
     }
 
     /**
-     * TODO convert guzzle exceptions to our own domain
-     *
      * @inheritdoc
      */
     public function request(RequestInterface $request, array $context = null)
     {
-        return $this->guzzle->send($request, ["http_errors" => false]);
+        try {
+
+            return $this->guzzle->send($request, ["http_errors" => false]);
+
+        } catch (guzzleEx\ConnectException $e) {
+            throw new mtEx\ConnectException($e->getMessage(), $request, null, $e);
+        } catch (guzzleEx\TooManyRedirectsException $e) {
+            throw new mtEx\TooManyRedirectsException($e->getMessage(), $request, null, $e);
+        } catch (guzzleEx\RequestException $e) {
+            throw new mtEx\RequestException($e->getMessage(), $request, null, $e);
+        }
     }
 }

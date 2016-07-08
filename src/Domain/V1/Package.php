@@ -2,87 +2,338 @@
 
 namespace MyTarget\Domain\V1;
 
-use MyTarget\Domain\Hydrated;
+use MyTarget\Mapper\Annotation\Field;
 use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\DomainFactory;
-use MyTarget\Util\DataAccess\DataAccess;
 
-class Package extends Hydrated
+class Package
 {
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="id", type="int")
+     */
     private $id;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="name", type="string")
+     */
     private $name;
 
-    /** @var Status */
+    /**
+     * @var Status
+     * @Field(name="status", type="MyTarget\Domain\V1\Enum\Status")
+     */
     private $status;
 
-    /** @var Status */
+    /**
+     * @var Status
+     * @Field(name="system_status", type="MyTarget\Domain\V1\Enum\Status")
+     */
     private $systemStatus;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="description", type="string")
+     */
     private $description;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="price_per_show", type="string")
+     */
     private $pricePerShow;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="price_per_click", type="string")
+     */
     private $pricePerClick;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="max_price_per_unit", type="string")
+     */
     private $maxPricePerUnit;
 
-    /** @var mixed */
+    /**
+     * @var mixed
+     * @Field(name="features", type="mixed")
+     */
     private $features;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="banner_format", type="string")
+     */
     private $bannerFormat;
 
-    /** @var Targeting */
+    /**
+     * @var Targeting
+     * @Field(name="targetings", type="MyTarget\Domain\V1\Targeting")
+     */
     private $targetings;
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     * @Field(name="flags", type="array<string>")
+     */
     private $flags;
 
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="max_uniq_shows_limit", type="int")
+     */
     private $maxUniqShowsLimit;
 
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="related_package_id", type="int")
+     */
     private $relatedPackageId;
 
-    /** @var mixed */
+    /**
+     * @var mixed
+     * @Field(name="options", type="mixed")
+     */
     private $options;
 
     /**
-     * @inheritdoc
+     * @return int
      */
-    public function load(DataAccess $data, DomainFactory $factory)
+    public function getId()
     {
-        $this->targetings = $data->peek("targetings")
-            ->map($factory->factorize(Targeting::class))->unwrap();
-
-        $this->id = $data->getOrNull("id");
-        $this->name = $data->getOrNull("name");
-        $this->status = $data->peek("status")->map([Status::class, "fromValue"])->unwrap();
-        $this->systemStatus = $data->peek("system_status")->map([Status::class, "fromValue"])->unwrap();
-        $this->description = $data->getOrNull("description");
-        $this->pricePerShow = $data->getOrNull("price_per_show");
-        $this->pricePerClick = $data->getOrNull("price_per_click");
-        $this->maxPricePerUnit = $data->getOrNull("max_price_per_unit");
-        $this->features = $data->getOrNull("features");
-        $this->bannerFormat = $data->getOrNull("banner_format");
-        $this->flags = $data->getOrNull("flags");
-        $this->maxUniqShowsLimit = $data->getOrNull("max_uniq_shows_limit");
-        $this->relatedPackageId = $data->getOrNull("related_package_id");
-        $this->options = $data->getOrNull("options");
+        return $this->id;
     }
 
     /**
-     * @inheritdoc
+     * @param int $id
      */
-    public function unload()
+    public function setId($id)
     {
-        return ["id" => $this->id];
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param Status $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getSystemStatus()
+    {
+        return $this->systemStatus;
+    }
+
+    /**
+     * @param Status $systemStatus
+     */
+    public function setSystemStatus($systemStatus)
+    {
+        $this->systemStatus = $systemStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPricePerShow()
+    {
+        return $this->pricePerShow;
+    }
+
+    /**
+     * @param string $pricePerShow
+     */
+    public function setPricePerShow($pricePerShow)
+    {
+        $this->pricePerShow = $pricePerShow;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPricePerClick()
+    {
+        return $this->pricePerClick;
+    }
+
+    /**
+     * @param string $pricePerClick
+     */
+    public function setPricePerClick($pricePerClick)
+    {
+        $this->pricePerClick = $pricePerClick;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMaxPricePerUnit()
+    {
+        return $this->maxPricePerUnit;
+    }
+
+    /**
+     * @param string $maxPricePerUnit
+     */
+    public function setMaxPricePerUnit($maxPricePerUnit)
+    {
+        $this->maxPricePerUnit = $maxPricePerUnit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeatures()
+    {
+        return $this->features;
+    }
+
+    /**
+     * @param mixed $features
+     */
+    public function setFeatures($features)
+    {
+        $this->features = $features;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerFormat()
+    {
+        return $this->bannerFormat;
+    }
+
+    /**
+     * @param string $bannerFormat
+     */
+    public function setBannerFormat($bannerFormat)
+    {
+        $this->bannerFormat = $bannerFormat;
+    }
+
+    /**
+     * @return Targeting
+     */
+    public function getTargetings()
+    {
+        return $this->targetings;
+    }
+
+    /**
+     * @param Targeting $targetings
+     */
+    public function setTargetings($targetings)
+    {
+        $this->targetings = $targetings;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getFlags()
+    {
+        return $this->flags;
+    }
+
+    /**
+     * @param \string[] $flags
+     */
+    public function setFlags($flags)
+    {
+        $this->flags = $flags;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxUniqShowsLimit()
+    {
+        return $this->maxUniqShowsLimit;
+    }
+
+    /**
+     * @param int $maxUniqShowsLimit
+     */
+    public function setMaxUniqShowsLimit($maxUniqShowsLimit)
+    {
+        $this->maxUniqShowsLimit = $maxUniqShowsLimit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRelatedPackageId()
+    {
+        return $this->relatedPackageId;
+    }
+
+    /**
+     * @param int $relatedPackageId
+     */
+    public function setRelatedPackageId($relatedPackageId)
+    {
+        $this->relatedPackageId = $relatedPackageId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param mixed $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
     }
 }

@@ -21,16 +21,18 @@ class Client
      */
     private $http;
 
-    public function __construct(RequestFactory $requestFactory, HttpMiddlewareStackPrototype $http)
+    public function __construct(RequestFactory $requestFactory, HttpMiddlewareStackPrototype $httpStack)
     {
         $this->requestFactory = $requestFactory;
-        $this->http = $http;
+        $this->http = $httpStack;
     }
 
     /**
+     * Makes GET request and returns JSON-decoded response
+     *
      * @param string $path
      * @param array|null $query
-     * @param array|null $context
+     * @param array|null $context Arbitrary context-table
      *
      * @return mixed
      * @throws MyTargetException
@@ -45,6 +47,8 @@ class Client
     }
 
     /**
+     * Makes POST request and returns JSON-decoded response
+     *
      * @param string $path
      * @param array|null $query
      * @param array|null $body

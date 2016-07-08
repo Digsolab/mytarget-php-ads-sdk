@@ -2,17 +2,31 @@
 
 namespace MyTarget\Domain\V1;
 
+use MyTarget\Mapper\Annotation\Field;
+
 class PeriodStat
 {
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="clicks", type="int")
+     */
     private $clicks;
 
-    /** @var int */
+    /**
+     * @var int
+     * @Field(name="shows", type="int")
+     */
     private $shows;
 
-    /** @var string */
+    /**
+     * @var string
+     * @Field(name="amount", type="string")
+     */
     private $amount;
 
-    /** @var \DateTime */
+    /**
+     * @var \DateTime
+     * @Field(name="date", type="DateTime")
+     */
     private $date;
 }
