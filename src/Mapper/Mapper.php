@@ -22,8 +22,12 @@ class Mapper
     }
 
     /**
+     * Creates a new object of type $type and hydrates it with the
+     * seeded data (usually received from API)
+     *
      * @param string $type
      * @param mixed $data
+     *
      * @return object
      */
     public function hydrateNew($type, $data)
@@ -32,8 +36,12 @@ class Mapper
     }
 
     /**
+     * Creates snapshot of an object (or array of objects) ready for
+     * sending to the API after JSON-encoding it
+     *
      * @param mixed $data
      * @param null|string $type
+     *
      * @return mixed
      */
     public function snapshot($data, $type = null)
