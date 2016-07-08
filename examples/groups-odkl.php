@@ -3,9 +3,9 @@
 namespace Foo;
 use MyTarget\Operator\V1\GroupsOperator;
 
-list($client, $converter) = require __DIR__ . "/bootstrap.php";
+list($client, $mapper) = require __DIR__ . "/bootstrap.php";
 
-$op = new GroupsOperator($client, $converter);
+$op = new GroupsOperator($client, $mapper);
 
 $groups = $op->getOdklGroups("коты");
 

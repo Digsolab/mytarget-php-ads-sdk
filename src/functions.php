@@ -37,7 +37,7 @@ function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir,
     $http = new trans\GuzzleHttpTransport(new GuzzleClient());
 
     $httpStack = mid\HttpMiddlewareStackPrototype::newEmpty($http);
-    $httpStack->push(new mid\impl\ResponseValidatingMiddleware());
+    $httpStack->push(new mid\Impl\ResponseValidatingMiddleware());
 
     $doctrineCache = new DoctrineCache\ChainCache([
         new DoctrineCache\ArrayCache(),
