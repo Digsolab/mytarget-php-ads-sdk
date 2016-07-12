@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7 as psr7;
 use GuzzleHttp\Client as GuzzleClient;
 
 use MyTarget\Exception\DecodingException;
+use MyTarget\Token\ClientCredentials\CredentialsProvider;
 use MyTarget\Limiting as lim;
 use MyTarget\Token as tok;
 use MyTarget\Transport as trans;
@@ -22,14 +23,14 @@ use MyTarget\Mapper\Type as t;
  * It is better to use memory cache instead of file cache
  * in production.
  *
- * @param tok\ClientCredentials\Credentials $credentials
+ * @param CredentialsProvider $credentials
  * @param string $cacheDir
  * @param tok\TokenStorage $tokenStorage
  * @param psr7\Uri $baseUri
  *
  * @return Client
  */
-function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null)
+function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null)
 {
     $baseUri = $baseUri ?: new psr7\Uri("https://target.my.com");
 
@@ -80,6 +81,10 @@ function simpleMapper($debug = false)
  */
 function json_decode($json)
 {
+    if ($json === "") {
+        return null;
+    }
+
     $decoded = @\json_decode($json, true);
 
     if ($decoded === null && null !== ($error = json_last_error_msg())) {

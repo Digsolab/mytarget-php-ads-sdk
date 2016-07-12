@@ -38,6 +38,7 @@ use MyTarget\Operator\AbstractFields;
  * @method BannerFields withPixels()
  * @method BannerFields withDeeplink()
  * @method BannerFields withCallToAction()
+ * @method BannerFields withContent()
  */
 class BannerFields extends AbstractFields
 {
@@ -58,6 +59,6 @@ class BannerFields extends AbstractFields
             'text', 'telephone', 'companyName', 'url', 'urlTypes', 'jsonUrl', 'editUrl', 'previewImageUrl',
             'user', 'campaign', 'category', 'moderationReasonDisplay', 'moderationReasonsDisplay',
             'bannerModeration', 'image', 'urlObjectId', 'promoImage', 'backgroundImage', 'html5',
-            'videoParams', 'products', 'bannerFields', 'links', 'pixels', 'deeplink', 'callToAction'];
+            'videoParams', 'products', 'bannerFields', 'links', 'pixels', 'deeplink', 'callToAction', 'content'];
     }
 }

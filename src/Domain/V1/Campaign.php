@@ -4,6 +4,7 @@ namespace MyTarget\Domain\V1;
 
 use MyTarget\Domain\V1\Enum\Mixing;
 use MyTarget\Domain\V1\Enum\Status;
+use MyTarget\Domain\V1\Remarketing\RemarketingPricelist;
 use MyTarget\Mapper\Annotation\Field;
 
 class Campaign
