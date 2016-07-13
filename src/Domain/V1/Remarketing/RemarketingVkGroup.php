@@ -8,20 +8,20 @@ class RemarketingVkGroup
 {
     /**
      * @var int
-     * @Field(type="int")
+     * @Field(name="group_id", type="int")
      */
-    private $id;
+    private $groupId;
 
-    public function __construct($id)
+    public function __construct($groupId)
     {
-        $this->id = $id;
+        $this->groupId = $groupId;
     }
 
     /**
      * @return int
      */
-    public function getId()
+    public function getGroupId()
     {
-        return $this->id;
+        return $this->groupId;
     }
 }

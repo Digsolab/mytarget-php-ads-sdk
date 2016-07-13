@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7 as psr7;
 use GuzzleHttp\Client as GuzzleClient;
 
 use MyTarget\Exception\DecodingException;
+use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
 use MyTarget\Token\ClientCredentials\CredentialsProvider;
 use MyTarget\Limiting as lim;
 use MyTarget\Token as tok;
@@ -17,6 +18,7 @@ use MyTarget\Transport as trans;
 use MyTarget\Transport\Middleware as mid;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Mapper\Type as t;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Creates simple client, mostly used for testing.
@@ -92,4 +94,20 @@ function json_decode($json)
     }
 
     return $decoded;
+}
+
+/**
+ * @param resource|string|StreamInterface $file
+ * @return resource|StreamInterface
+ */
+function streamOrResource($file)
+{
+    if (is_string($file)) { // assume it's a file path
+        $file = fopen($file, 'r');
+    }
+    if ( ! $file instanceof StreamInterface && ! is_resource($file)) {
+        throw new UnexpectedFileArgumentException($file);
+    }
+
+    return $file;
 }

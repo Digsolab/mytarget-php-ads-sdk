@@ -36,12 +36,7 @@ class ImageOperator
      */
     public function upload($file, UploadImage $image, array $context = null)
     {
-        if (is_string($file)) { // assume it's a file path
-            $file = fopen($file, 'r');
-        }
-        if ( ! $file instanceof StreamInterface && ! is_resource($file)) {
-            throw new UnexpectedFileArgumentException($file);
-        }
+        $file = \MyTarget\streamOrResource($file);
 
         $imageInfo = $this->mapper->snapshot($image);
         $imageInfo = array_filter($imageInfo, function ($v) { return $v !== null; });

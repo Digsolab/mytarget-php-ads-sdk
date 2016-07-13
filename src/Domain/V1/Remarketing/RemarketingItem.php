@@ -43,8 +43,8 @@ class RemarketingItem
     private $groups;
 
     /**
-     * @var RemarketingUsersList[]
-     * @Field(name="remarketing_users_lists", type="array<MyTarget\Domain\V1\Remarketing\RemarketingUsersList>")
+     * @var RemarketingUserList[]
+     * @Field(name="remarketing_users_lists", type="array<MyTarget\Domain\V1\Remarketing\RemarketingUserList>")
      */
     private $usersLists;
 
@@ -70,7 +70,7 @@ class RemarketingItem
      * TODO unsupported due to being undocumented in my.com docs...
      * @Field(name="remarketing_custom_audiences", type="mixed")
      */
-    private $audiences;
+    private $_audiences;
 
     /**
      * @var RemarketingVkGroup[]
@@ -88,7 +88,7 @@ class RemarketingItem
      * TODO unsupported due to being undocumented in docs
      * @Field(name="remarketing_android_categories", type="mixed")
      */
-    private $androidCategories;
+    private $_androidCategories;
 
     /**
      * @return RemarketingCounterInterval[]
@@ -187,7 +187,7 @@ class RemarketingItem
     }
 
     /**
-     * @return RemarketingUsersList[]
+     * @return RemarketingUserList[]
      */
     public function getUsersLists()
     {
@@ -195,7 +195,7 @@ class RemarketingItem
     }
 
     /**
-     * @param RemarketingUsersList[] $usersLists
+     * @param RemarketingUserList[] $usersLists
      */
     public function setUsersLists($usersLists)
     {
@@ -251,19 +251,21 @@ class RemarketingItem
     }
 
     /**
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
      * @return mixed
      */
-    public function getAudiences()
+    public function _getAudiences()
     {
-        return $this->audiences;
+        return $this->_audiences;
     }
 
     /**
-     * @param mixed $audiences
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
+     * @param mixed $_audiences
      */
-    public function setAudiences($audiences)
+    public function _setAudiences($_audiences)
     {
-        $this->audiences = $audiences;
+        $this->_audiences = $_audiences;
     }
 
     /**
@@ -299,18 +301,20 @@ class RemarketingItem
     }
 
     /**
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
      * @return mixed
      */
-    public function getAndroidCategories()
+    public function _getAndroidCategories()
     {
-        return $this->androidCategories;
+        return $this->_androidCategories;
     }
 
     /**
-     * @param mixed $androidCategories
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
+     * @param mixed $_androidCategories
      */
-    public function setAndroidCategories($androidCategories)
+    public function _setAndroidCategories($_androidCategories)
     {
-        $this->androidCategories = $androidCategories;
+        $this->_androidCategories = $_androidCategories;
     }
 }

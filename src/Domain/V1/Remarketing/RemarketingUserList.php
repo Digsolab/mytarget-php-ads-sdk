@@ -5,7 +5,7 @@ namespace MyTarget\Domain\V1\Remarketing;
 use MyTarget\Domain\V1\Enum\RemarketingType;
 use MyTarget\Mapper\Annotation\Field;
 
-class RemarketingUsersList
+class RemarketingUserList
 {
     /**
      * @var int

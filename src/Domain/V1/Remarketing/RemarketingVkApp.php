@@ -8,20 +8,20 @@ class RemarketingVkApp
 {
     /**
      * @var int
-     * @Field(type="int")
+     * @Field(name="app_id", type="int")
      */
-    private $id;
+    private $appId;
 
-    public function __construct($id)
+    public function __construct($appId)
     {
-        $this->id = $id;
+        $this->appId = $appId;
     }
 
     /**
      * @return int
      */
-    public function getId()
+    public function getAppId()
     {
-        return $this->id;
+        return $this->appId;
     }
 }
