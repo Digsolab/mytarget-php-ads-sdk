@@ -147,12 +147,6 @@ class Campaign
     private $autoBiddingMode;
 
     /**
-     * @var bool
-     * @Field(name="append_utm", type="bool")
-     */
-    private $appendUtm;
-
-    /**
      * @var string
      * @Field(name="age_restrictions", type="string")
      */
@@ -596,22 +590,6 @@ class Campaign
     public function setAutoBiddingMode($autoBiddingMode)
     {
         $this->autoBiddingMode = $autoBiddingMode;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isAppendUtm()
-    {
-        return $this->appendUtm;
-    }
-
-    /**
-     * @param boolean $appendUtm
-     */
-    public function setAppendUtm($appendUtm)
-    {
-        $this->appendUtm = $appendUtm;
     }
 
     /**
