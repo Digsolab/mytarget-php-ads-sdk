@@ -13,7 +13,7 @@ class LocalGeoLocType extends AbstractEnum
     /**
      * @return LocalGeoLocType
      */
-    public function all()
+    public static function all()
     {
         return LocalGeoLocType::fromValue(self::ALL);
     }
@@ -21,7 +21,7 @@ class LocalGeoLocType extends AbstractEnum
     /**
      * @return LocalGeoLocType
      */
-    public function home()
+    public static function home()
     {
         return LocalGeoLocType::fromValue(self::HOME);
     }
@@ -29,7 +29,7 @@ class LocalGeoLocType extends AbstractEnum
     /**
      * @return LocalGeoLocType
      */
-    public function work()
+    public static function work()
     {
         return LocalGeoLocType::fromValue(self::WORK);
     }

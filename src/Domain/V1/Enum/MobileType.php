@@ -12,7 +12,7 @@ class MobileType extends AbstractEnum
     /**
      * @return MobileType
      */
-    public function tablets()
+    public static function tablets()
     {
         return MobileType::fromValue(self::TABLETS);
     }
@@ -20,7 +20,7 @@ class MobileType extends AbstractEnum
     /**
      * @return MobileType
      */
-    public function smartphones()
+    public static function smartphones()
     {
         return MobileType::fromValue(self::SMARTPHONES);
     }

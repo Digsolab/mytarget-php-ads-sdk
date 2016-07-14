@@ -14,4 +14,4 @@ $credentials = new Credentials($config["client_id"], $config["client_secret"]);
 $client = \MyTarget\simpleClient($credentials, __DIR__ . "/../var", $config["token_storage"]);
 $mapper = \MyTarget\simpleMapper(true);
 
-return [$client, $mapper];
+return [$client, $mapper, $config];

@@ -60,8 +60,8 @@ class CampaignTargeting
     private $salary;
 
     /**
-     * @var string
-     * @Field(name="profession", type="string")
+     * @var string[]
+     * @Field(name="profession", type="array<string>")
      */
     private $profession;
 

@@ -13,7 +13,7 @@ class Mixing extends AbstractEnum
     /**
      * @return Mixing
      */
-    public function fastest()
+    public static function fastest()
     {
         return Mixing::fromValue(self::FASTEST);
     }
@@ -21,7 +21,7 @@ class Mixing extends AbstractEnum
     /**
      * @return Mixing
      */
-    public function recommended()
+    public static function recommended()
     {
         return Mixing::fromValue(self::RECOMMENDED);
     }
@@ -29,7 +29,7 @@ class Mixing extends AbstractEnum
     /**
      * @return Mixing
      */
-    public function none()
+    public static function none()
     {
         return Mixing::fromValue(self::NONE);
     }

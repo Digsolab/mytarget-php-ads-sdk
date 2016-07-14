@@ -15,35 +15,39 @@ class ImageType extends AbstractEnum
     /**
      * @return ImageType
      */
-    public function static_()
+    public static function static_()
     {
         return ImageType::fromValue(self::STATIC_);
     }
+
     /**
      * @return ImageType
      */
-    public function animated()
+    public static function animated()
     {
         return ImageType::fromValue(self::ANIMATED);
     }
+
     /**
      * @return ImageType
      */
-    public function flash()
+    public static function flash()
     {
         return ImageType::fromValue(self::FLASH);
     }
+
     /**
      * @return ImageType
      */
-    public function video()
+    public static function video()
     {
         return ImageType::fromValue(self::VIDEO);
     }
+
     /**
      * @return ImageType
      */
-    public function html5()
+    public static function html5()
     {
         return ImageType::fromValue(self::HTML5);
     }

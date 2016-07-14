@@ -62,8 +62,8 @@ class Package
     private $features;
 
     /**
-     * @var string
-     * @Field(name="banner_format", type="string")
+     * @var mixed
+     * @Field(name="banner_format", type="mixed")
      */
     private $bannerFormat;
 

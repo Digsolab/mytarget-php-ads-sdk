@@ -12,7 +12,7 @@ class RemarketingAppType extends AbstractEnum
     /**
      * @return RemarketingAppType
      */
-    public function odkl()
+    public static function odkl()
     {
         return self::fromValue(self::ODKL);
     }
@@ -20,7 +20,7 @@ class RemarketingAppType extends AbstractEnum
     /**
      * @return RemarketingAppType
      */
-    public function mir()
+    public static function mir()
     {
         return self::fromValue(self::MIR);
     }

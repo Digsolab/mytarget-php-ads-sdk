@@ -12,7 +12,7 @@ class LocalGeoVisitType extends AbstractEnum
     /**
      * @return LocalGeoVisitType
      */
-    public function now()
+    public static function now()
     {
         return LocalGeoVisitType::fromValue(self::NOW);
     }
@@ -20,7 +20,7 @@ class LocalGeoVisitType extends AbstractEnum
     /**
      * @return LocalGeoVisitType
      */
-    public function usual()
+    public static function usual()
     {
         return LocalGeoVisitType::fromValue(self::USUAL);
     }

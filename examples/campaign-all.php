@@ -8,10 +8,6 @@ list($client, $mapper) = require __DIR__ . "/bootstrap.php";
 $operator = new CampaignOperator($client, $mapper);
 
 $campaigns = $operator->forClient($config["username"])
-    ->all(CampaignFields::createEmpty()
-        ->withBanners()
-        ->withName()
-        ->withId()
-        ->withStatus());
+    ->all(CampaignFields::create());
 
 var_dump($campaigns);

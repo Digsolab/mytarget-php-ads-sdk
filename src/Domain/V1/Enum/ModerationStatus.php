@@ -15,7 +15,7 @@ class ModerationStatus extends AbstractEnum
     /**
      * @return ModerationStatus
      */
-    public function new_()
+    public static function new_()
     {
         return ModerationStatus::fromValue(self::NEW_);
     }
@@ -23,7 +23,7 @@ class ModerationStatus extends AbstractEnum
     /**
      * @return ModerationStatus
      */
-    public function changed()
+    public static function changed()
     {
         return ModerationStatus::fromValue(self::CHANGED);
     }
@@ -31,7 +31,7 @@ class ModerationStatus extends AbstractEnum
     /**
      * @return ModerationStatus
      */
-    public function delayed()
+    public static function delayed()
     {
         return ModerationStatus::fromValue(self::DELAYED);
     }
@@ -39,7 +39,7 @@ class ModerationStatus extends AbstractEnum
     /**
      * @return ModerationStatus
      */
-    public function allowed()
+    public static function allowed()
     {
         return ModerationStatus::fromValue(self::ALLOWED);
     }
@@ -47,7 +47,7 @@ class ModerationStatus extends AbstractEnum
     /**
      * @return ModerationStatus
      */
-    public function banned()
+    public static function banned()
     {
         return ModerationStatus::fromValue(self::BANNED);
     }

@@ -13,7 +13,7 @@ class MobilePrefix extends AbstractEnum
     /**
      * @return MobilePrefix
      */
-    public function mts()
+    public static function mts()
     {
         return MobilePrefix::fromValue(self::MTS);
     }
@@ -21,7 +21,7 @@ class MobilePrefix extends AbstractEnum
     /**
      * @return MobilePrefix
      */
-    public function beeline()
+    public static function beeline()
     {
         return MobilePrefix::fromValue(self::BEELINE);
     }
@@ -29,7 +29,7 @@ class MobilePrefix extends AbstractEnum
     /**
      * @return MobilePrefix
      */
-    public function megafon()
+    public static function megafon()
     {
         return MobilePrefix::fromValue(self::MEGAFON);
     }

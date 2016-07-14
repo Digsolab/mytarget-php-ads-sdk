@@ -12,7 +12,7 @@ class RemarketingGroupType extends AbstractEnum
     /**
      * @return RemarketingGroupType
      */
-    public function group()
+    public static function group()
     {
         return self::fromValue(self::GROUP);
     }
@@ -20,7 +20,7 @@ class RemarketingGroupType extends AbstractEnum
     /**
      * @return RemarketingGroupType
      */
-    public function scope()
+    public static function scope()
     {
         return self::fromValue(self::SCOPE);
     }

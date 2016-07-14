@@ -13,7 +13,7 @@ class AutobiddingMode extends AbstractEnum
     /**
      * @return AutobiddingMode
      */
-    public function fixed()
+    public static function fixed()
     {
         return AutobiddingMode::fromValue(self::FIXED);
     }
@@ -21,7 +21,7 @@ class AutobiddingMode extends AbstractEnum
     /**
      * @return AutobiddingMode
      */
-    public function secondPrice()
+    public static function secondPrice()
     {
         return AutobiddingMode::fromValue(self::SECOND_PRICE);
     }
@@ -29,7 +29,7 @@ class AutobiddingMode extends AbstractEnum
     /**
      * @return AutobiddingMode
      */
-    public function secondPriceMean()
+    public static function secondPriceMean()
     {
         return AutobiddingMode::fromValue(self::SECOND_PRICE_MEAN);
     }

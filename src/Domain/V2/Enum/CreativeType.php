@@ -12,7 +12,7 @@ class CreativeType extends AbstractEnum
     /**
      * @return CreativeType
      */
-    public function static_()
+    public static function static_()
     {
         return CreativeType::fromValue(self::STATIC_);
     }
@@ -20,7 +20,7 @@ class CreativeType extends AbstractEnum
     /**
      * @return CreativeType
      */
-    public function video()
+    public static function video()
     {
         return CreativeType::fromValue(self::VIDEO);
     }

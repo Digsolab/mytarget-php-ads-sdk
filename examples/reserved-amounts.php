@@ -4,9 +4,7 @@ namespace Foo;
 
 use MyTarget\Operator\V2\ReservedAmountsOperator;
 
-list($client, $mapper) = require __DIR__ . "/bootstrap.php";
-
-$config = include __DIR__ . "/.config.php";
+list($client, $mapper, $config) = require __DIR__ . "/bootstrap.php";
 
 $op = new ReservedAmountsOperator($client, $mapper);
 

@@ -15,7 +15,7 @@ class Mailing extends AbstractEnum
     /**
      * @return Mailing
      */
-    public function news()
+    public static function news()
     {
         return Mailing::fromValue(self::NEWS);
     }
@@ -23,7 +23,7 @@ class Mailing extends AbstractEnum
     /**
      * @return Mailing
      */
-    public function finance()
+    public static function finance()
     {
         return Mailing::fromValue(self::FINANCE);
     }
@@ -31,7 +31,7 @@ class Mailing extends AbstractEnum
     /**
      * @return Mailing
      */
-    public function event()
+    public static function event()
     {
         return Mailing::fromValue(self::EVENT);
     }
@@ -39,7 +39,7 @@ class Mailing extends AbstractEnum
     /**
      * @return Mailing
      */
-    public function moderation()
+    public static function moderation()
     {
         return Mailing::fromValue(self::MODERATION);
     }
@@ -47,7 +47,7 @@ class Mailing extends AbstractEnum
     /**
      * @return Mailing
      */
-    public function other()
+    public static function other()
     {
         return Mailing::fromValue(self::OTHER);
     }

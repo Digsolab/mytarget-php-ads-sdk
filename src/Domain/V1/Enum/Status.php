@@ -38,7 +38,7 @@ class Status extends AbstractEnum
     /**
      * @return Status
      */
-    public function active()
+    public static function active()
     {
         return Status::fromValue(self::ACTIVE);
     }
@@ -46,7 +46,7 @@ class Status extends AbstractEnum
     /**
      * @return Status
      */
-    public function deleted()
+    public static function deleted()
     {
         return Status::fromValue(self::DELETED);
     }
@@ -54,7 +54,7 @@ class Status extends AbstractEnum
     /**
      * @return Status
      */
-    public function blocked()
+    public static function blocked()
     {
         return Status::fromValue(self::BLOCKED);
     }

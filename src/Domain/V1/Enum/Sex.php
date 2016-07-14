@@ -13,7 +13,7 @@ class Sex extends AbstractEnum
     /**
      * @return Sex
      */
-    public function male()
+    public static function male()
     {
         return Sex::fromValue(self::MALE);
     }
@@ -21,7 +21,7 @@ class Sex extends AbstractEnum
     /**
      * @return Sex
      */
-    public function female()
+    public static function female()
     {
         return Sex::fromValue(self::FEMALE);
     }
@@ -29,7 +29,7 @@ class Sex extends AbstractEnum
     /**
      * @return Sex
      */
-    public function both()
+    public static function both()
     {
         return Sex::fromValue(self::BOTH);
     }

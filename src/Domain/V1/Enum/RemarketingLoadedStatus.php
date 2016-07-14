@@ -13,7 +13,7 @@ class RemarketingLoadedStatus extends AbstractEnum
     /**
      * @return RemarketingLoadedStatus
      */
-    public function loading()
+    public static function loading()
     {
         return self::fromValue(self::LOADING);
     }
@@ -21,7 +21,7 @@ class RemarketingLoadedStatus extends AbstractEnum
     /**
      * @return RemarketingLoadedStatus
      */
-    public function loaded()
+    public static function loaded()
     {
         return self::fromValue(self::LOADED);
     }
@@ -29,7 +29,7 @@ class RemarketingLoadedStatus extends AbstractEnum
     /**
      * @return RemarketingLoadedStatus
      */
-    public function unloaded()
+    public static function unloaded()
     {
         return self::fromValue(self::UNLOADED);
     }

@@ -12,7 +12,7 @@ class RemarketingType extends AbstractEnum
     /**
      * @return RemarketingType
      */
-    public function positive()
+    public static function positive()
     {
         return self::fromValue(self::POSITIVE);
     }
@@ -20,7 +20,7 @@ class RemarketingType extends AbstractEnum
     /**
      * @return RemarketingType
      */
-    public function negative()
+    public static function negative()
     {
         return self::fromValue(self::NEGATIVE);
     }
