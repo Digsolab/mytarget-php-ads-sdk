@@ -11,7 +11,7 @@ $autoloader = require_once __DIR__ . "/../vendor/autoload.php";
 $config = include __DIR__ . "/.config.php";
 $credentials = new Credentials($config["client_id"], $config["client_secret"]);
 
-$client = \MyTarget\simpleClient($credentials, __DIR__ . "/../var");
-$converter = \MyTarget\simpleMapper(true);
+$client = \MyTarget\simpleClient($credentials, __DIR__ . "/../var", $config["token_storage"]);
+$mapper = \MyTarget\simpleMapper(true);
 
-return [$client, $converter];
+return [$client, $mapper, $config];

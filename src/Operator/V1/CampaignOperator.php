@@ -2,6 +2,7 @@
 
 namespace MyTarget\Operator\V1;
 
+use MyTarget\Domain\V1\Campaign;
 use MyTarget\Domain\V1\CampaignStat;
 use MyTarget\Domain\V1\Enum\Status;
 use MyTarget\Mapper\Mapper;
@@ -36,6 +37,38 @@ class CampaignOperator
     }
 
     /**
+     * @param Campaign $campaign
+     * @param array|null $context
+     *
+     * @return Campaign
+     */
+    public function create(Campaign $campaign, array $context = null)
+    {
+        $rawCampaign = $this->mapper->snapshot($campaign);
+
+        $json = $this->client->post("/api/v1/campaigns.json", null, $rawCampaign, $context);
+
+        return $this->mapper->hydrateNew(Campaign::class, $json);
+    }
+
+    /**
+     * @param Campaign $campaign
+     * @param array|null $context
+     *
+     * @return Campaign
+     */
+    public function update(Campaign $campaign, array $context = null)
+    {
+        $rawCampaign = $this->mapper->snapshot($campaign);
+
+        $json = $this->client->post(sprintf("/api/v1/campaigns/%d.json", $campaign->getId()), null, $rawCampaign, $context);
+
+        return $this->mapper->hydrateNew(Campaign::class, $json);
+    }
+
+    /**
+     * Returns all campaigns with given statuses
+     *
      * @param CampaignFields|null $fields
      * @param Status[]|null $withStatuses
      * @param array|null $context
@@ -52,7 +85,7 @@ class CampaignOperator
             $query["status"] = $status;
         }
 
-        if (in_array(CampaignFields::FIELD_BANNERS, $fields->getFields(), true)) {
+        if ($fields->hasField(CampaignFields::FIELD_BANNERS)) {
             $query["with_banners"] = "1";
         }
 
@@ -68,18 +101,49 @@ class CampaignOperator
     }
 
     /**
+     * Returns campaign with given $id or null if it doesn't exist
+     *
      * @param int $id
+     * @param CampaignFields|null $fields
      * @param array|null $context
      *
-     * @return CampaignStat
+     * @return CampaignStat|null
      */
-    public function find($id, array $context = null)
+    public function find($id, CampaignFields $fields = null, array $context = null)
+    {
+        $campaigns = $this->findAll([$id], $fields, null, $context);
+
+        return $campaigns ? reset($campaigns) : null;
+    }
+
+    /**
+     * Returns all campaigns with given $ids and statuses
+     *
+     * @param int[] $ids
+     * @param CampaignFields|null $fields
+     * @param Status[]|null $withStatuses
+     * @param array|null $context
+     *
+     * @return CampaignStat[]
+     */
+    public function findAll(array $ids, CampaignFields $fields = null, array $withStatuses = null, array $context = null)
     {
         $context = (array)$context + ["limit-by" => "campaigns-find"];
 
-        $json = $this->client->get(sprintf('/api/v1/campaigns/%d.json', $id), null, $context);
+        $query = ["fields" => $this->mapFields($fields->getFields())];
+        if ($fields->hasField(CampaignFields::FIELD_BANNERS)) {
+            $query["with_banners"] = "1";
+        }
+        if ($withStatuses && ($status = Status::inApiFormat($withStatuses))) {
+            $query["status"] = $status;
+        }
 
-        return $this->mapper->hydrateNew(CampaignStat::class, $json);
+        $path = sprintf("/api/v1/campaigns/%s.json", implode(";", $ids));
+        $json = $this->client->get($path, $query, $context);
+
+        return array_map(function ($json) {
+            return $this->mapper->hydrateNew(CampaignStat::class, $json);
+        }, $json);
     }
 
     /**

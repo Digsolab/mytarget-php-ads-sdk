@@ -2,6 +2,7 @@
 
 namespace MyTarget\Domain\V1;
 
+use MyTarget\Domain\V1\Remarketing\RemarketingTargeting;
 use MyTarget\Mapper\Annotation\Field;
 use MyTarget\Domain\V1\Enum\MobilePrefix;
 use MyTarget\Domain\V1\Enum\MobileType;
@@ -18,7 +19,7 @@ class CampaignTargeting
 
     /**
      * @var RemarketingTargeting[]
-     * @Field(name="remarketing", type="array<MyTarget\Domain\V1\RemarketingTargeting>")
+     * @Field(name="remarketing", type="array<MyTarget\Domain\V1\Remarketing\RemarketingTargeting>")
      */
     private $remarketing;
 
@@ -59,8 +60,8 @@ class CampaignTargeting
     private $salary;
 
     /**
-     * @var string
-     * @Field(name="profession", type="string")
+     * @var string[]
+     * @Field(name="profession", type="array<string>")
      */
     private $profession;
 

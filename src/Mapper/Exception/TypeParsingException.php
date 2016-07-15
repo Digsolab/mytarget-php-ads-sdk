@@ -5,7 +5,7 @@ namespace MyTarget\Mapper\Exception;
 use MyTarget\Exception\MyTargetException;
 
 class TypeParsingException extends \RuntimeException
-    implements MyTargetException
+    implements MyTargetException, ContextUnawareException
 {
     /**
      * @var string

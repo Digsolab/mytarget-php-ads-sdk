@@ -4,32 +4,35 @@ namespace MyTarget;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache as DoctrineCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
-use Doctrine\Common\Cache\FilesystemCache as DoctrineFileCache;
 use GuzzleHttp\Psr7 as psr7;
 use GuzzleHttp\Client as GuzzleClient;
 
 use MyTarget\Exception\DecodingException;
+use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
+use MyTarget\Token\ClientCredentials\CredentialsProvider;
 use MyTarget\Limiting as lim;
 use MyTarget\Token as tok;
 use MyTarget\Transport as trans;
 use MyTarget\Transport\Middleware as mid;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Mapper\Type as t;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Creates simple client, mostly used for testing.
  * It is better to use memory cache instead of file cache
  * in production.
  *
- * @param tok\ClientCredentials\Credentials $credentials
+ * @param CredentialsProvider $credentials
  * @param string $cacheDir
+ * @param tok\TokenStorage $tokenStorage
  * @param psr7\Uri $baseUri
  *
  * @return Client
  */
-function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir, psr7\Uri $baseUri = null)
+function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null)
 {
     $baseUri = $baseUri ?: new psr7\Uri("https://target.my.com");
 
@@ -37,15 +40,16 @@ function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir,
     $http = new trans\GuzzleHttpTransport(new GuzzleClient());
 
     $httpStack = mid\HttpMiddlewareStackPrototype::newEmpty($http);
-    $httpStack->push(new mid\impl\ResponseValidatingMiddleware());
+    $httpStack->push(new mid\Impl\ResponseValidatingMiddleware());
 
-    $doctrineCache = new DoctrineFileCache($cacheDir);
+    $doctrineCache = new DoctrineCache\ChainCache([
+        new DoctrineCache\ArrayCache(),
+        new DoctrineCache\FilesystemCache($cacheDir)]);
 
     $rateLimitProvider = new lim\DoctrineCacheRateLimitProvider($doctrineCache);
     $httpStack->push(new lim\LimitingMiddleware($rateLimitProvider));
 
     $tokenAcquirer = new tok\TokenAcquirer($baseUri, $http, $credentials);
-    $tokenStorage = new tok\DoctrineCacheTokenStorage($doctrineCache);
     $tokenManager = new tok\TokenManager($tokenAcquirer, $tokenStorage);
     $httpStack->push(new tok\ClientGrantMiddleware($tokenManager));
 
@@ -58,7 +62,7 @@ function simpleClient(tok\ClientCredentials\Credentials $credentials, $cacheDir,
  */
 function simpleMapper($debug = false)
 {
-    $annotationReader = new CachedReader(new AnnotationReader(), new ArrayCache(), $debug);
+    $annotationReader = new CachedReader(new AnnotationReader(), new DoctrineCache\ArrayCache(), $debug);
 
     $mapper = new Mapper([
         "array" => new t\ArrayType(),
@@ -73,21 +77,16 @@ function simpleMapper($debug = false)
 }
 
 /**
- * @param \DateTime $date
- * @return string
- */
-function stringFromDate(\DateTime $date)
-{
-    return $date->format("Y-m-d H:i:s");
-}
-
-/**
  * @param string $json
  * @return mixed
  * @throws DecodingException
  */
 function json_decode($json)
 {
+    if ($json === "") {
+        return null;
+    }
+
     $decoded = @\json_decode($json, true);
 
     if ($decoded === null && null !== ($error = json_last_error_msg())) {
@@ -95,4 +94,20 @@ function json_decode($json)
     }
 
     return $decoded;
+}
+
+/**
+ * @param resource|string|StreamInterface $file
+ * @return resource|StreamInterface
+ */
+function streamOrResource($file)
+{
+    if (is_string($file)) { // assume it's a file path
+        $file = fopen($file, 'r');
+    }
+    if ( ! $file instanceof StreamInterface && ! is_resource($file)) {
+        throw new UnexpectedFileArgumentException($file);
+    }
+
+    return $file;
 }

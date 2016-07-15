@@ -6,6 +6,8 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Instantiator\Instantiator;
 use Doctrine\Instantiator\InstantiatorInterface;
 use MyTarget\Mapper\Annotation\Field;
+use MyTarget\Mapper\Exception\ContextAwareException;
+use MyTarget\Mapper\Exception\ContextUnawareException;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Mapper\Exception\ClassNotFoundException;
 
@@ -47,7 +49,11 @@ class ObjectType implements Type
                     $fieldName = $field->name ?: $property->getName();
 
                     if (isset($value[$fieldName])) {
-                        $hydrated = $mapper->hydrateNew($field->type, $value[$fieldName]);
+                        try {
+                            $hydrated = $mapper->hydrateNew($field->type, $value[$fieldName]);
+                        } catch (ContextUnawareException $e) {
+                            throw new ContextAwareException($class->getName(), $property->getName(), $e);
+                        }
 
                         $property->setAccessible(true);
                         $property->setValue($result, $hydrated);

@@ -56,6 +56,15 @@ abstract class AbstractFields
     }
 
     /**
+     * @param string $field
+     * @return bool
+     */
+    public function hasField($field)
+    {
+        return in_array($field, $this->fields, true);
+    }
+
+    /**
      * @param string $name
      * @param mixed $_
      *

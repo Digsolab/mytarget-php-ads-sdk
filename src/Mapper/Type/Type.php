@@ -2,6 +2,8 @@
 
 namespace MyTarget\Mapper\Type;
 
+use MyTarget\Mapper\Exception\ContextAwareException;
+use MyTarget\Mapper\Exception\ContextUnawareException;
 use MyTarget\Mapper\Mapper;
 
 /**
@@ -18,6 +20,8 @@ interface Type
      * @param Mapper $mapper
      *
      * @return mixed
+     * @throws ContextUnawareException
+     * @throws ContextAwareException
      */
     public function hydrated($value, $type, Mapper $mapper);
 
@@ -29,6 +33,8 @@ interface Type
      * @param Mapper $mapper
      *
      * @return mixed
+     * @throws ContextUnawareException
+     * @throws ContextAwareException
      */
     public function snapshot($value, $type, Mapper $mapper);
 }

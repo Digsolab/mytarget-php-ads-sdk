@@ -34,4 +34,28 @@ class Status extends AbstractEnum
 
         return $apiStatus;
     }
+
+    /**
+     * @return Status
+     */
+    public static function active()
+    {
+        return Status::fromValue(self::ACTIVE);
+    }
+
+    /**
+     * @return Status
+     */
+    public static function deleted()
+    {
+        return Status::fromValue(self::DELETED);
+    }
+
+    /**
+     * @return Status
+     */
+    public static function blocked()
+    {
+        return Status::fromValue(self::BLOCKED);
+    }
 }

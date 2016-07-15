@@ -4,6 +4,7 @@ namespace MyTarget\Domain\V1;
 
 use MyTarget\Domain\V1\Enum\Mixing;
 use MyTarget\Domain\V1\Enum\Status;
+use MyTarget\Domain\V1\Remarketing\RemarketingPricelist;
 use MyTarget\Mapper\Annotation\Field;
 
 class Campaign
@@ -144,12 +145,6 @@ class Campaign
      * @Field(name="auto_bidding_mode", type="MyTarget\Domain\V1\Enum\AutobiddingMode")
      */
     private $autoBiddingMode;
-
-    /**
-     * @var bool
-     * @Field(name="append_utm", type="bool")
-     */
-    private $appendUtm;
 
     /**
      * @var string
@@ -595,22 +590,6 @@ class Campaign
     public function setAutoBiddingMode($autoBiddingMode)
     {
         $this->autoBiddingMode = $autoBiddingMode;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isAppendUtm()
-    {
-        return $this->appendUtm;
-    }
-
-    /**
-     * @param boolean $appendUtm
-     */
-    public function setAppendUtm($appendUtm)
-    {
-        $this->appendUtm = $appendUtm;
     }
 
     /**

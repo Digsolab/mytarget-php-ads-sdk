@@ -9,7 +9,7 @@ interface LimitExtractor
     /**
      * @param ResponseInterface $response
      *
-     * @return int[]
+     * @return Limits
      */
     public function extractLimits(ResponseInterface $response);
 }

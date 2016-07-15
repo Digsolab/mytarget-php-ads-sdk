@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Domain\V1;
+namespace MyTarget\Domain\V1\Remarketing;
 
 use MyTarget\Mapper\Annotation\Field;
 

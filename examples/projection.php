@@ -10,11 +10,9 @@ use MyTarget\Domain\V1\ProjectionCampaign;
 use MyTarget\Domain\V1\User;
 use MyTarget\Operator\V1\ProjectionOperator;
 
-list($client, $converter) = require __DIR__ . "/bootstrap.php";
+list($client, $mapper, $config) = require __DIR__ . "/bootstrap.php";
 
-$config = include __DIR__ . "/.config.php";
-
-$projectionOp = new ProjectionOperator($client, $converter);
+$projectionOp = new ProjectionOperator($client, $mapper);
 
 $package = new Package();
 $package->setId(83);

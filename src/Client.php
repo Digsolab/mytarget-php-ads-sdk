@@ -70,4 +70,43 @@ class Client
 
         return f\json_decode((string)$response->getBody());
     }
+
+    /**
+     * Makes DELETE request and returns JSON-decoded response
+     *
+     * @param string $path
+     * @param array|null $query
+     * @param array|null $context
+     *
+     * @return mixed
+     * @throws MyTargetException
+     */
+    public function delete($path, array $query = null, array $context = null)
+    {
+        $request = $this->requestFactory->create("DELETE", $path, $query);
+
+        $response = $this->http->freeze()->request($request, $context);
+
+        return f\json_decode((string)$response->getBody());
+    }
+
+    /**
+     * @param string $path
+     * @param array $body
+     * @param array|null $query
+     * @param array|null $context
+     *
+     * @return mixed
+     * @throws MyTargetException
+     */
+    public function postMultipart($path, array $body, array $query = null, array $context = null)
+    {
+        $request = $this->requestFactory->create("POST", $path, $query);
+        $request = $request->withBody(new psr\MultipartStream($body));
+        /** @var RequestInterface $request */
+
+        $response = $this->http->freeze()->request($request, $context);
+
+        return f\json_decode((string)$response->getBody());
+    }
 }
