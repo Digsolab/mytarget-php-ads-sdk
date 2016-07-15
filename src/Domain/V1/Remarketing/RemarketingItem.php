@@ -251,7 +251,7 @@ class RemarketingItem
     }
 
     /**
-     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what does API expect/give us here
      * @return mixed
      */
     public function _getAudiences()
@@ -260,7 +260,7 @@ class RemarketingItem
     }
 
     /**
-     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what does API expect/give us here
      * @param mixed $_audiences
      */
     public function _setAudiences($_audiences)
@@ -301,7 +301,7 @@ class RemarketingItem
     }
 
     /**
-     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what does API expect/give us here
      * @return mixed
      */
     public function _getAndroidCategories()
@@ -310,7 +310,7 @@ class RemarketingItem
     }
 
     /**
-     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what API expects/gives here
+     * @deprecated Subject to removal (and introducing no-underscored method in place) when it will be clear what does API expect/give us here
      * @param mixed $_androidCategories
      */
     public function _setAndroidCategories($_androidCategories)
