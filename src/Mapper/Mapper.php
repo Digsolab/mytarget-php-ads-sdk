@@ -59,7 +59,7 @@ class Mapper
     {
         $pattern = "!^(?:"
             . "(?<array_type>array)|(?<scalar_type>int|bool|float|string)"
-            . "|(?<mixed>mixed)"
+            . "|(?<mixed>mixed)|(?<dict>dict)"
             . "|(?<date_type>DateTime)|(?<object_type>[^<]+)"
             . ")!";
         if ( ! preg_match($pattern, $type, $parsed)) {
@@ -74,6 +74,8 @@ class Mapper
             return $this->types["date"];
         } elseif (isset($parsed["mixed"][0])) {
             return $this->types["mixed"];
+        } elseif (isset($parsed["dict"][0])) {
+            return $this->types["dict"];
         } else {
             if (is_subclass_of($type, AbstractEnum::class, true)) {
                 return $this->types["enum"];

@@ -17,6 +17,19 @@ class Creative
      */
     private $variants;
 
+    /**
+     * @param int $id
+     * @param CreativeVariant[] $variants
+     */
+    public function __construct($id, array $variants)
+    {
+        $this->id = $id;
+        $this->variants = $variants;
+    }
+
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;

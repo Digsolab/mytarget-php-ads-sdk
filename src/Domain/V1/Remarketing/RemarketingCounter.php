@@ -39,7 +39,7 @@ class RemarketingCounter
 
     /**
      * @var array[]
-     * @Field(type="mixed")
+     * @Field(type="array<dict>")
      */
     private $goals;
 

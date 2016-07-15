@@ -3,8 +3,8 @@
 namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
-use MyTarget\Domain\V1\Banner;
-use MyTarget\Domain\V1\BannerStat;
+use MyTarget\Domain\V1\Banner\Banner;
+use MyTarget\Domain\V1\Banner\BannerStat;
 use MyTarget\Domain\V1\Enum\Status;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Operator\V1\Fields\BannerFields;

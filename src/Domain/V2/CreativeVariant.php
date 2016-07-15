@@ -31,6 +31,20 @@ class CreativeVariant
     private $size;
 
     /**
+     * @param string $url
+     * @param int $width
+     * @param int $height
+     * @param int $size
+     */
+    public function __construct($url, $width, $height, $size)
+    {
+        $this->url = $url;
+        $this->width = $width;
+        $this->height = $height;
+        $this->size = $size;
+    }
+
+    /**
      * @return string
      */
     public function getUrl()

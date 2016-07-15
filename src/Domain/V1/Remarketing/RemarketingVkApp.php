@@ -12,6 +12,9 @@ class RemarketingVkApp
      */
     private $appId;
 
+    /**
+     * @param int $appId
+     */
     public function __construct($appId)
     {
         $this->appId = $appId;

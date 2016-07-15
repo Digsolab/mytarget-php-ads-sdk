@@ -3,7 +3,7 @@
 namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
-use MyTarget\Domain\V1\UploadImage;
+use MyTarget\Domain\V1\Image\UploadImage;
 use MyTarget\Mapper\Mapper;
 
 class ClientImageOperator extends ImageOperator

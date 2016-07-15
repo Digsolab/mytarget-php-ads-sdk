@@ -3,10 +3,10 @@
 namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
-use MyTarget\Domain\V1\Image;
-use MyTarget\Domain\V1\UploadImage;
+use MyTarget\Domain\V1\Image\Image;
+use MyTarget\Domain\V1\Image\UploadImage;
 use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
+
 use Psr\Http\Message\StreamInterface;
 
 class ImageOperator

@@ -57,7 +57,7 @@ class Client
      * @return mixed
      * @throws MyTargetException
      */
-    public function post($path, array $query = null, array $body = null, array $context = null)
+    public function post($path, array $query = null, $body = null, array $context = null)
     {
         $request = $this->requestFactory->create('POST', $path, $query);
 

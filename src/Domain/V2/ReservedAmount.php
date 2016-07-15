@@ -31,6 +31,20 @@ class ReservedAmount
     private $credit;
 
     /**
+     * @param string $balance
+     * @param string $hold
+     * @param int $userId
+     * @param string $credit
+     */
+    public function __construct($balance, $hold, $userId, $credit)
+    {
+        $this->balance = $balance;
+        $this->hold = $hold;
+        $this->userId = $userId;
+        $this->credit = $credit;
+    }
+
+    /**
      * @return string
      */
     public function getBalance()

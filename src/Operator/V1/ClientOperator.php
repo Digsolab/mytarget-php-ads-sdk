@@ -3,6 +3,7 @@
 namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
+use MyTarget\Domain\V1\AdditionalUserInfo;
 use MyTarget\Domain\V1\AgencyClient;
 use MyTarget\Mapper\Mapper;
 
@@ -38,16 +39,17 @@ class ClientOperator
     }
 
     /**
-     * @param AgencyClient $client
+     * @param AdditionalUserInfo $userInfo
      * @param array|null $context
      *
      * @return AgencyClient
      */
-    public function create(AgencyClient $client, array $context = null)
+    public function create(AdditionalUserInfo $userInfo, array $context = null)
     {
-        $rawClient = $this->mapper->snapshot($client);
+        $rawUserInfo = $this->mapper->snapshot($userInfo);
+        $body = ["additional_info" => $rawUserInfo];
 
-        $json = $this->client->post("/api/v1/clients.json", null, $rawClient, $context);
+        $json = $this->client->post("/api/v1/clients.json", null, $body, $context);
 
         return $this->mapper->hydrateNew(AgencyClient::class, $json);
     }
