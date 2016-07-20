@@ -19,6 +19,7 @@ use MyTarget\Transport\Middleware as mid;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Mapper\Type as t;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Creates simple client, mostly used for testing.
@@ -29,10 +30,11 @@ use Psr\Http\Message\StreamInterface;
  * @param string $cacheDir
  * @param tok\TokenStorage $tokenStorage
  * @param psr7\Uri $baseUri
+ * @param LoggerInterface $logger
  *
  * @return Client
  */
-function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null)
+function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null, LoggerInterface $logger)
 {
     $baseUri = $baseUri ?: new psr7\Uri("https://target.my.com");
 
@@ -40,6 +42,7 @@ function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStor
     $http = new trans\GuzzleHttpTransport(new GuzzleClient());
 
     $httpStack = mid\HttpMiddlewareStackPrototype::newEmpty($http);
+    $httpStack->push(new mid\Impl\RequestResponseLoggerMiddleware($logger));
     $httpStack->push(new mid\Impl\ResponseValidatingMiddleware());
 
     $doctrineCache = new DoctrineCache\ChainCache([
