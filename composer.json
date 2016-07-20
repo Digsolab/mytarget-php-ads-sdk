@@ -6,7 +6,8 @@
     "doctrine/instantiator": "^1",
     "psr/http-message": "~1",
     "guzzlehttp/psr7": "^1",
-    "doctrine/annotations": "^1"
+    "doctrine/annotations": "^1",
+    "psr/log": "1.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.7",
