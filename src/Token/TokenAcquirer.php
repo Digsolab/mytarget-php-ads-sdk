@@ -44,6 +44,8 @@ class TokenAcquirer
      * @param array $context
      *
      * @return Token|null
+     *
+     * @throws TokenRequestException
      */
     public function acquire(RequestInterface $request, \DateTime $now, $username = null, array $context = null)
     {
@@ -87,6 +89,8 @@ class TokenAcquirer
      * @param array|null $context
      *
      * @return Token|null
+     *
+     * @throws TokenRequestException
      */
     public function refresh(RequestInterface $request, \DateTime $now, $refreshToken, array $context = null)
     {
