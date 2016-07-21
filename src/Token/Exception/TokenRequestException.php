@@ -57,4 +57,26 @@ class TokenRequestException extends RequestException
 
         return new TokenRequestException($message, $request, $response);
     }
+
+    /**
+     * @param static $lockName
+     * @param RequestInterface $request
+     *
+     * @return TokenRequestException
+     */
+    public static function temporaryLockFailed($lockName, RequestInterface $request)
+    {
+        return new self(sprintf('Could not obtain temporary cache lock: %s', $lockName), $request);
+    }
+
+    /**
+     * @param string $lockName
+     * @param RequestInterface $request
+     *
+     * @return TokenRequestException
+     */
+    public static function permanentLockFailed($lockName, RequestInterface $request)
+    {
+        return new self(sprintf('Could not obtain permanent cache lock: %s', $lockName), $request);
+    }
 }

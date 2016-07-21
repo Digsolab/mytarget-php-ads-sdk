@@ -40,25 +40,14 @@ class TokenManager
 
     /**
      * @param RequestInterface $request
+     * @param string $account
      * @param array|null $context
      *
      * @return Token|null
      */
-    public function getToken(RequestInterface $request, array $context = null)
+    public function getAccountToken(RequestInterface $request, $account, array $context = null)
     {
-        $now = call_user_func($this->momentGenerator);
-        $token = $this->storage->getToken($request, $context);
-
-        if ($token === null) {
-            $token = $this->acquirer->acquire($request, $now, null, $context);
-            $this->storage->updateToken($token, $request, $context);
-        }
-        elseif ($token->isExpiredAt($now)) {
-            $token = $this->acquirer->refresh($request, $now, $token->getRefreshToken(), $context);
-            $this->storage->updateToken($token, $request, $context);
-        }
-
-        return $token;
+        return $this->getToken($request, $account, null, $context);
     }
 
     /**
@@ -70,16 +59,22 @@ class TokenManager
      */
     public function getClientToken(RequestInterface $request, $username, array $context = null)
     {
+        return $this->getToken($request, null, $username, $context);
+    }
+
+    private function getToken(RequestInterface $request, $account = null, $username = null, array $context = null)
+    {
+        $id = $username ?: $account;
+
         $now = call_user_func($this->momentGenerator);
-        $token = $this->storage->getClientToken($username, $request, $context);
+        $token = $this->storage->getToken($id, $request, $context);
 
         if ($token === null) {
             $token = $this->acquirer->acquire($request, $now, $username, $context);
-            $this->storage->updateClientToken($username, $token, $request, $context);
-        }
-        elseif ($token->isExpiredAt($now)) {
+            $this->storage->updateToken($id, $token, $request, $context);
+        } else if ($token->isExpiredAt($now)) {
             $token = $this->acquirer->refresh($request, $now, $token->getRefreshToken(), $context);
-            $this->storage->updateClientToken($username, $token, $request, $context);
+            $this->storage->updateToken($id, $token, $request, $context);
         }
 
         return $token;

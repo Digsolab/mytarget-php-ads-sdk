@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache as DoctrineCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
+use DSL\LockInterface;
 use GuzzleHttp\Psr7 as psr7;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -31,11 +32,20 @@ use Psr\Log\LoggerInterface;
  * @param tok\TokenStorage $tokenStorage
  * @param psr7\Uri $baseUri
  * @param LoggerInterface $logger
+ * @param LockInterface $lock
+ * @param DoctrineCache\Cache $cache
  *
  * @return Client
  */
-function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStorage $tokenStorage, psr7\Uri $baseUri = null, LoggerInterface $logger)
-{
+function simpleClient(
+    CredentialsProvider $credentials,
+    $cacheDir,
+    tok\TokenStorage    $tokenStorage,
+    psr7\Uri            $baseUri = null,
+    LoggerInterface     $logger,
+    LockInterface       $lock,
+    DoctrineCache\Cache $cache
+) {
     $baseUri = $baseUri ?: new psr7\Uri("https://target.my.com");
 
     $requestFactory = new trans\RequestFactory($baseUri);
@@ -54,7 +64,7 @@ function simpleClient(CredentialsProvider $credentials, $cacheDir, tok\TokenStor
 
     $tokenAcquirer = new tok\TokenAcquirer($baseUri, $http, $credentials);
     $tokenManager = new tok\TokenManager($tokenAcquirer, $tokenStorage);
-    $httpStack->push(new tok\ClientGrantMiddleware($tokenManager));
+    $httpStack->push(new tok\ClientGrantMiddleware($tokenManager, $lock, $cache));
 
     return new Client($requestFactory, $httpStack);
 }
