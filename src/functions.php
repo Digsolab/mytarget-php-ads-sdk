@@ -6,13 +6,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache as DoctrineCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
-use DSL\LockInterface;
-use GuzzleHttp\Psr7 as psr7;
-use GuzzleHttp\Client as GuzzleClient;
-
 use MyTarget\Exception\DecodingException;
 use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
-use MyTarget\Token\ClientCredentials\CredentialsProvider;
 use MyTarget\Limiting as lim;
 use MyTarget\Token as tok;
 use MyTarget\Transport as trans;
@@ -20,54 +15,6 @@ use MyTarget\Transport\Middleware as mid;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Mapper\Type as t;
 use Psr\Http\Message\StreamInterface;
-use Psr\Log\LoggerInterface;
-
-/**
- * Creates simple client, mostly used for testing.
- * It is better to use memory cache instead of file cache
- * in production.
- *
- * @param CredentialsProvider $credentials
- * @param string $cacheDir
- * @param tok\TokenStorage $tokenStorage
- * @param psr7\Uri $baseUri
- * @param LoggerInterface $logger
- * @param LockInterface $lock
- * @param DoctrineCache\Cache $cache
- *
- * @return Client
- */
-function simpleClient(
-    CredentialsProvider $credentials,
-    $cacheDir,
-    tok\TokenStorage    $tokenStorage,
-    psr7\Uri            $baseUri = null,
-    LoggerInterface     $logger,
-    LockInterface       $lock,
-    DoctrineCache\Cache $cache
-) {
-    $baseUri = $baseUri ?: new psr7\Uri("https://target.my.com");
-
-    $requestFactory = new trans\RequestFactory($baseUri);
-    $http = new trans\GuzzleHttpTransport(new GuzzleClient());
-
-    $httpStack = mid\HttpMiddlewareStackPrototype::newEmpty($http);
-    $httpStack->push(new mid\Impl\RequestResponseLoggerMiddleware($logger));
-    $httpStack->push(new mid\Impl\ResponseValidatingMiddleware());
-
-    $doctrineCache = new DoctrineCache\ChainCache([
-        new DoctrineCache\ArrayCache(),
-        new DoctrineCache\FilesystemCache($cacheDir)]);
-
-    $rateLimitProvider = new lim\DoctrineCacheRateLimitProvider($doctrineCache);
-    $httpStack->push(new lim\LimitingMiddleware($rateLimitProvider));
-
-    $tokenAcquirer = new tok\TokenAcquirer($baseUri, $http, $credentials);
-    $tokenManager = new tok\TokenManager($tokenAcquirer, $tokenStorage);
-    $httpStack->push(new tok\ClientGrantMiddleware($tokenManager, $lock, $cache, 'target_token', 300));
-
-    return new Client($requestFactory, $httpStack);
-}
 
 /**
  * @param bool $debug

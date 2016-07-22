@@ -1,17 +1,57 @@
 <?php
 
 use MyTarget\Token\ClientCredentials\Credentials;
-use GuzzleHttp\Psr7 as psr7;
-use MyTarget\Mapper\Type as t;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Client as GuzzleClient;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\ChainCache;
+use MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
+use MyTarget\Transport\Middleware\Impl\RequestResponseLoggerMiddleware;
+use MyTarget\Transport\Middleware\Impl\ResponseValidatingMiddleware;
+use MyTarget\Limiting\DoctrineCacheRateLimitProvider;
+use MyTarget\Limiting\LimitingMiddleware;
+use MyTarget\Token\TokenAcquirer;
+use MyTarget\Token\TokenManager;
+use MyTarget\Token\ClientGrantMiddleware;
+use MyTarget\Client;
+use MyTarget\Token\LockManager;
 
-$autoloader = require_once __DIR__ . "/../vendor/autoload.php";
+$autoloader = require_once __DIR__ . '/../vendor/autoload.php';
 
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$autoloader, 'loadClass']);
+AnnotationRegistry::registerLoader([$autoloader, 'loadClass']);
 
-$config = include __DIR__ . "/.config.php";
-$credentials = new Credentials($config["client_id"], $config["client_secret"]);
+$config = include __DIR__ . '/.config.php';
+$credentials = new Credentials($config['client_id'], $config['client_secret']);
 
-$client = \MyTarget\simpleClient($credentials, __DIR__ . "/../var", $config["token_storage"], null, $config["logger"], $config["lock"], $config["cache"]);
+$baseUri = new Uri('https://target.my.com');
+
+$requestFactory = new \MyTarget\Transport\RequestFactory($baseUri);
+$http = new \MyTarget\Transport\GuzzleHttpTransport(new GuzzleClient());
+
+$httpStack = HttpMiddlewareStackPrototype::newEmpty($http);
+$httpStack->push(new RequestResponseLoggerMiddleware($config['logger']));
+$httpStack->push(new ResponseValidatingMiddleware());
+
+$doctrineCache = new ChainCache(
+    [
+        new ArrayCache(),
+        new FilesystemCache(__DIR__ . '/../var'),
+    ]
+);
+
+$rateLimitProvider = new DoctrineCacheRateLimitProvider($doctrineCache);
+$httpStack->push(new LimitingMiddleware($rateLimitProvider));
+
+$lockManager = new LockManager($config['lock'], 'lock_my_target', 300);
+
+$tokenAcquirer = new TokenAcquirer($baseUri, $http, $credentials);
+$tokenManager = new TokenManager($tokenAcquirer, $config['token_storage']);
+$httpStack->push(new ClientGrantMiddleware($tokenManager, $lockManager, $config['cache']));
+
+$client = Client($requestFactory, $httpStack);
+
 $mapper = \MyTarget\simpleMapper(true);
 
 return [$client, $mapper, $config];
