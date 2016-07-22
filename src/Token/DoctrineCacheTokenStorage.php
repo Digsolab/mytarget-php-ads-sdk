@@ -59,7 +59,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     protected function fetch($id, RequestInterface $request, array $context = null)
     {
-        $tokenArray = $this->cache->fetch($this->hash($id, $request, $context) . $id);
+        $tokenArray = $this->cache->fetch($this->hash($id, $request, $context));
 
         if ( ! $tokenArray) {
             return null;
