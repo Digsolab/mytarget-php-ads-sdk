@@ -3,10 +3,8 @@
 namespace MyTarget\Token;
 
 use Doctrine\Common\Cache\Cache;
-use DSL\LockInterface;
 use MyTarget\Token\Exception\InvalidArgumentException;
 use MyTarget\Token\Exception\TokenLimitReachedException;
-use MyTarget\Token\Exception\TokenLockException;
 use MyTarget\Transport\Middleware\HttpMiddleware;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
@@ -15,36 +13,24 @@ use GuzzleHttp\Psr7 as guzzle;
 
 class ClientGrantMiddleware implements HttpMiddleware
 {
-    /**
-     * @var TokenManager
-     */
+    /** @var TokenManager  */
     private $tokens;
 
-    /** @var  LockInterface */
-    private $lock;
+    /** @var  LockManager */
+    private $lockManager;
 
     /** @var  Cache */
     private $cache;
 
-    /** @var  string */
-    private $lockPrefix;
-
-    /** @var  int */
-    private $lockLifetime;
-
-    public function __construct(
-        TokenManager  $tokens,
-        LockInterface $lock,
-        Cache         $cache,
-        $lockPrefix,
-        $lockLifetime
-    ) {
+    /**
+     * @param TokenManager $tokens
+     * @param LockManager  $lockManager
+     * @param Cache        $cache
+     */
+    public function __construct(TokenManager $tokens, LockManager $lockManager, Cache $cache) {
         $this->tokens = $tokens;
-        $this->lock = $lock;
+        $this->lockManager = $lockManager;
         $this->cache = $cache;
-
-        $this->lockPrefix = $lockPrefix;
-        $this->lockLifetime = $lockLifetime;
     }
 
     /**
@@ -52,18 +38,14 @@ class ClientGrantMiddleware implements HttpMiddleware
      */
     public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
     {
-        $account = isset($context["account"]) ? $context["account"] : null;
-        $username = isset($context["username"]) ? $context["username"] : null;
+        $account = isset($context['account']) ? $context['username'] : null;
+        $username = isset($context['username']) ? $context['username'] : null;
 
-        if ( ! $account &&  ! $username) {
+        if ( ! ($id = $username ?: $account)) {
             throw new InvalidArgumentException('context should contains one of this keys "username" or "account"');
         }
 
-        $lockName = sprintf("%s_%s", $this->lockPrefix, $username ?: $account);
-
-        if ( ! $this->lock->lock($lockName, $this->lockLifetime)) {
-            throw new TokenLockException(sprintf('Could not obtain temporary cache lock: %s', $lockName));
-        }
+        $this->lockManager->lock($id);
 
         try {
             if ($username) {
@@ -72,18 +54,17 @@ class ClientGrantMiddleware implements HttpMiddleware
                 $token = $this->tokens->getAccountToken($request, $account, $context);
             }
 
-            $this->lock->unlock($lockName);
+            $this->lockManager->unlock($id);
         } catch (TokenLimitReachedException $e) {
             throw $e;
         } catch (\Exception $e) {
-            $this->lock->unlock($lockName);
+            $this->lockManager->unlock($id);
 
             throw $e;
         }
 
-        $request = $request->withHeader("Authorization", sprintf("Bearer %s", $token->getAccessToken()));
-
         /** @var RequestInterface $request */
+        $request = $request->withHeader('Authorization', sprintf('Bearer %s', $token->getAccessToken()));
 
         return $stack->request($request, $context);
     }
