@@ -64,7 +64,7 @@ function simpleClient(
 
     $tokenAcquirer = new tok\TokenAcquirer($baseUri, $http, $credentials);
     $tokenManager = new tok\TokenManager($tokenAcquirer, $tokenStorage);
-    $httpStack->push(new tok\ClientGrantMiddleware($tokenManager, $lock, $cache));
+    $httpStack->push(new tok\ClientGrantMiddleware($tokenManager, $lock, $cache, 'target_token', 300));
 
     return new Client($requestFactory, $httpStack);
 }

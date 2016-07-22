@@ -5,7 +5,8 @@ namespace MyTarget\Token;
 use Doctrine\Common\Cache\Cache;
 use DSL\LockInterface;
 use MyTarget\Token\Exception\InvalidArgumentException;
-use MyTarget\Token\Exception\TokenRequestException;
+use MyTarget\Token\Exception\TokenLimitReachedException;
+use MyTarget\Token\Exception\TokenLockException;
 use MyTarget\Transport\Middleware\HttpMiddleware;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
@@ -14,10 +15,6 @@ use GuzzleHttp\Psr7 as guzzle;
 
 class ClientGrantMiddleware implements HttpMiddleware
 {
-    const TEMPORARY_LOCK_TIME = 300;
-    const PERMANENT_LOCK_TIME = 3600;
-    const LOCK_PREFIX = 'lock_';
-
     /**
      * @var TokenManager
      */
@@ -33,26 +30,21 @@ class ClientGrantMiddleware implements HttpMiddleware
     private $lockPrefix;
 
     /** @var  int */
-    private $temporaryLockTime;
-
-    /** @var  int */
-    private $permanentLockTime;
+    private $lockLifetime;
 
     public function __construct(
         TokenManager  $tokens,
         LockInterface $lock,
         Cache         $cache,
-        $lockPrefix = self::LOCK_PREFIX,
-        $temporaryLockTime = self::TEMPORARY_LOCK_TIME,
-        $permanentLockTime = self::PERMANENT_LOCK_TIME
+        $lockPrefix,
+        $lockLifetime
     ) {
         $this->tokens = $tokens;
         $this->lock = $lock;
         $this->cache = $cache;
 
         $this->lockPrefix = $lockPrefix;
-        $this->temporaryLockTime = $temporaryLockTime;
-        $this->permanentLockTime = $permanentLockTime;
+        $this->lockLifetime = $lockLifetime;
     }
 
     /**
@@ -67,42 +59,30 @@ class ClientGrantMiddleware implements HttpMiddleware
             throw new InvalidArgumentException('context should contains one of this keys "username" or "account"');
         }
 
-        $temporaryLockName = sprintf("%starget_token_%s_temporary", $this->lockPrefix, $username ?: $account);
-        $permanentLockName = sprintf("%starget_token_%s_permanent", $this->lockPrefix, $username ?: $account);
+        $lockName = sprintf("%s_%s", $this->lockPrefix, $username ?: $account);
 
-        if ( ! $this->lock->lock($temporaryLockName, $this->temporaryLockTime)) {
-            TokenRequestException::temporaryLockFailed($temporaryLockName, $request);
+        if ( ! $this->lock->lock($lockName, $this->lockLifetime)) {
+            throw new TokenLockException(sprintf('Could not obtain temporary cache lock: %s', $lockName));
         }
 
         try {
-            if ( ! $this->lock->lock($permanentLockName, $this->permanentLockTime)) {
-                TokenRequestException::permanentLockFailed($permanentLockName, $request);
-            }
-
             if ($username) {
                 $token = $this->tokens->getClientToken($request, $username, $context);
             } else {
                 $token = $this->tokens->getAccountToken($request, $account, $context);
             }
 
-            $this->lock->unlock($temporaryLockName);
-            $this->lock->unlock($permanentLockName);
-
-        } catch (TokenRequestException $e) {
-            $this->lock->unlock($temporaryLockName);
-            if ($e->response && 200 == $e->response->getStatusCode()) {
-                $this->lock->unlock($temporaryLockName);
-            }
-
+            $this->lock->unlock($lockName);
+        } catch (TokenLimitReachedException $e) {
             throw $e;
         } catch (\Exception $e) {
-            // @todo finally works incorrect with Redis in php5.5
-            $this->lock->unlock($temporaryLockName);
+            $this->lock->unlock($lockName);
 
             throw $e;
         }
 
         $request = $request->withHeader("Authorization", sprintf("Bearer %s", $token->getAccessToken()));
+
         /** @var RequestInterface $request */
 
         return $stack->request($request, $context);
