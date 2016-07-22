@@ -2,6 +2,7 @@
 
 namespace MyTarget\Token;
 
+use MyTarget\Token\Exception\TokenDeletedException;
 use Psr\Http\Message\RequestInterface;
 
 class TokenManager
@@ -69,11 +70,18 @@ class TokenManager
         $now = call_user_func($this->momentGenerator);
         $token = $this->storage->getToken($id, $request, $context);
 
+        if ($token && $token->isExpiredAt($now)) {
+            try {
+                $token = $this->acquirer->refresh($request, $now, $token->getRefreshToken(), $context);
+                $this->storage->updateToken($id, $token, $request, $context);
+            } catch (TokenDeletedException $e) {
+                // 30 days token expire, we should get new token
+                $token = null;
+            }
+        }
+
         if ($token === null) {
             $token = $this->acquirer->acquire($request, $now, $username, $context);
-            $this->storage->updateToken($id, $token, $request, $context);
-        } else if ($token->isExpiredAt($now)) {
-            $token = $this->acquirer->refresh($request, $now, $token->getRefreshToken(), $context);
             $this->storage->updateToken($id, $token, $request, $context);
         }
 

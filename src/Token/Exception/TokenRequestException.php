@@ -2,11 +2,12 @@
 
 namespace MyTarget\Token\Exception;
 
+use MyTarget\Exception\MyTargetException;
 use MyTarget\Transport\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class TokenRequestException extends RequestException
+class TokenRequestException extends RequestException implements MyTargetException
 {
     /**
      * @param RequestInterface $request
@@ -56,27 +57,5 @@ class TokenRequestException extends RequestException
         }
 
         return new TokenRequestException($message, $request, $response);
-    }
-
-    /**
-     * @param static $lockName
-     * @param RequestInterface $request
-     *
-     * @return TokenRequestException
-     */
-    public static function temporaryLockFailed($lockName, RequestInterface $request)
-    {
-        return new self(sprintf('Could not obtain temporary cache lock: %s', $lockName), $request);
-    }
-
-    /**
-     * @param string $lockName
-     * @param RequestInterface $request
-     *
-     * @return TokenRequestException
-     */
-    public static function permanentLockFailed($lockName, RequestInterface $request)
-    {
-        return new self(sprintf('Could not obtain permanent cache lock: %s', $lockName), $request);
     }
 }

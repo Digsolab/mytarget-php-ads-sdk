@@ -4,6 +4,8 @@ namespace MyTarget\Token;
 
 use GuzzleHttp\Psr7\Request;
 use MyTarget\Token\ClientCredentials\CredentialsProvider;
+use MyTarget\Token\Exception\TokenDeletedException;
+use MyTarget\Token\Exception\TokenLimitReachedException;
 use MyTarget\Token\Exception\TokenRequestException;
 use MyTarget\Transport\HttpTransport;
 use Psr\Http\Message\RequestInterface;
@@ -52,6 +54,7 @@ class TokenAcquirer
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);
 
+        // @todo переписать на Operator
         $payload = [
             "grant_type" => $username === null ? "client_credentials" : "agency_client_credentials",
             "client_id" => $credentials->getClientId(),
@@ -68,11 +71,19 @@ class TokenAcquirer
 
         $response = $this->http->request($tokenRequest, $context);
 
-        if ($response->getStatusCode() !== 200) {
+        $body = (string) $response->getBody();
+
+        if ($response->getStatusCode() === HttpTransport::STATUS_ACCESS_DENIED
+            && false !== strpos($body, 'limit reached')
+        ) {
+            throw new TokenLimitReachedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body));
+        }
+
+        if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
             throw TokenRequestException::forCredentials($tokenRequest, $response, $username);
         }
 
-        $tokenArray = f\json_decode((string)$response->getBody());
+        $tokenArray = f\json_decode($body);
         $token = Token::fromResponse($tokenArray, $now);
 
         if ($token === null) {
@@ -97,6 +108,7 @@ class TokenAcquirer
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);
 
+        // @todo переписать на Operator
         $payload = [
             "grant_type" => "refresh_token",
             "refresh_token" => $refreshToken,
@@ -110,11 +122,19 @@ class TokenAcquirer
 
         $response = $this->http->request($tokenRequest, $context);
 
-        if ($response->getStatusCode() !== 200) {
+        $body = (string) $response->getBody();
+
+        if ($response->getStatusCode() === HttpTransport::STATUS_UNAUTHORIZED
+            && false !== strpos($body, 'deleted')
+        ) {
+            throw new TokenDeletedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body));
+        }
+
+        if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
             throw TokenRequestException::refreshFailed($tokenRequest, $response);
         }
 
-        $tokenArray = f\json_decode((string)$response->getBody());
+        $tokenArray = f\json_decode($body);
         $token = Token::fromResponse($tokenArray, $now);
 
         if ($token === null) {
