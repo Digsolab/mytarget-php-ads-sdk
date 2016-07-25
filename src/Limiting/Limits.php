@@ -74,10 +74,10 @@ class Limits
         $limits = new self();
 
         $limits->moment = isset($limitsArray['moment']) ? new \DateTimeImmutable($limitsArray['moment']) : null;
-        $limits->bySecond = isset($limitsArray['by_second']) ? $limitsArray['by_second'] : null;
-        $limits->byMinute = isset($limitsArray['by_minute']) ? $limitsArray['by_minute'] : null;
-        $limits->byHour = isset($limitsArray['by_hour']) ? $limitsArray['by_hour'] : null;
-        $limits->byDay = isset($limitsArray['by_day']) ? $limitsArray['by_day'] : null;
+        $limits->bySecond = isset($limitsArray['by_second']) ? (int) $limitsArray['by_second'] : null;
+        $limits->byMinute = isset($limitsArray['by_minute']) ? (int) $limitsArray['by_minute'] : null;
+        $limits->byHour = isset($limitsArray['by_hour']) ? (int) $limitsArray['by_hour'] : null;
+        $limits->byDay = isset($limitsArray['by_day']) ? (int) $limitsArray['by_day'] : null;
 
         return $limits;
     }
