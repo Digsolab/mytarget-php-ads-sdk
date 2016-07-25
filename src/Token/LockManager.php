@@ -28,7 +28,7 @@ class LockManager
     {
         $this->lock = $lock;
         $this->lifetime = $lifetime;
-        $this->hashFunction = $hashFunction ? $hashFunction : function($id) { return $id; };
+        $this->hashFunction = $hashFunction ?: function($id) { return $id; };
     }
 
     /**
