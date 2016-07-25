@@ -63,4 +63,22 @@ class Limits
             'by_day'    => $this->byDay,
         ];
     }
+
+    /**
+     * @param array $limitsArray
+     *
+     * @return Limits
+     */
+    public static function buildFromArray(array $limitsArray)
+    {
+        $limits = new self();
+
+        $limits->moment = isset($limitsArray['moment']) ? $limitsArray['moment'] : null;
+        $limits->bySecond = isset($limitsArray['by_second']) ? $limitsArray['by_second'] : null;
+        $limits->byMinute = isset($limitsArray['by_minute']) ? $limitsArray['by_minute'] : null;
+        $limits->byHour = isset($limitsArray['by_hour']) ? $limitsArray['by_hour'] : null;
+        $limits->byDay = isset($limitsArray['moment']) ? $limitsArray['moment'] : null;
+
+        return $limits;
+    }
 }

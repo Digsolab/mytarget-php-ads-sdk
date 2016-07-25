@@ -22,16 +22,31 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
      */
     private $limitExtractor;
 
+    private $hashFunction;
+
     /**
      * @var callable callable(): \DateTimeInterface
      */
     private $momentGenerator;
 
-    public function __construct(Cache $cache, IdBuilder $idBuilder = null, LimitExtractor $limitExtractor = null)
+    /**
+     * DoctrineCacheRateLimitProvider constructor.
+     *
+     * @param Cache               $cache
+     * @param IdBuilder|null      $idBuilder
+     * @param LimitExtractor|null $limitExtractor
+     * @param callable|null       $hashFunction
+     */
+    public function __construct(
+        Cache $cache,
+        IdBuilder $idBuilder = null,
+        LimitExtractor $limitExtractor = null,
+        callable $hashFunction = null)
     {
         $this->cache = $cache;
         $this->idBuilder = $idBuilder ?: new SimpleIdBuilder();
         $this->limitExtractor = $limitExtractor ?: new HeaderLimitExtractor();
+        $this->hashFunction = $hashFunction ?: function($id) { return $id; };
         $this->momentGenerator = function () {
             return new \DateTimeImmutable();
         };
@@ -51,11 +66,13 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     public function isLimitReached($limitBy, $username = null)
     {
         $id = $this->idBuilder->buildId($limitBy, $username);
-        $limits = $this->cache->fetch($id);
+        $limitsArray = $this->cache->fetch($this->hash($id));
 
-        if ( ! $limits instanceof Limits || $limits->moment === null) {
+        if ( ! is_array($limitsArray) || ! $limitsArray) {
             return false;
         }
+
+        $limits = Limits::buildFromArray($limitsArray);
 
         $now = call_user_func($this->momentGenerator); /** @var \DateTimeInterface $now */
         $diff = $now->diff($limits->moment);
@@ -85,6 +102,13 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
 
         $id = $this->idBuilder->buildId($limitBy, $username);
 
-        $this->cache->save($id, $limits->toArray());
+        $this->cache->save($this->hash($id), $limits->toArray());
+    }
+
+    private function hash($id)
+    {
+        $f = $this->hashFunction;
+
+        return $f($id);
     }
 }
