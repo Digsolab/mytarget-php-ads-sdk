@@ -56,7 +56,7 @@ class Limits
     public function toArray()
     {
         return [
-            'moment'    => $this->moment,
+            'moment'    => $this->moment->format('Y-m-d H:i:s'),
             'by_second' => $this->bySecond,
             'by_minute' => $this->byMinute,
             'by_hour'   => $this->byHour,
@@ -73,7 +73,7 @@ class Limits
     {
         $limits = new self();
 
-        $limits->moment = isset($limitsArray['moment']) ? $limitsArray['moment'] : null;
+        $limits->moment = isset($limitsArray['moment']) ? new \DateTimeImmutable($limitsArray['moment']) : null;
         $limits->bySecond = isset($limitsArray['by_second']) ? $limitsArray['by_second'] : null;
         $limits->byMinute = isset($limitsArray['by_minute']) ? $limitsArray['by_minute'] : null;
         $limits->byHour = isset($limitsArray['by_hour']) ? $limitsArray['by_hour'] : null;
