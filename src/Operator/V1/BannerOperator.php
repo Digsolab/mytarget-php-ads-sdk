@@ -153,7 +153,7 @@ class BannerOperator
             $query["campaign__status"] = $campaignStatus;
         }
 
-        $path = sprintf("/api/v1/banners/%s.json", $ids ? implode(";", $ids) : '');
+        $path = sprintf("/api/v1/banners%s.json", $ids ? "/" . implode(";", $ids) : "");
         $json = $this->client->get($path, $query, $context);
 
         return array_map(function ($json) {
