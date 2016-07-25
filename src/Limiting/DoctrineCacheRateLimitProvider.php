@@ -85,6 +85,6 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
 
         $id = $this->idBuilder->buildId($limitBy, $username);
 
-        $this->cache->save($id, $limits);
+        $this->cache->save($id, $limits->toArray());
     }
 }

@@ -49,4 +49,18 @@ class Limits
 
         return $self;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'moment'    => $this->moment,
+            'by_second' => $this->bySecond,
+            'by_minute' => $this->byMinute,
+            'by_hour'   => $this->byHour,
+            'by_day'    => $this->byDay,
+        ];
+    }
 }

@@ -18,20 +18,14 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     private $hashFunction;
 
-    /** @var  string */
-    private $keyPrefix;
-
     /**
      * @param Cache $cache
      * @param callable $hashFunction callable(string $id, RequestInterface, $context): string Identity function used as a default
-     * @param string $keyPrefix
      */
-    public function __construct(Cache $cache, callable $hashFunction = null, $keyPrefix)
+    public function __construct(Cache $cache, callable $hashFunction = null)
     {
         $this->cache = $cache;
         $this->hashFunction = $hashFunction ?: function ($v) { return $v; };
-
-        $this->keyPrefix = $keyPrefix;
     }
 
     /**
@@ -39,7 +33,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function getToken($id, RequestInterface $request, array $context = null)
     {
-        return $this->fetch(sprintf("%s_%s", $this->keyPrefix, $id), $request, $context);
+        return $this->fetch($id, $request, $context);
     }
 
     /**
@@ -47,7 +41,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function updateToken($id, Token $token, RequestInterface $request, array $context = null)
     {
-        $this->save(sprintf("%s_%s", $this->keyPrefix, $id), $token, $request, $context);
+        $this->save($id, $token, $request, $context);
     }
 
     /**
