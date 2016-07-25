@@ -34,14 +34,7 @@ $httpStack = HttpMiddlewareStackPrototype::newEmpty($http);
 $httpStack->push(new RequestResponseLoggerMiddleware($config['logger']));
 $httpStack->push(new ResponseValidatingMiddleware());
 
-$doctrineCache = new ChainCache(
-    [
-        new ArrayCache(),
-        new FilesystemCache(__DIR__ . '/../var'),
-    ]
-);
-
-$rateLimitProvider = new DoctrineCacheRateLimitProvider($doctrineCache);
+$rateLimitProvider = new DoctrineCacheRateLimitProvider($config['cache']);
 $httpStack->push(new LimitingMiddleware($rateLimitProvider));
 
 $lockManager = new LockManager($config['lock'], 'lock_my_target', 300);
