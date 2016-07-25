@@ -11,24 +11,24 @@ class LockManager
     /** @var  LockInterface */
     private $lock;
 
-    /** @var  string */
-    private $prefix;
-
     /** @var  int */
     private $lifetime;
+
+    /** @var callable  */
+    private $hashFunction;
 
     /**
      * LockManager constructor.
      *
      * @param LockInterface $lock
-     * @param string        $prefix
      * @param int           $lifetime
+     * @param callable      $hashFunction
      */
-    public function __construct(LockInterface $lock, $prefix, $lifetime)
+    public function __construct(LockInterface $lock, $lifetime, callable $hashFunction = null)
     {
         $this->lock = $lock;
-        $this->prefix = $prefix;
         $this->lifetime = $lifetime;
+        $this->hashFunction = $hashFunction ? $hashFunction : function($id) { return $id; };
     }
 
     /**
@@ -38,7 +38,7 @@ class LockManager
      */
     public function lock($id)
     {
-        $name = $this->getLockNameById($id);
+        $name = $this->hash($id);
         if ( ! $this->lock->lock($name, $this->lifetime)) {
             throw new TokenLockException(sprintf('Could not obtain temporary cache lock: %s', $name));
         }
@@ -49,12 +49,19 @@ class LockManager
      */
     public function unlock($id)
     {
-        $this->lock->unlock($this->getLockNameById($id));
+        $this->lock->unlock($this->hash($id));
     }
 
-    private function getLockNameById($id)
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
+    private function hash($id)
     {
-        return sprintf("%s_%s", $this->prefix, $id);
+        $f = $this->hashFunction;
+
+        return $f($id);
     }
 
 }
