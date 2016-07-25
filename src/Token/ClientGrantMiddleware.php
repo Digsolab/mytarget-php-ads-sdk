@@ -38,7 +38,7 @@ class ClientGrantMiddleware implements HttpMiddleware
      */
     public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
     {
-        $account = isset($context['account']) ? $context['username'] : null;
+        $account = isset($context['account']) ? $context['account'] : null;
         $username = isset($context['username']) ? $context['username'] : null;
 
         if ( ! ($id = $username ?: $account)) {
