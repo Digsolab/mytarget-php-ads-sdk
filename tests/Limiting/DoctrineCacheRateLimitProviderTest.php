@@ -72,7 +72,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method("fetch")
             ->with($id)
-            ->willReturn($limits);
+            ->willReturn($limits->toArray());
 
         $result = $limitProvider->isLimitReached($limitBy, $username);
 
@@ -129,7 +129,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->cache->expects($this->once())
                     ->method("save")
-                    ->with($id, $limits);
+                    ->with($id, $limits->toArray());
 
         $limitProvider->refreshLimits($response, $limitBy, $username);
     }
