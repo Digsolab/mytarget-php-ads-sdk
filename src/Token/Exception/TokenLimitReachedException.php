@@ -4,6 +4,6 @@ namespace MyTarget\Token\Exception;
 
 use MyTarget\Exception\MyTargetException;
 
-class TokenLimitReachedException extends \RuntimeException implements MyTargetException
+class TokenLimitReachedException extends TokenRequestException implements MyTargetException
 {
 }

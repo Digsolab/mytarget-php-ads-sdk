@@ -76,7 +76,7 @@ class TokenAcquirer
         if ($response->getStatusCode() === HttpTransport::STATUS_ACCESS_DENIED
             && false !== strpos($body, 'limit reached')
         ) {
-            throw new TokenLimitReachedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body));
+            throw new TokenLimitReachedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body), $request);
         }
 
         if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
@@ -127,7 +127,7 @@ class TokenAcquirer
         if ($response->getStatusCode() === HttpTransport::STATUS_UNAUTHORIZED
             && false !== strpos($body, 'deleted')
         ) {
-            throw new TokenDeletedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body));
+            throw new TokenDeletedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body), $request);
         }
 
         if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
@@ -142,5 +142,13 @@ class TokenAcquirer
         }
 
         return $token;
+    }
+
+    /**
+     * @return CredentialsProvider
+     */
+    public function getCredentials()
+    {
+        return $this->credentials;
     }
 }
