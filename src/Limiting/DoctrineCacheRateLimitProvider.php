@@ -22,6 +22,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
      */
     private $limitExtractor;
 
+    /** @var callable  */
     private $hashFunction;
 
     /**
@@ -73,6 +74,9 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
         }
 
         $limits = Limits::buildFromArray($limitsArray);
+        if (null === $limits->moment) {
+            return false;
+        }
 
         $now = call_user_func($this->momentGenerator); /** @var \DateTimeInterface $now */
         $diff = $now->diff($limits->moment);
@@ -105,6 +109,11 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
         $this->cache->save($this->hash($id), $limits->toArray());
     }
 
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
     private function hash($id)
     {
         $f = $this->hashFunction;

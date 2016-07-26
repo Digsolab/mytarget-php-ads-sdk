@@ -46,7 +46,7 @@ class TokenManager
      *
      * @return Token|null
      */
-    public function getAccountToken(RequestInterface $request, $account, array $context = null)
+    public function getClientToken(RequestInterface $request, $account, array $context = null)
     {
         return $this->getToken($request, $account, null, $context);
     }
@@ -58,7 +58,7 @@ class TokenManager
      *
      * @return Token|null
      */
-    public function getClientToken(RequestInterface $request, $username, array $context = null)
+    public function getUserToken(RequestInterface $request, $username, array $context = null)
     {
         return $this->getToken($request, null, $username, $context);
     }
@@ -86,5 +86,13 @@ class TokenManager
         }
 
         return $token;
+    }
+
+    /**
+     * @return TokenAcquirer
+     */
+    public function getAcquirer()
+    {
+        return $this->acquirer;
     }
 }
