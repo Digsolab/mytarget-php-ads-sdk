@@ -3,6 +3,7 @@
 namespace MyTarget\Token;
 
 use MyTarget\Token\Exception\TokenDeletedException;
+use MyTarget\Token\Exception\TokenRequestException;
 use Psr\Http\Message\RequestInterface;
 
 class TokenManager
@@ -41,14 +42,16 @@ class TokenManager
 
     /**
      * @param RequestInterface $request
-     * @param string $account
-     * @param array|null $context
+     * @param string           $client
+     * @param array|null       $context
      *
      * @return Token|null
+     *
+     * @throws TokenRequestException
      */
-    public function getClientToken(RequestInterface $request, $account, array $context = null)
+    public function getClientToken(RequestInterface $request, $client, array $context = null)
     {
-        return $this->getToken($request, $account, null, $context);
+        return $this->getToken($request, $client, null, $context);
     }
 
     /**
@@ -57,12 +60,24 @@ class TokenManager
      * @param array|null $context
      *
      * @return Token|null
+     *
+     * @throws TokenRequestException
      */
     public function getUserToken(RequestInterface $request, $username, array $context = null)
     {
         return $this->getToken($request, null, $username, $context);
     }
 
+    /**
+     * @param RequestInterface $request
+     * @param string|null      $account
+     * @param string|null      $username
+     * @param array|null       $context
+     *
+     * @return Token|null
+     *
+     * @throws TokenRequestException
+     */
     private function getToken(RequestInterface $request, $account = null, $username = null, array $context = null)
     {
         $id = $username ?: $account;

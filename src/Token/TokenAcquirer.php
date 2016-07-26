@@ -32,6 +32,13 @@ class TokenAcquirer
      */
     private $credentials;
 
+    /**
+     * TokenAcquirer constructor.
+     *
+     * @param UriInterface        $baseAddress
+     * @param HttpTransport       $http
+     * @param CredentialsProvider $credentials
+     */
     public function __construct(UriInterface $baseAddress, HttpTransport $http, CredentialsProvider $credentials)
     {
         $this->baseAddress = $baseAddress;
@@ -74,9 +81,9 @@ class TokenAcquirer
         $body = (string) $response->getBody();
 
         if ($response->getStatusCode() === HttpTransport::STATUS_ACCESS_DENIED
-            && false !== strpos($body, 'limit reached')
+            && false !== stripos($body, 'limit reached')
         ) {
-            throw new TokenLimitReachedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body), $request);
+            throw TokenLimitReachedException::forCredentials($tokenRequest, $response, $username);
         }
 
         if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
@@ -125,9 +132,9 @@ class TokenAcquirer
         $body = (string) $response->getBody();
 
         if ($response->getStatusCode() === HttpTransport::STATUS_UNAUTHORIZED
-            && false !== strpos($body, 'deleted')
+            && false !== stripos($body, 'deleted')
         ) {
-            throw new TokenDeletedException(sprintf("Reason phrase: %s\nBody: %s", $response->getReasonPhrase(), $body), $request);
+            throw TokenDeletedException::refreshFailed($tokenRequest, $response);
         }
 
         if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
