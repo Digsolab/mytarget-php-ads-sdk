@@ -14,19 +14,19 @@ class HeaderLimitExtractor implements LimitExtractor
         $limits = new Limits();
 
         if ($header = $response->getHeader('X-RateLimit-RPS-Remaining')) {
-            $limits->bySecond = (int)$header[0];
+            $limits->bySecond = (int) $header[0];
         }
 
         if ($header = $response->getHeader('X-RateLimit-Minutely-Remaining')) {
-            $limits->byMinute = (int)$header[0];
+            $limits->byMinute = (int) $header[0];
         }
 
         if ($header = $response->getHeader('X-RateLimit-Hourly-Remaining')) {
-            $limits->byHour = (int)$header[0];
+            $limits->byHour = (int) $header[0];
         }
 
         if ($header = $response->getHeader('X-RateLimit-Daily-Remaining')) {
-            $limits->byDay = (int)$header[0];
+            $limits->byDay = (int) $header[0];
         }
 
         return $limits;

@@ -103,6 +103,20 @@ class BannerOperator
     }
 
     /**
+     * @param BannerFields|null $fields
+     * @param array|null        $withStatuses
+     * @param array|null        $withCampaignStatuses
+     * @param array|null        $context
+     *
+     * @return \MyTarget\Domain\V1\BannerStat[]
+     */
+    public function all(BannerFields $fields = null,
+        array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)
+    {
+        return $this->findAll([], $fields, $withStatuses, $withCampaignStatuses, $context);
+    }
+
+    /**
      * @param int $id
      * @param BannerFields|null $fields
      * @param array|null $context
@@ -139,7 +153,7 @@ class BannerOperator
             $query["campaign__status"] = $campaignStatus;
         }
 
-        $path = sprintf("/api/v1/banners/%s.json", implode(";", $ids));
+        $path = sprintf("/api/v1/banners%s.json", $ids ? "/" . implode(";", $ids) : "");
         $json = $this->client->get($path, $query, $context);
 
         return array_map(function ($json) {
