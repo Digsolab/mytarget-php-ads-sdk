@@ -56,9 +56,9 @@ $httpStack->push(new LimitingMiddleware($rateLimitProvider));
 
 $tokenLockManager = new LockManager($config['lock'], 300, function ($v) { return 'lock_' . $v; });
 $tokenAcquirer = new TokenAcquirer($baseUri, $http, $credentials);
-$tokenManager = new TokenManager($tokenAcquirer, $config['token_storage']);
+$tokenManager = new TokenManager($tokenAcquirer, $config['token_storage'], $tokenLockManager);
 // Also you can use SimpleGrantMiddleware with own rules
-$httpStack->push(new GrantMiddleware($tokenManager, $tokenLockManager, $config['cache']));
+$httpStack->push(new GrantMiddleware($tokenManager));
 
 $client = new Client($requestFactory, $httpStack);
 
