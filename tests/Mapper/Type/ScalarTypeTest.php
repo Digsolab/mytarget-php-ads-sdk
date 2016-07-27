@@ -6,12 +6,14 @@ use MyTarget\Mapper\Mapper;
 
 class ScalarTypeTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Mapper */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|RateLimitProvider */
     protected $mapper;
 
     protected function setUp()
     {
-        $this->mapper = new Mapper([]);
+        $this->mapper = $this->getMockBuilder(Mapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**
@@ -26,7 +28,7 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
 
         $result = $scalarType->hydrated($value, $type, $this->mapper);
 
-        $this->assertTrue($result === $hydrated);
+        $this->assertSame($hydrated, $result);
     }
 
     /**
@@ -41,7 +43,7 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
 
         $result = $scalarType->snapshot($value, 'anyType', $this->mapper);
 
-        $this->assertTrue($result === $snapshot);
+        $this->assertSame($snapshot, $result);
     }
 
     public function hydratedValues()
