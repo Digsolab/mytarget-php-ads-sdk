@@ -9,8 +9,6 @@ class SimpleIdBuilder implements IdBuilder
      */
     public function buildId($limitBy, $username = null)
     {
-        $id =  $limitBy . '#' . (string)$username;
-
-        return $id;
+        return $limitBy . '#' . (string) $username;
     }
 }

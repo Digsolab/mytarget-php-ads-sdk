@@ -49,4 +49,36 @@ class Limits
 
         return $self;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'moment'    => $this->moment->format(\DateTime::ISO8601),
+            'by_second' => $this->bySecond,
+            'by_minute' => $this->byMinute,
+            'by_hour'   => $this->byHour,
+            'by_day'    => $this->byDay,
+        ];
+    }
+
+    /**
+     * @param array $limitsArray
+     *
+     * @return Limits
+     */
+    public static function buildFromArray(array $limitsArray)
+    {
+        $limits = new self();
+
+        $limits->moment = isset($limitsArray['moment']) ? new \DateTimeImmutable($limitsArray['moment']) : null;
+        $limits->bySecond = isset($limitsArray['by_second']) ? (int) $limitsArray['by_second'] : null;
+        $limits->byMinute = isset($limitsArray['by_minute']) ? (int) $limitsArray['by_minute'] : null;
+        $limits->byHour = isset($limitsArray['by_hour']) ? (int) $limitsArray['by_hour'] : null;
+        $limits->byDay = isset($limitsArray['by_day']) ? (int) $limitsArray['by_day'] : null;
+
+        return $limits;
+    }
 }

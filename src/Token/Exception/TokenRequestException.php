@@ -2,23 +2,24 @@
 
 namespace MyTarget\Token\Exception;
 
+use MyTarget\Exception\MyTargetException;
 use MyTarget\Transport\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class TokenRequestException extends RequestException
+class TokenRequestException extends RequestException implements MyTargetException
 {
     /**
-     * @param RequestInterface $request
+     * @param RequestInterface  $request
      * @param ResponseInterface $response
      *
-     * @return TokenRequestException
+     * @return static
      */
     public static function refreshFailed(RequestInterface $request, ResponseInterface $response)
     {
         $message = sprintf("Couldn't refresh token, response code: %d", $response->getStatusCode());
 
-        return new TokenRequestException($message, $request, $response);
+        return new static($message, $request, $response);
     }
 
     /**
@@ -26,7 +27,7 @@ class TokenRequestException extends RequestException
      * @param ResponseInterface $response
      * @param string|null $username
      *
-     * @return TokenRequestException
+     * @return static
      */
     public static function forCredentials(RequestInterface $request, ResponseInterface $response, $username = null)
     {
@@ -37,7 +38,7 @@ class TokenRequestException extends RequestException
             $message = sprintf("Couldn't get new token for credentials, response code: %d", $response->getStatusCode());
         }
 
-        return new TokenRequestException($message, $request, $response);
+        return new static($message, $request, $response);
     }
 
     /**
@@ -45,7 +46,7 @@ class TokenRequestException extends RequestException
      * @param ResponseInterface $response
      * @param string|null $username
      *
-     * @return TokenRequestException
+     * @return static
      */
     public static function invalidResponse(RequestInterface $request, ResponseInterface $response, $username = null)
     {
@@ -55,6 +56,6 @@ class TokenRequestException extends RequestException
             $message = sprintf("Couldn't parse token response for username %s", $username);
         }
 
-        return new TokenRequestException($message, $request, $response);
+        return new static($message, $request, $response);
     }
 }

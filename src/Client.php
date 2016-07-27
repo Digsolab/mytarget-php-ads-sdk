@@ -43,7 +43,7 @@ class Client
 
         $response = $this->http->freeze()->request($request, $context);
 
-        return f\json_decode((string)$response->getBody());
+        return f\json_decode((string) $response->getBody());
     }
 
     /**
@@ -68,7 +68,7 @@ class Client
 
         $response = $this->http->freeze()->request($request, $context);
 
-        return f\json_decode((string)$response->getBody());
+        return f\json_decode((string) $response->getBody());
     }
 
     /**
@@ -87,7 +87,7 @@ class Client
 
         $response = $this->http->freeze()->request($request, $context);
 
-        return f\json_decode((string)$response->getBody());
+        return f\json_decode((string) $response->getBody());
     }
 
     /**
@@ -107,6 +107,6 @@ class Client
 
         $response = $this->http->freeze()->request($request, $context);
 
-        return f\json_decode((string)$response->getBody());
+        return f\json_decode((string) $response->getBody());
     }
 }

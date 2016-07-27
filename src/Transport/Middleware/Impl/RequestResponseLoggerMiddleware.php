@@ -36,7 +36,7 @@ class RequestResponseLoggerMiddleware implements HttpMiddleware
                 $this->getHeadersAsString($request),
                 $request->getBody()->getContents()
             ),
-            $context
+            $context ?: []
         );
 
         $response = $stack->request($request, $context);
@@ -49,7 +49,7 @@ class RequestResponseLoggerMiddleware implements HttpMiddleware
                 $this->getHeadersAsString($response),
                 $response->getBody()->getContents()
             ),
-            $context
+            $context ?: []
         );
 
         return $response;

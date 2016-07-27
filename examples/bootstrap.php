@@ -1,17 +1,67 @@
 <?php
 
 use MyTarget\Token\ClientCredentials\Credentials;
-use GuzzleHttp\Psr7 as psr7;
-use MyTarget\Mapper\Type as t;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Client as GuzzleClient;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
+use MyTarget\Transport\Middleware\Impl\RequestResponseLoggerMiddleware;
+use MyTarget\Transport\Middleware\Impl\ResponseValidatingMiddleware;
+use MyTarget\Limiting\DoctrineCacheRateLimitProvider;
+use MyTarget\Limiting\LimitingMiddleware;
+use MyTarget\Token\TokenAcquirer;
+use MyTarget\Token\TokenManager;
+use MyTarget\Token\GrantMiddleware;
+use MyTarget\Client;
+use MyTarget\Token\LockManager;
+use MyTarget\Transport\RequestFactory;
+use MyTarget\Transport\GuzzleHttpTransport;
 
-$autoloader = require_once __DIR__ . "/../vendor/autoload.php";
+$autoloader = require_once __DIR__ . '/../vendor/autoload.php';
 
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$autoloader, 'loadClass']);
+AnnotationRegistry::registerLoader([$autoloader, 'loadClass']);
 
-$config = include __DIR__ . "/.config.php";
-$credentials = new Credentials($config["client_id"], $config["client_secret"]);
+/**
+ * Config example
+ *
+ * $logger = new \Psr\Log\NullLogger();
+ * $redis = new \Predis\Client('localhost');
+ * $cache = new \DSL\Cache\RedisHashMapCache($redis);
+ * $lock = new DSL\Lock\RedisLock($redis);
+ * $token = new \MyTarget\Token\DoctrineCacheTokenStorage($cache, function($v) {return 'token_' . $v; });
+ *
+ * return [
+ *     'client_id' => '',
+ *     'client_secret' => '',
+ *     'logger' => $logger,
+ *     'cache' => $cache,
+ *     'lock' => $lock,
+ *     'token_storage' => $token,
+ * ];
+ */
+$config = include __DIR__ . '/config.php';
+$credentials = new Credentials($config['client_id'], $config['client_secret']);
 
-$client = \MyTarget\simpleClient($credentials, __DIR__ . "/../var", $config["token_storage"], null, $config["logger"]);
+$baseUri = new Uri('https://target.my.com');
+
+$requestFactory = new RequestFactory($baseUri);
+$http = new GuzzleHttpTransport(new GuzzleClient());
+
+$httpStack = HttpMiddlewareStackPrototype::newEmpty($http);
+$httpStack->push(new RequestResponseLoggerMiddleware($config['logger']));
+$httpStack->push(new ResponseValidatingMiddleware());
+
+$rateLimitProvider = new DoctrineCacheRateLimitProvider($config['cache']);
+$httpStack->push(new LimitingMiddleware($rateLimitProvider));
+
+$tokenLockManager = new LockManager($config['lock'], 300, function ($v) { return 'lock_' . $v; });
+$tokenAcquirer = new TokenAcquirer($baseUri, $http, $credentials);
+$tokenManager = new TokenManager($tokenAcquirer, $config['token_storage'], $tokenLockManager);
+// Also you can use SimpleGrantMiddleware with own rules
+$httpStack->push(new GrantMiddleware($tokenManager));
+
+$client = new Client($requestFactory, $httpStack);
+
 $mapper = \MyTarget\simpleMapper(true);
 
 return [$client, $mapper, $config];

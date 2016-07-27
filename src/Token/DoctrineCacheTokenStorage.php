@@ -31,33 +31,17 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function getToken(RequestInterface $request, array $context = null)
+    public function getToken($id, RequestInterface $request, array $context = null)
     {
-        return $this->fetch("target_token", $request, $context);
+        return $this->fetch($id, $request, $context);
     }
 
     /**
      * @inheritdoc
      */
-    public function updateToken(Token $token, RequestInterface $request, array $context = null)
+    public function updateToken($id, Token $token, RequestInterface $request, array $context = null)
     {
-        $this->save("target_token", $token, $request, $context);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getClientToken($username, RequestInterface $request, array $context = null)
-    {
-        return $this->fetch(sprintf("target_token_%s", $username), $request, $context);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function updateClientToken($username, Token $token, RequestInterface $request, array $context = null)
-    {
-        $this->save(sprintf("target_token_%s", $username), $token, $request, $context);
+        $this->save($id, $token, $request, $context);
     }
 
     /**
@@ -69,13 +53,11 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     protected function fetch($id, RequestInterface $request, array $context = null)
     {
-        $json = $this->cache->fetch($this->hash($id, $request, $context) . $id);
+        $tokenArray = $this->cache->fetch($this->hash($id, $request, $context));
 
-        if ( ! $json) {
+        if ( ! $tokenArray) {
             return null;
         }
-
-        $tokenArray = f\json_decode($json);
 
         return Token::fromArray($tokenArray);
     }
@@ -88,9 +70,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     protected function save($id, Token $token, RequestInterface $request, array $context = null)
     {
-        $serialized = \json_encode($token->toArray());
-
-        $this->cache->save($this->hash($id, $request, $context), $serialized);
+        $this->cache->save($this->hash($id, $request, $context), $token->toArray());
     }
 
     /**
