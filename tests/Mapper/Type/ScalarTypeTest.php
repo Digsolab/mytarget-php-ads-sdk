@@ -77,6 +77,8 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
             'string from negative float' => ['string', -1.2, '-1.2'],
             'string from positive float with exponent' => ['string', 1.0e3, '1000'],
             'string from negative float with exponent' => ['string', -1.0e3, '-1000'],
+
+            'null from unknown type' => ['someType', 'someInputValue', null],
         ];
     }
 }
