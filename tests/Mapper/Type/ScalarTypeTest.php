@@ -29,6 +29,21 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result === $hydrated);
     }
 
+    /**
+     * @dataProvider snapshotValues
+     * @param $type
+     * @param $value
+     * @param $snapshot
+     */
+    public function testItMakesSnapshot($value, $snapshot)
+    {
+        $scalarType = new ScalarType();
+
+        $result = $scalarType->snapshot($value, 'anyType', $this->mapper);
+
+        $this->assertTrue($result === $snapshot);
+    }
+
     public function hydratedValues()
     {
         // result type, input value, result value
@@ -79,6 +94,22 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
             'string from negative float with exponent' => ['string', -1.0e3, '-1000'],
 
             'null from unknown type' => ['someType', 'someInputValue', null],
+        ];
+    }
+
+    public function snapshotValues()
+    {
+        // input value, result value
+        return [
+            'null from array' => [[], null],
+            'null from resource' => [fopen(__FILE__, 'r'), null],
+            'null from object' => [new \stdClass(), null],
+
+            'integer from integer' => [1, 1],
+            'float from float' => [1.2, 1.2],
+            'string from string' => ['A', 'A'],
+            'boolean from negative boolean' => [false, false],
+            'boolean from positive boolean' => [true, true],
         ];
     }
 }
