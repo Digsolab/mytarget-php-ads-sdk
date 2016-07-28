@@ -59,8 +59,8 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
             'integer from string with letters after float' => ['int', '1.2USD', 1],
             'integer from string with negative integer' => ['int', '-1', -1],
             'integer from string beginning with letters' => ['int', 'qwerty18', 0],
-            'integer from string with positive exponent' => ['int', '1.0e3', (version_compare(PHP_VERSION, '7.1.0') >= 0) ? 1000 : 2],
-            'integer from string with negative exponent' => ['int', '-1.0e3', (version_compare(PHP_VERSION, '7.1.0') >= 0) ? -1000 : -2],
+            'integer from string with positive exponent' => ['int', '1.0e3', (version_compare(PHP_VERSION, '7.1.0beta1') >= 0) ? 1000 : 1],
+            'integer from string with negative exponent' => ['int', '-1.0e3', (version_compare(PHP_VERSION, '7.1.0beta1') >= 0) ? -1000 : -1],
             'integer from positive boolean' => ['int', true, 1],
             'integer from negative boolean' => ['int', false, 0],
 
