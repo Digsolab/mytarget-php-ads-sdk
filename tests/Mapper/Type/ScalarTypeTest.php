@@ -49,7 +49,6 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
     public function hydratedValues()
     {
         // result type, input value, result value
-        var_dump(phpversion());
         return [
             'integer from integer' => ['int', 1, 1],
             'integer from float' => ['int', 1.2, 1],
