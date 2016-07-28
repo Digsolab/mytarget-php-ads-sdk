@@ -6,7 +6,7 @@ use MyTarget\Mapper\Mapper;
 
 class ArrayTypeTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject|RateLimitProvider */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Mapper */
     protected $mapper;
 
     protected function setUp()
