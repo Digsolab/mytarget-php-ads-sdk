@@ -43,6 +43,11 @@ class ObjectType implements Type
 
         do {
             foreach ($class->getProperties() as $property) {
+
+                if ($property->class !== $class->getName()) {
+                    continue;
+                }
+
                 $field = $this->annotations->getPropertyAnnotation($property, Field::class);
 
                 if ($field instanceof Field) {
