@@ -132,4 +132,10 @@ class Token
     {
         return $this->refreshToken;
     }
+
+    public function expire()
+    {
+        $now = new \DateTime();
+        $this->expiresAt = $now->sub(new \DateInterval('P1D'));
+    }
 }

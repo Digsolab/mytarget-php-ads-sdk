@@ -153,16 +153,8 @@ class TokenManager
     public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, array $context = null)
     {
         $id = $this->selectId($account, $username);
-
-        $tokenData = $token->toArray();
-
-        /** @var \DateTime $now */
-        $now = call_user_func($this->momentGenerator);
-        $tokenData['expires_at'] = $now->sub(new \DateInterval('P1D'));
-        
-        $expiredToken = Token::fromArray($tokenData);
-
-        $this->storage->updateToken($id, $expiredToken, $request, $context);
+        $token->expire();
+        $this->storage->updateToken($id, $token, $request, $context);
     }
 
     /**
