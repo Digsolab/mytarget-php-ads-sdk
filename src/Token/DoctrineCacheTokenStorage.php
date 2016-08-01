@@ -6,6 +6,9 @@ use Doctrine\Common\Cache\Cache;
 use Psr\Http\Message\RequestInterface;
 use MyTarget as f;
 
+/**
+ * Token storage implementation that depends on "doctrine/cache" composer package
+ */
 class DoctrineCacheTokenStorage implements TokenStorage
 {
     /**
@@ -33,27 +36,8 @@ class DoctrineCacheTokenStorage implements TokenStorage
      */
     public function getToken($id, RequestInterface $request, array $context = null)
     {
-        return $this->fetch($id, $request, $context);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function updateToken($id, Token $token, RequestInterface $request, array $context = null)
-    {
-        $this->save($id, $token, $request, $context);
-    }
-
-    /**
-     * @param string $id
-     * @param RequestInterface $request
-     * @param array|null $context
-     *
-     * @return Token|null
-     */
-    protected function fetch($id, RequestInterface $request, array $context = null)
-    {
-        $tokenArray = $this->cache->fetch($this->hash($id, $request, $context));
+        $id = call_user_func($this->hashFunction, $id, $request, $context);
+        $tokenArray = $this->cache->fetch($id);
 
         if ( ! $tokenArray) {
             return null;
@@ -63,26 +47,12 @@ class DoctrineCacheTokenStorage implements TokenStorage
     }
 
     /**
-     * @param string $id
-     * @param Token $token
-     * @param RequestInterface $request
-     * @param array|null $context
+     * @inheritdoc
      */
-    protected function save($id, Token $token, RequestInterface $request, array $context = null)
+    public function updateToken($id, Token $token, RequestInterface $request, array $context = null)
     {
-        $this->cache->save($this->hash($id, $request, $context), $token->toArray());
-    }
+        $id = call_user_func($this->hashFunction, $id, $request, $context);
 
-    /**
-     * @param string $id
-     * @param RequestInterface $request
-     * @param array|null $context
-     * @return string
-     */
-    protected function hash($id, RequestInterface $request, array $context = null)
-    {
-        $f = $this->hashFunction;
-
-        return $f($id, $request, $context);
+        $this->cache->save($id, $token->toArray());
     }
 }

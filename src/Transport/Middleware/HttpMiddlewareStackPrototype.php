@@ -35,7 +35,7 @@ class HttpMiddlewareStackPrototype extends HttpMiddlewareStack
      */
     public function freeze()
     {
-        return new HttpMiddlewareStack($this->middlewares, $this->http);
+        return new HttpMiddlewareStack(clone $this->middlewares, $this->http);
     }
 
     /**

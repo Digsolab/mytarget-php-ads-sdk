@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl;
+namespace tests\MyTarget\Transport\Middleware\Impl;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception as guzzleEx;

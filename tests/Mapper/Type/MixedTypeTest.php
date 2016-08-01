@@ -1,8 +1,9 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\MyTarget\Mapper\Type;
 
 use MyTarget\Mapper\Mapper;
+use MyTarget\Mapper\Type\MixedType;
 
 class MixedTypeTest extends \PHPUnit_Framework_TestCase
 {

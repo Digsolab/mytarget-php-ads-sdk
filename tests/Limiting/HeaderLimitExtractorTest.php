@@ -1,8 +1,10 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace tests\MyTarget\Limiting;
 
 use GuzzleHttp\Psr7\Response;
+use MyTarget\Limiting\HeaderLimitExtractor;
+use MyTarget\Limiting\Limits;
 
 class HeaderLimitExtractorTest extends \PHPUnit_Framework_TestCase
 {

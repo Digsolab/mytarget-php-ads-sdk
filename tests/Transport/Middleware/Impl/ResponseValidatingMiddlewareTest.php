@@ -1,10 +1,11 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl;
+namespace tests\MyTarget\Transport\Middleware\Impl;
 
 use GuzzleHttp\Psr7\Request;
 use MyTarget\Transport\Exception as ex;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use MyTarget\Transport\Middleware\Impl\ResponseValidatingMiddleware;
 use Psr\Http\Message\ResponseInterface;
 
 class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase

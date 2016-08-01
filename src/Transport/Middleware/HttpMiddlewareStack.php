@@ -37,10 +37,7 @@ class HttpMiddlewareStack
      */
     public function request(RequestInterface $request, array $context = null)
     {
-        $middlewares = clone $this->middlewares;
-        $stack = new HttpMiddlewareStack($middlewares, $this->http);
-
-        return $stack->pop()->request($request, $stack, $context);
+        return $this->pop()->request($request, $this, $context);
     }
 
     /**

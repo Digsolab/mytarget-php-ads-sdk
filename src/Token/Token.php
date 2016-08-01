@@ -63,15 +63,16 @@ class Token
 
     /**
      * @param array $token
-     * @param \DateTime $now
+     * @param \DateTimeInterface $now
      * @return Token|null
      */
-    public static function fromResponse(array $token, \DateTime $now)
+    public static function fromResponse(array $token, \DateTimeInterface $now)
     {
         if ( ! isset($token["access_token"], $token["token_type"], $token["expires_in"], $token["refresh_token"])) {
             return null;
         }
 
+        /** @var \DateTime|\DateTimeImmutable $now */
         $now = clone $now;
         $expiresAt = $now->add(new \DateInterval(sprintf("PT%dS", $token["expires_in"])));
 
@@ -134,12 +135,12 @@ class Token
     }
 
     /**
-     * It makes the the token invalid by setting its value to current time
+     * @param Token $token
      *
-     * @return void
+     * @return bool
      */
-    public function invalidate()
+    public function isEqual(Token $token)
     {
-        $this->expiresAt = new \DateTime("now", $this->expiresAt->getTimezone());
+        return $this->accessToken === $token->accessToken;
     }
 }

@@ -22,5 +22,4 @@ interface TokenStorage
      * @param array|null $context
      */
     public function updateToken($id, Token $token, RequestInterface $request, array $context = null);
-
 }

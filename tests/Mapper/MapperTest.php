@@ -1,13 +1,14 @@
 <?php
 
-namespace MyTarget\Mapper;
+namespace tests\MyTarget\Mapper;
 
-use MyTarget\Mapper\Exception\TypeParsingException;
+use MyTarget\Mapper\Mapper;
 use MyTarget\Mapper\Type\ArrayType;
 use MyTarget\Mapper\Type\ScalarType;
 use MyTarget\Mapper\Type\MixedType;
 use MyTarget\Mapper\Type\EnumType;
 use MyTarget\Mapper\Type\ObjectType;
+use tests\MyTarget\Mapper\Type\EnumTypeMock;
 
 class MapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +35,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     {
         $mapper = new Mapper($this->types);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject $type */
+        /** @var \PHPUnit_Framework_MockObject_MockObject $typeObject */
         $typeObject = $this->types[$type];
 
         $typeObject->expects($this->once())
@@ -68,7 +69,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     {
         $mapper = new Mapper($this->types);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject $type */
+        /** @var \PHPUnit_Framework_MockObject_MockObject $typeObject */
         $typeObject = $this->types[$type];
 
         $typeObject->expects($this->once())
@@ -95,7 +96,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     {
         $mapper = new Mapper($this->types);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject $type */
+        /** @var \PHPUnit_Framework_MockObject_MockObject $typeObject */
         $typeObject = $this->types['object'];
 
         $data = new \stdClass();
@@ -118,7 +119,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
             [true, 'scalar', 'bool', true],
             ['Abc', 'scalar', 'string', 'Abc'],
             ['mixed', 'mixed', 'mixed', 'mixed'],
-            [777, 'enum', '\MyTarget\Mapper\Type\EnumTypeMock', EnumTypeMock::fromValue(777)],
+            [777, 'enum', EnumTypeMock::class, EnumTypeMock::fromValue(777)],
             [['integerValue' => 5], 'object', '\stdClass', (object)['integerValue' => 5]]
         ];
     }
@@ -133,7 +134,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
             [true, 'scalar', 'bool', true],
             ['Abc', 'scalar', 'string', 'Abc'],
             ['mixed', 'mixed', 'mixed', 'mixed'],
-            [EnumTypeMock::fromValue(777), 'enum', '\MyTarget\Mapper\Type\EnumTypeMock', 777],
+            [EnumTypeMock::fromValue(777), 'enum', EnumTypeMock::class, 777],
             [(object)['integerValue' => 5], 'object', '\stdClass', ['integerValue' => 5]]
         ];
     }

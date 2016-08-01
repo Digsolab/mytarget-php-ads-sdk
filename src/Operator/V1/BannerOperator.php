@@ -165,12 +165,14 @@ class BannerOperator
      * TODO to be changed
      *
      * @param array $fields
-     * @return array
+     * @return string
      */
     private function mapFields(array $fields)
     {
-        return array_map(function ($field) {
+        $fields = array_map(function ($field) {
             return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $field));
         }, $fields);
+
+        return implode(",", $fields);
     }
 }

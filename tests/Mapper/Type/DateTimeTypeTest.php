@@ -1,8 +1,9 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\MyTarget\Mapper\Type;
 
 use MyTarget\Mapper\Mapper;
+use MyTarget\Mapper\Type\DateTimeType;
 
 class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
 {

@@ -8,10 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 
 interface HttpTransport
 {
-    const STATUS_OK = 200;
-    const STATUS_UNAUTHORIZED = 401;
-    const STATUS_ACCESS_DENIED = 403;
-
     /**
      * @param RequestInterface $request
      * @param array|null $context

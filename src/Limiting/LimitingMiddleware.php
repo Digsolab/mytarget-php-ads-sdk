@@ -31,9 +31,8 @@ class LimitingMiddleware implements HttpMiddleware
         }
 
         $limitBy = $context["limit-by"];
-        $username = isset($context["username"]) ? $context["username"] : null;
 
-        $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $username);
+        $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $request, $context);
 
         if ($isLimitReached) {
             throw new ThrottleException("Preventively throttled: limit had been reached", $request);
@@ -41,7 +40,7 @@ class LimitingMiddleware implements HttpMiddleware
 
         $response = $stack->request($request, $context);
 
-        $this->rateLimitProvider->refreshLimits($response, $limitBy, $username);
+        $this->rateLimitProvider->refreshLimits($request, $response, $limitBy, $context);
 
         if ($response->getStatusCode() === 429) {
             try {

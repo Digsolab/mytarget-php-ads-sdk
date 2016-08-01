@@ -7,6 +7,9 @@ use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Exception as guzzleEx;
 use MyTarget\Transport\Exception as mtEx;
 
+/**
+ * An implementation of HttpTransport that uses Guzzle and depends on "guzzlehttp/guzzle" composer package
+ */
 class GuzzleHttpTransport implements HttpTransport
 {
     /**

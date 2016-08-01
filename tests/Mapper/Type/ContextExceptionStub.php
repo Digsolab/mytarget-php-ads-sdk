@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\MyTarget\Mapper\Type;
 
 use MyTarget\Mapper\Exception\ContextUnawareException;
 
