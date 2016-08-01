@@ -62,23 +62,6 @@ class Token
     }
 
     /**
-     * @param Token $token
-     * @return Token
-     */
-    public static function expire($token)
-    {
-        $now = new \DateTime();
-        $pastDate = $now->sub(new \DateInterval('P1D'));
-
-        return new Token(
-            $token->getAccessToken(),
-            $token->getTokenType(),
-            $pastDate,
-            $token->getRefreshToken()
-        );
-    }
-
-    /**
      * @param array $token
      * @param \DateTime $now
      * @return Token|null
@@ -148,5 +131,10 @@ class Token
     public function getRefreshToken()
     {
         return $this->refreshToken;
+    }
+
+    public function invalidate()
+    {
+        $this->expiresAt = 0;
     }
 }

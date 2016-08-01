@@ -95,7 +95,7 @@ class TokenManager
      */
     private function getToken(RequestInterface $request, $account = null, $username = null, array $context = null)
     {
-        $id = $this->selectId($account, $username);
+        $id = $username ?: $account;
 
         $now = call_user_func($this->momentGenerator);
         $token = $this->storage->getToken($id, $request, $context);
@@ -152,19 +152,8 @@ class TokenManager
      */
     public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, array $context = null)
     {
-        $id = $this->selectId($account, $username);
-        $expiredToken = Token::expire($token);
-        $this->storage->updateToken($id, $expiredToken, $request, $context);
-    }
-
-    /**
-     * @param string|null      $account
-     * @param string|null      $username
-     *
-     * @return null
-     */
-    private function selectId($account = null, $username = null)
-    {
-        return $username ?: $account;
+        $token->invalidate();
+        $id = $username ?: $account;
+        $this->storage->updateToken($id, $token, $request, $context);
     }
 }
