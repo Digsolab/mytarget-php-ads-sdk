@@ -50,8 +50,8 @@ class Token
     public static function fromArray(array $token)
     {
         if (
-            ! isset($token["access_token"], $token["token_type"], $token["expires_in"])
-            || !array_key_exists("refresh_token", $token)
+            ! isset($token["access"], $token["type"], $token["refresh"])
+            || !array_key_exists("expires_at", $token)
         ) {
             return null;
         }
@@ -72,8 +72,8 @@ class Token
     public static function fromResponse(array $token, \DateTime $now)
     {
         if (
-            ! isset($token["access_token"], $token["token_type"], $token["expires_in"])
-            || !array_key_exists("refresh_token", $token)
+            ! isset($token["access_token"], $token["token_type"], $token["refresh_token"])
+            || !array_key_exists("expires_in", $token)
         ) {
             return null;
         }
