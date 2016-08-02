@@ -142,4 +142,18 @@ class TokenManager
     {
         return $this->acquirer;
     }
+
+    /**
+     * @param Token            $token
+     * @param RequestInterface $request
+     * @param string|null      $account
+     * @param string|null      $username
+     * @param array|null       $context
+     */
+    public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, array $context = null)
+    {
+        $token->invalidate();
+        $id = $username ?: $account;
+        $this->storage->updateToken($id, $token, $request, $context);
+    }
 }

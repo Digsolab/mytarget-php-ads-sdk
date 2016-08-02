@@ -20,7 +20,7 @@ class Token
     private $tokenType;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $expiresAt;
 
@@ -49,7 +49,10 @@ class Token
      */
     public static function fromArray(array $token)
     {
-        if ( ! isset($token["access"], $token["type"], $token["refresh"], $token["expires_at"])) {
+        if (
+            ! isset($token["access_token"], $token["token_type"], $token["expires_in"])
+            || !array_key_exists("refresh_token", $token)
+        ) {
             return null;
         }
 
@@ -68,7 +71,10 @@ class Token
      */
     public static function fromResponse(array $token, \DateTime $now)
     {
-        if ( ! isset($token["access_token"], $token["token_type"], $token["expires_in"], $token["refresh_token"])) {
+        if (
+            ! isset($token["access_token"], $token["token_type"], $token["expires_in"])
+            || !array_key_exists("refresh_token", $token)
+        ) {
             return null;
         }
 
@@ -87,7 +93,7 @@ class Token
             "access" => $this->accessToken,
             "type" => $this->tokenType,
             "refresh" => $this->refreshToken,
-            "expires_at" => $this->expiresAt->format(\DateTime::ISO8601)
+            "expires_at" => (null === $this->expiresAt) ?: $this->expiresAt->format(\DateTime::ISO8601)
         ];
     }
 
@@ -108,7 +114,7 @@ class Token
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getExpiresAt()
     {
@@ -122,6 +128,10 @@ class Token
      */
     public function isExpiredAt(\DateTime $moment)
     {
+        if (null === $this->expiresAt) {
+            return false;
+        }
+
         return $this->expiresAt->sub(new \DateInterval(self::SAFE_TIME_BUFFER)) < $moment;
     }
 
@@ -131,5 +141,15 @@ class Token
     public function getRefreshToken()
     {
         return $this->refreshToken;
+    }
+
+    /**
+     * It makes the the token invalid by deleting its TTL
+     *
+     * @return void
+     */
+    public function invalidate()
+    {
+        $this->expiresAt = null;
     }
 }
