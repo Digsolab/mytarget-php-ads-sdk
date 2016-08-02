@@ -25,13 +25,11 @@ class GuzzleHttpTransport implements HttpTransport
     public function request(RequestInterface $request, array $context = null)
     {
         try {
-
             return $this->guzzle->send($request, ["http_errors" => false]);
-
         } catch (guzzleEx\ConnectException $e) {
-            throw new mtEx\ConnectException($e->getMessage(), $request, null, $e);
+            throw new mtEx\NetworkException($e->getMessage(), $request, null, $e);
         } catch (guzzleEx\TooManyRedirectsException $e) {
-            throw new mtEx\TooManyRedirectsException($e->getMessage(), $request, null, $e);
+            throw new mtEx\NetworkException($e->getMessage(), $request, null, $e);
         } catch (guzzleEx\RequestException $e) {
             throw new mtEx\RequestException($e->getMessage(), $request, null, $e);
         }

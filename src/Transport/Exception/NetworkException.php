@@ -2,6 +2,6 @@
 
 namespace MyTarget\Transport\Exception;
 
-class ConnectException extends RequestException
+class NetworkException extends RequestException
 {
 }
