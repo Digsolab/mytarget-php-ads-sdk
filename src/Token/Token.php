@@ -133,6 +133,11 @@ class Token
         return $this->refreshToken;
     }
 
+    /**
+     * It makes the the token invalid
+     *
+     * @return void
+     */
     public function invalidate()
     {
         $this->expiresAt = 0;
