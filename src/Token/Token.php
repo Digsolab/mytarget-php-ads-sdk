@@ -71,10 +71,7 @@ class Token
      */
     public static function fromResponse(array $token, \DateTime $now)
     {
-        if (
-            ! isset($token["access_token"], $token["token_type"], $token["refresh_token"])
-            || !array_key_exists("expires_in", $token)
-        ) {
+        if ( ! isset($token["access_token"], $token["token_type"], $token["expires_in"], $token["refresh_token"])) {
             return null;
         }
 
