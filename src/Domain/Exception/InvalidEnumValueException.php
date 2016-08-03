@@ -2,15 +2,16 @@
 
 namespace MyTarget\Domain\Exception;
 
-class InvalidEnumValueException extends \RuntimeException
+class InvalidEnumValueException extends \InvalidArgumentException
 {
     /**
      * @param string $value
      * @param string $enumClass
-     * @return InvalidEnumValueException
+     *
+     * @return static
      */
     public static function create($value, $enumClass)
     {
-        return new InvalidEnumValueException(sprintf('Value "%s" does not exist in %s', $value, $enumClass));
+        return static(sprintf('Value "%s" does not exist in %s', $value, $enumClass));
     }
 }
