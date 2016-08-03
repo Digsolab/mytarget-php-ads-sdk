@@ -2,8 +2,8 @@
 
 namespace MyTarget\Transport\Middleware\Impl;
 
+use GuzzleHttp\Psr7 as psr;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Stream;
 use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -37,13 +37,7 @@ class RequestResponseLoggerMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $response = $this->getMock(ResponseInterface::class);
         $response->method('getHeaders')->willReturn(['X-Ok' => ['1']]);
-        $response->method('getBody')->willReturn(call_user_func(function() {
-            $responseStream = new Stream(fopen('php://temp', 'r+'));
-            $responseStream->write('{"json": true}');
-            $responseStream->seek(0);
-
-            return $responseStream;
-        }));
+        $response->method('getBody')->willReturn(psr\stream_for('{"json": true}'));
         $response->method('getProtocolVersion')->willReturn('1.1');
         $response->method('getStatusCode')->willReturn(200);
 
