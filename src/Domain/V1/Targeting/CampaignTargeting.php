@@ -8,6 +8,7 @@ use MyTarget\Domain\V1\Enum\MobilePrefix;
 use MyTarget\Domain\V1\Enum\MobileType;
 use MyTarget\Domain\V1\Enum\Sex;
 use MyTarget\Domain\V1\Targeting\Pad\Pad;
+use MyTarget\Domain\V1\Enum\Employment;
 
 class CampaignTargeting
 {
@@ -42,14 +43,44 @@ class CampaignTargeting
     private $sex;
 
     /**
+     * @var Employment[]
+     * @Field(type="array<MyTarget\Domain\V1\Enum\Employment>")
+     */
+    private $employment;
+
+    /**
+     * @var Enum\PersonalIncome[]
+     * @Field(name="personal_income", type="array<MyTarget\Domain\V1\Enum\PersonalIncome>")
+     */
+    private $personalIncome;
+
+    /**
+     * @var Enum\MaritalStatus[]
+     * @Field(name="marital_status", type="array<MyTarget\Domain\V1\Enum\MaritalStatus>")
+     */
+    private $maritalStatus;
+
+    /**
+     * @var Enum\TvType[]
+     * @Field(name="tv_viewer", type="array<MyTarget\Domain\V1\Enum\TvType>")
+     */
+    private $tvViewer;
+
+    /**
+     * @var int[]
+     * @Field(type="array<int>")
+     */
+    private $hours;
+
+    /**
      * @var Fulltime
      * @Field(name="fulltime", type="MyTarget\Domain\V1\Targeting\Fulltime")
      */
     private $fulltime;
 
     /**
-     * @var string[]
-     * @Field(name="f_education", type="array<string>")
+     * @var Enum\Education[]
+     * @Field(name="f_education", type="array<MyTarget\Domain\V1\Enum\TvType>")
      */
     private $education;
 
@@ -234,7 +265,7 @@ class CampaignTargeting
     }
 
     /**
-     * @return string[]
+     * @return Enum\Education[]
      */
     public function getEducation()
     {
@@ -242,7 +273,7 @@ class CampaignTargeting
     }
 
     /**
-     * @param string[] $education
+     * @param Enum\Education[] $education
      */
     public function setEducation($education)
     {
@@ -471,5 +502,85 @@ class CampaignTargeting
     public function setInterests($interests)
     {
         $this->interests = $interests;
+    }
+
+    /**
+     * @return Enum\Employment[]
+     */
+    public function getEmployment()
+    {
+        return $this->employment;
+    }
+
+    /**
+     * @param Enum\Employment[] $employment
+     */
+    public function setEmployment($employment)
+    {
+        $this->employment = $employment;
+    }
+
+    /**
+     * @return Enum\PersonalIncome[]
+     */
+    public function getPersonalIncome()
+    {
+        return $this->personalIncome;
+    }
+
+    /**
+     * @param Enum\PersonalIncome[] $personalIncome
+     */
+    public function setPersonalIncome($personalIncome)
+    {
+        $this->personalIncome = $personalIncome;
+    }
+
+    /**
+     * @return Enum\MaritalStatus[]
+     */
+    public function getMaritalStatus()
+    {
+        return $this->maritalStatus;
+    }
+
+    /**
+     * @param Enum\MaritalStatus[] $maritalStatus
+     */
+    public function setMaritalStatus($maritalStatus)
+    {
+        $this->maritalStatus = $maritalStatus;
+    }
+
+    /**
+     * @return Enum\TvType[]
+     */
+    public function getTvViewer()
+    {
+        return $this->tvViewer;
+    }
+
+    /**
+     * @param Enum\TvType[] $tvViewer
+     */
+    public function setTvViewer($tvViewer)
+    {
+        $this->tvViewer = $tvViewer;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getHours()
+    {
+        return $this->hours;
+    }
+
+    /**
+     * @param int[] $hours
+     */
+    public function setHours($hours)
+    {
+        $this->hours = $hours;
     }
 }
