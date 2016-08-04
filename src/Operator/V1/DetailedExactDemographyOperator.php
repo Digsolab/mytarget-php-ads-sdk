@@ -4,7 +4,7 @@ namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
 use MyTarget\Domain\DateRange;
-use MyTarget\Domain\V1\DetailedExactDemographyCampaigns;
+use MyTarget\Domain\V1\Demography\DetailedExactDemographyCampaigns;
 use MyTarget\Mapper\Mapper;
 
 class DetailedExactDemographyOperator
