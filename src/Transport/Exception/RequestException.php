@@ -7,7 +7,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class RequestException extends \RuntimeException
-    implements TransportException, MyTargetException
+    implements MyTargetException
 {
 
     /**

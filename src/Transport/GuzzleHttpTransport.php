@@ -2,7 +2,7 @@
 
 namespace MyTarget\Transport;
 
-use GuzzleHttp\ClientInterface as Client;
+use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Exception as guzzleEx;
 use MyTarget\Transport\Exception as mtEx;
@@ -10,11 +10,11 @@ use MyTarget\Transport\Exception as mtEx;
 class GuzzleHttpTransport implements HttpTransport
 {
     /**
-     * @var Client
+     * @var ClientInterface
      */
     private $guzzle;
 
-    public function __construct(Client $guzzle)
+    public function __construct(ClientInterface $guzzle)
     {
         $this->guzzle = $guzzle;
     }
@@ -25,15 +25,9 @@ class GuzzleHttpTransport implements HttpTransport
     public function request(RequestInterface $request, array $context = null)
     {
         try {
-
             return $this->guzzle->send($request, ["http_errors" => false]);
-
-        } catch (guzzleEx\ConnectException $e) {
-            throw new mtEx\ConnectException($e->getMessage(), $request, null, $e);
-        } catch (guzzleEx\TooManyRedirectsException $e) {
-            throw new mtEx\TooManyRedirectsException($e->getMessage(), $request, null, $e);
-        } catch (guzzleEx\RequestException $e) {
-            throw new mtEx\RequestException($e->getMessage(), $request, null, $e);
+        } catch (guzzleEx\GuzzleException $e) {
+            throw new mtEx\HttpTransportException($e->getMessage(), $request, null, $e);
         }
     }
 }

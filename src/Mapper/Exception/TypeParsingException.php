@@ -4,7 +4,7 @@ namespace MyTarget\Mapper\Exception;
 
 use MyTarget\Exception\MyTargetException;
 
-class TypeParsingException extends \RuntimeException
+class TypeParsingException extends \LogicException
     implements MyTargetException, ContextUnawareException
 {
     /**

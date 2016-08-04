@@ -4,7 +4,7 @@ namespace MyTarget\Mapper\Exception;
 
 use MyTarget\Exception\MyTargetException;
 
-class ContextAwareException extends \RuntimeException
+class ContextAwareException extends \LogicException
     implements MyTargetException
 {
     public function __construct($inClass, $inField, \Exception $previous)
