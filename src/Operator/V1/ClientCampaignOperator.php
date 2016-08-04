@@ -3,7 +3,8 @@
 namespace MyTarget\Operator\V1;
 
 use MyTarget\Client;
-use MyTarget\Domain\V1\Campaign;
+
+use MyTarget\Domain\V1\Campaign\MutateCampaign;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Operator\V1\Fields\CampaignFields;
 
@@ -46,18 +47,18 @@ class ClientCampaignOperator extends CampaignOperator
         return parent::find($id, $context);
     }
 
-    public function create(Campaign $campaign, array $context = null)
+    public function create(MutateCampaign $campaign, array $context = null)
     {
         $context = (array)$context + ["username" => $this->username];
 
         return parent::create($campaign, $context);
     }
 
-    public function update(Campaign $campaign, array $context = null)
+    public function update($id, MutateCampaign $campaign, array $context = null)
     {
         $context = (array)$context + ["username" => $this->username];
 
-        return parent::update($campaign, $context);
+        return parent::update($id, $campaign, $context);
     }
 
     public function findAll(array $ids, CampaignFields $fields = null, array $withStatuses = null, array $context = null)

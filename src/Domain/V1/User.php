@@ -429,7 +429,7 @@ class User
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAppendUtm()
     {
@@ -437,7 +437,7 @@ class User
     }
 
     /**
-     * @param boolean $appendUtm
+     * @param bool $appendUtm
      */
     public function setAppendUtm($appendUtm)
     {
@@ -445,7 +445,7 @@ class User
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isShowCompactView()
     {
@@ -453,7 +453,7 @@ class User
     }
 
     /**
-     * @param boolean $showCompactView
+     * @param bool $showCompactView
      */
     public function setShowCompactView($showCompactView)
     {

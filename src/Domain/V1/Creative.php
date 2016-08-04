@@ -20,10 +20,13 @@ class Creative
 
     /**
      * @var CreativeVariant[]
-     * @Field(type="MyTarget\Operator\V1\CreativeVariant")
+     * @Field(type="MyTarget\Domain\V1\CreativeVariant")
      */
     private $variants;
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
@@ -43,5 +46,29 @@ class Creative
     public function getVariants()
     {
         return $this->variants;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param CreativeType $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @param CreativeVariant[] $variants
+     */
+    public function setVariants($variants)
+    {
+        $this->variants = $variants;
     }
 }

@@ -43,19 +43,29 @@ class AdditionalUserInfo
     private $clientInfo;
 
     /**
+     * @param string|null $clientName
+     * @param string|null $clientInfo
+     * @param string|null $name
+     * @param string|null $email
+     * @param string|null $phone
+     * @param string|null $address
+     */
+    public function __construct($clientName = null, $clientInfo = null, $name = null, $email = null, $phone = null, $address = null)
+    {
+        $this->clientName = $clientName;
+        $this->clientInfo = $clientInfo;
+        $this->name = $name;
+        $this->email = $email;
+        $this->phone = $phone;
+        $this->address = $address;
+    }
+
+    /**
      * @return string
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     /**
@@ -67,27 +77,11 @@ class AdditionalUserInfo
     }
 
     /**
-     * @param string $email
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    /**
      * @return string
      */
     public function getPhone()
     {
         return $this->phone;
-    }
-
-    /**
-     * @param string $phone
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
     }
 
     /**
@@ -99,14 +93,6 @@ class AdditionalUserInfo
     }
 
     /**
-     * @param string $address
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    }
-
-    /**
      * @return string
      */
     public function getClientName()
@@ -115,19 +101,51 @@ class AdditionalUserInfo
     }
 
     /**
-     * @param string $clientName
-     */
-    public function setClientName($clientName)
-    {
-        $this->clientName = $clientName;
-    }
-
-    /**
      * @return string
      */
     public function getClientInfo()
     {
         return $this->clientInfo;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @param string $address
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * @param string $clientName
+     */
+    public function setClientName($clientName)
+    {
+        $this->clientName = $clientName;
     }
 
     /**

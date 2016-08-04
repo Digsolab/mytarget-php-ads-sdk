@@ -12,6 +12,9 @@ class RemarketingVkGroup
      */
     private $groupId;
 
+    /**
+     * @param int $groupId
+     */
     public function __construct($groupId)
     {
         $this->groupId = $groupId;

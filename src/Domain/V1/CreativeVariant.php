@@ -77,4 +77,44 @@ class CreativeVariant
     {
         return $this->isAnimated;
     }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @param int $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
+
+    /**
+     * @param bool $isAnimated
+     */
+    public function setIsAnimated($isAnimated)
+    {
+        $this->isAnimated = $isAnimated;
+    }
 }

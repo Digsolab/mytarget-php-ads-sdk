@@ -13,12 +13,12 @@ class RequestException extends \RuntimeException
     /**
      * @var RequestInterface
      */
-    protected $request;
+    public $request;
 
     /**
      * @var ResponseInterface
      */
-    protected $response;
+    public $response;
 
     /**
      * @param string $message
@@ -32,21 +32,5 @@ class RequestException extends \RuntimeException
 
         $this->request = $request;
         $this->response = $response;
-    }
-
-    /**
-     * @return RequestInterface
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @return ResponseInterface
-     */
-    public function getResponse()
-    {
-        return $this->response;
     }
 }

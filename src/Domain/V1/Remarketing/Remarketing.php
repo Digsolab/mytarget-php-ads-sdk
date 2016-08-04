@@ -14,7 +14,7 @@ class Remarketing
 
     /**
      * @var RemarketingItem[]
-     * @Field(type="array<MyTarget\Domain\V1\RemarketingItem>")
+     * @Field(type="array<MyTarget\Domain\V1\Remarketing\RemarketingItem>")
      */
     private $disjunctions;
 

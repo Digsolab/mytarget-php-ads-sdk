@@ -64,27 +64,11 @@ class AgencyClient
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return string
      */
     public function getUsername()
     {
         return $this->username;
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
     }
 
     /**
@@ -96,27 +80,11 @@ class AgencyClient
     }
 
     /**
-     * @param Status $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
      * @return string
      */
     public function getAdditionalInfo()
     {
         return $this->additionalInfo;
-    }
-
-    /**
-     * @param string $additionalInfo
-     */
-    public function setAdditionalInfo($additionalInfo)
-    {
-        $this->additionalInfo = $additionalInfo;
     }
 
     /**
@@ -128,6 +96,62 @@ class AgencyClient
     }
 
     /**
+     * @return bool
+     */
+    public function isRedClient()
+    {
+        return $this->isRedClient;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMskAllowed()
+    {
+        return $this->isMskAllowed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSpbAllowed()
+    {
+        return $this->isSpbAllowed;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @param Status $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @param AdditionalUserInfo $additionalInfo
+     */
+    public function setAdditionalInfo($additionalInfo)
+    {
+        $this->additionalInfo = $additionalInfo;
+    }
+
+    /**
      * @param UserAccount $account
      */
     public function setAccount($account)
@@ -136,49 +160,25 @@ class AgencyClient
     }
 
     /**
-     * @return boolean
+     * @param bool $isRedClient
      */
-    public function isRedClient()
-    {
-        return $this->isRedClient;
-    }
-
-    /**
-     * @param boolean $isRedClient
-     */
-    public function setRedClient($isRedClient)
+    public function setIsRedClient($isRedClient)
     {
         $this->isRedClient = $isRedClient;
     }
 
     /**
-     * @return boolean
+     * @param bool $isMskAllowed
      */
-    public function isMskAllowed()
-    {
-        return $this->isMskAllowed;
-    }
-
-    /**
-     * @param boolean $isMskAllowed
-     */
-    public function setMskAllowed($isMskAllowed)
+    public function setIsMskAllowed($isMskAllowed)
     {
         $this->isMskAllowed = $isMskAllowed;
     }
 
     /**
-     * @return boolean
+     * @param bool $isSpbAllowed
      */
-    public function isSpbAllowed()
-    {
-        return $this->isSpbAllowed;
-    }
-
-    /**
-     * @param boolean $isSpbAllowed
-     */
-    public function setSpbAllowed($isSpbAllowed)
+    public function setIsSpbAllowed($isSpbAllowed)
     {
         $this->isSpbAllowed = $isSpbAllowed;
     }

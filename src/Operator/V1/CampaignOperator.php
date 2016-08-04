@@ -2,8 +2,9 @@
 
 namespace MyTarget\Operator\V1;
 
-use MyTarget\Domain\V1\Campaign;
-use MyTarget\Domain\V1\CampaignStat;
+use MyTarget\Domain\V1\Campaign\Campaign;
+use MyTarget\Domain\V1\Campaign\CampaignStat;
+use MyTarget\Domain\V1\Campaign\MutateCampaign;
 use MyTarget\Domain\V1\Enum\Status;
 use MyTarget\Mapper\Mapper;
 use MyTarget\Operator\V1\Fields\CampaignFields;
@@ -37,12 +38,12 @@ class CampaignOperator
     }
 
     /**
-     * @param Campaign $campaign
+     * @param MutateCampaign $campaign
      * @param array|null $context
      *
      * @return Campaign
      */
-    public function create(Campaign $campaign, array $context = null)
+    public function create(MutateCampaign $campaign, array $context = null)
     {
         $rawCampaign = $this->mapper->snapshot($campaign);
 
@@ -52,16 +53,17 @@ class CampaignOperator
     }
 
     /**
-     * @param Campaign $campaign
+     * @param int $id
+     * @param MutateCampaign $campaign
      * @param array|null $context
      *
      * @return Campaign
      */
-    public function update(Campaign $campaign, array $context = null)
+    public function update($id, MutateCampaign $campaign, array $context = null)
     {
         $rawCampaign = $this->mapper->snapshot($campaign);
 
-        $json = $this->client->post(sprintf("/api/v1/campaigns/%d.json", $campaign->getId()), null, $rawCampaign, $context);
+        $json = $this->client->post(sprintf("/api/v1/campaigns/%d.json", $id), null, $rawCampaign, $context);
 
         return $this->mapper->hydrateNew(Campaign::class, $json);
     }

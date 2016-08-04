@@ -30,7 +30,8 @@ function simpleMapper($debug = false)
         "date" => new t\DateTimeType(),
         "enum" => new t\EnumType(),
         "object" => new t\ObjectType($annotationReader, new DoctrineInstantiator()),
-        "mixed" => new t\MixedType()
+        "mixed" => new t\MixedType(),
+        "dict" => new t\DictType()
     ]);
 
     return $mapper;

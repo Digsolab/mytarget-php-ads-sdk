@@ -3,7 +3,7 @@
 use MyTarget\Operator\V1\CampaignOperator;
 use MyTarget\Operator\V1\Fields\CampaignFields;
 
-list($client, $mapper) = require __DIR__ . "/bootstrap.php";
+list($client, $mapper, $config) = require __DIR__ . "/bootstrap.php";
 
 $operator = new CampaignOperator($client, $mapper);
 

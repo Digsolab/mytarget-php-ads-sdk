@@ -29,4 +29,36 @@ class PeriodStat
      * @Field(name="date", type="DateTime")
      */
     private $date;
+
+    /**
+     * @return int
+     */
+    public function getClicks()
+    {
+        return $this->clicks;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShows()
+    {
+        return $this->shows;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
 }
