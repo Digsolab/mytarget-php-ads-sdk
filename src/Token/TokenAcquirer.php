@@ -54,6 +54,7 @@ class TokenAcquirer
      *
      * @return Token|null
      *
+     * @throws TokenLimitReachedException
      * @throws TokenRequestException
      */
     public function acquire(RequestInterface $request, \DateTime $now, $username = null, array $context = null)
@@ -91,9 +92,11 @@ class TokenAcquirer
         }
 
         $tokenArray = f\json_decode($body);
-        $token = Token::fromResponse($tokenArray, $now);
+        if (is_array($tokenArray)) {
+            $token = Token::fromResponse($tokenArray, $now);
+        }
 
-        if ($token === null) {
+        if (empty($token)) {
             throw TokenRequestException::invalidResponse($tokenRequest, $response, $username);
         }
 
@@ -142,9 +145,11 @@ class TokenAcquirer
         }
 
         $tokenArray = f\json_decode($body);
-        $token = Token::fromResponse($tokenArray, $now);
+        if (is_array($tokenArray)) {
+            $token = Token::fromResponse($tokenArray, $now);
+        }
 
-        if ($token === null) {
+        if (empty($token)) {
             throw TokenRequestException::invalidResponse($tokenRequest, $response);
         }
 
