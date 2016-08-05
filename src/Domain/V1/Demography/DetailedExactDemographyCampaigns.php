@@ -1,15 +1,15 @@
 <?php
 
-namespace MyTarget\Domain\V1\Demography;
+namespace Dsl\MyTarget\Domain\V1\Demography;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class DetailedExactDemographyCampaigns
 {
 
     /**
      * @var DetailedExactDemography[]
-     * @Field(type="array<MyTarget\Domain\V1\DetailedExactDemography>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\DetailedExactDemography>")
      */
     private $campaigns;
 

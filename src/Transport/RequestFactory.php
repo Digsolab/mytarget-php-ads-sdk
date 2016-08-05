@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Transport;
+namespace Dsl\MyTarget\Transport;
 
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;

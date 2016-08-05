@@ -1,29 +1,29 @@
 <?php
 
-namespace MyTarget\Domain\V1\Targeting;
+namespace Dsl\MyTarget\Domain\V1\Targeting;
 
-use MyTarget\Domain\V1\Remarketing\RemarketingCounterInterval;
-use MyTarget\Domain\V1\Remarketing\RemarketingGameInterval;
-use MyTarget\Domain\V1\Remarketing\RemarketingPricelistInterval;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingCounterInterval;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingGameInterval;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingPricelistInterval;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Targeting extends CampaignTargeting
 {
     /**
      * @var RemarketingCounterInterval[]
-     * @Field(name="remarketing_counters", type="array<MyTarget\Domain\V1\Remarketing\RemarketingCounterInterval>")
+     * @Field(name="remarketing_counters", type="array<Dsl\MyTarget\Domain\V1\Remarketing\RemarketingCounterInterval>")
      */
     private $remarketingCounters;
 
     /**
      * @var RemarketingPricelistInterval[]
-     * @Field(name="remarketing_price_lists", type="array<MyTarget\Domain\V1\Remarketing\RemarketingPricelistInterval>")
+     * @Field(name="remarketing_price_lists", type="array<Dsl\MyTarget\Domain\V1\Remarketing\RemarketingPricelistInterval>")
      */
     private $remarketingPriceLists;
 
     /**
      * @var RemarketingGameInterval
-     * @Field(name="remarketing_game_players", type="MyTarget\Domain\V1\Remarketing\RemarketingGameInterval")
+     * @Field(name="remarketing_game_players", type="Dsl\MyTarget\Domain\V1\Remarketing\RemarketingGameInterval")
      */
     private $remarketingGamePlayers;
 

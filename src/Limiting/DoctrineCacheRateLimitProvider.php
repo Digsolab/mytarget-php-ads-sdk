@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace Dsl\MyTarget\Limiting;
 
 use Doctrine\Common\Cache\Cache;
 use Psr\Http\Message\RequestInterface;

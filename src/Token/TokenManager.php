@@ -1,12 +1,12 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
-use MyTarget\Token\ClientCredentials\CredentialsProvider;
-use MyTarget\Token\Exception\TokenDeletedException;
-use MyTarget\Token\Exception\TokenLimitReachedException;
-use MyTarget\Token\Exception\TokenLockException;
-use MyTarget\Token\Exception\TokenRequestException;
+use Dsl\MyTarget\Token\ClientCredentials\CredentialsProvider;
+use Dsl\MyTarget\Token\Exception\TokenDeletedException;
+use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
+use Dsl\MyTarget\Token\Exception\TokenLockException;
+use Dsl\MyTarget\Token\Exception\TokenRequestException;
 use Psr\Http\Message\RequestInterface;
 
 class TokenManager

@@ -1,12 +1,12 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Client;
+use Dsl\MyTarget\Client;
 
-use MyTarget\Domain\V1\Campaign\MutateCampaign;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\V1\Fields\CampaignFields;
+use Dsl\MyTarget\Domain\V1\Campaign\MutateCampaign;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Operator\V1\Fields\CampaignFields;
 
 class ClientCampaignOperator extends CampaignOperator
 {

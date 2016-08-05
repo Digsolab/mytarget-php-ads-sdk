@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use DSL\LockInterface;
-use MyTarget\Token\Exception\TokenLockException;
+use Dsl\MyTarget\Token\Exception\TokenLockException;
 
 class LockManager
 {

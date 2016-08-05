@@ -1,12 +1,12 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign;
+namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use MyTarget\Domain\V1\Enum\AutobiddingMode;
-use MyTarget\Domain\V1\Enum\Mixing;
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Domain\V1\Targeting\CampaignTargeting;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode;
+use Dsl\MyTarget\Domain\V1\Enum\Mixing;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class MutateCampaign
 {
@@ -18,7 +18,7 @@ class MutateCampaign
 
     /**
      * @var Status
-     * @Field(type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $status;
 
@@ -36,7 +36,7 @@ class MutateCampaign
 
     /**
      * @var PackageId
-     * @Field(type="MyTarget\Domain\V1\Campaign\PackageId")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Campaign\PackageId")
      */
     private $package;
 
@@ -78,19 +78,19 @@ class MutateCampaign
 
     /**
      * @var Mixing
-     * @Field(name="mixing", type="MyTarget\Domain\V1\Enum\Mixing")
+     * @Field(name="mixing", type="Dsl\MyTarget\Domain\V1\Enum\Mixing")
      */
     private $mixing;
 
     /**
      * @var CampaignTargeting
-     * @Field(name="targetings", type="MyTarget\Domain\V1\Targeting\CampaignTargeting")
+     * @Field(name="targetings", type="Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting")
      */
     private $targetings;
 
     /**
      * @var AutobiddingMode
-     * @Field(name="auto_bidding_mode", type="MyTarget\Domain\V1\Enum\AutobiddingMode")
+     * @Field(name="auto_bidding_mode", type="Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode")
      */
     private $autoBiddingMode;
 
@@ -102,7 +102,7 @@ class MutateCampaign
 
     /**
      * @var RemarketingPricelistId
-     * @Field(name="price_list", type="MyTarget\Domain\V1\Campaign\RemarketingPricelistId")
+     * @Field(name="price_list", type="Dsl\MyTarget\Domain\V1\Campaign\RemarketingPricelistId")
      */
     private $pricelist;
 

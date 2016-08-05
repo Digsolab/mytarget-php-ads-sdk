@@ -1,11 +1,11 @@
 <?php
 
-namespace MyTarget\Operator\V1\Remarketing;
+namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
-use MyTarget\Client;
-use MyTarget\Domain\V1\Remarketing\RemarketingUserList;
-use MyTarget\Domain\V1\Remarketing\UploadUserList;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingUserList;
+use Dsl\MyTarget\Domain\V1\Remarketing\UploadUserList;
+use Dsl\MyTarget\Mapper\Mapper;
 use Psr\Http\Message\StreamInterface;
 
 class RemarketingUserListsOperator
@@ -34,7 +34,7 @@ class RemarketingUserListsOperator
      */
     public function create($file, UploadUserList $upload, array $context = null)
     {
-        $file = \MyTarget\streamOrResource($file);
+        $file = \Dsl\MyTarget\streamOrResource($file);
 
         $body = [
             ["name" => "name", "contents" => $upload->getName()],

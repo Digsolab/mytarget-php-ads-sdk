@@ -1,33 +1,33 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign;
+namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use MyTarget\Domain\V1\PeriodStat;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\PeriodStat;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class CampaignStat extends Campaign
 {
     /**
      * @var PeriodStat
-     * @Field(name="stats", type="MyTarget\Domain\V1\PeriodStat")
+     * @Field(name="stats", type="Dsl\MyTarget\Domain\V1\PeriodStat")
      */
     private $stats;
 
     /**
      * @var PeriodStat
-     * @Field(name="stats_today", type="MyTarget\Domain\V1\PeriodStat")
+     * @Field(name="stats_today", type="Dsl\MyTarget\Domain\V1\PeriodStat")
      */
     private $statsToday;
 
     /**
      * @var PeriodStat
-     * @Field(name="stats_yesterday", type="MyTarget\Domain\V1\PeriodStat")
+     * @Field(name="stats_yesterday", type="Dsl\MyTarget\Domain\V1\PeriodStat")
      */
     private $statsYesterday;
 
     /**
      * @var PeriodStat[]
-     * @Field(name="stats_full", type="array<MyTarget\Domain\V1\PeriodStat>")
+     * @Field(name="stats_full", type="array<Dsl\MyTarget\Domain\V1\PeriodStat>")
      */
     private $statsFull;
 
@@ -62,7 +62,7 @@ class CampaignStat extends Campaign
     }
 
     /**
-     * @return \MyTarget\Domain\V1\PeriodStat[]
+     * @return \Dsl\MyTarget\Domain\V1\PeriodStat[]
      */
     public function getStatsFull()
     {

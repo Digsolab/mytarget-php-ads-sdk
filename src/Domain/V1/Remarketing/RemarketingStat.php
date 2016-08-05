@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1\Remarketing;
+namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use MyTarget\Domain\V1\Campaign\Campaign;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class RemarketingStat extends Remarketing
 {
@@ -15,7 +15,7 @@ class RemarketingStat extends Remarketing
 
     /**
      * @var Campaign[]
-     * @Field(type="array<MyTarget\Domain\V1\Campaign\Campaign>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\Campaign\Campaign>")
      */
     private $campaigns;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Remarketing;
+namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class RemarketingPricelist
 {

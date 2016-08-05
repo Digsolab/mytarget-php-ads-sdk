@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Transport;
+namespace Dsl\MyTarget\Transport;
 
-use MyTarget\Transport\Exception\HttpTransportException;
+use Dsl\MyTarget\Transport\Exception\HttpTransportException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

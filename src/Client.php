@@ -1,12 +1,12 @@
 <?php
 
-namespace MyTarget;
+namespace Dsl\MyTarget;
 
-use MyTarget as f;
-use MyTarget\Exception\MyTargetException;
+use Dsl\MyTarget as f;
+use Dsl\MyTarget\Exception\MyTargetException;
 use GuzzleHttp\Psr7 as psr;
-use MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
-use MyTarget\Transport\RequestFactory;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
+use Dsl\MyTarget\Transport\RequestFactory;
 use Psr\Http\Message\RequestInterface;
 
 class Client

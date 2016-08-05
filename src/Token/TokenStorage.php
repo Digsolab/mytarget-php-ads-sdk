@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use Psr\Http\Message\RequestInterface;
 

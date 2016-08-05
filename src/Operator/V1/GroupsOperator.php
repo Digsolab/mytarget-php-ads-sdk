@@ -1,11 +1,11 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Client;
-use MyTarget\Domain\V1\OdklGroup;
-use MyTarget\Domain\V1\VkGroup;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\OdklGroup;
+use Dsl\MyTarget\Domain\V1\VkGroup;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class GroupsOperator
 {

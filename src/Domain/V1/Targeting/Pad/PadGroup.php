@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1\Targeting\Pad;
+namespace Dsl\MyTarget\Domain\V1\Targeting\Pad;
 
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class PadGroup
 {
@@ -39,7 +39,7 @@ class PadGroup
 
     /**
      * @var PadForPadGroup[]
-     * @Field(name="pads", type="array<MyTarget\Domain\V1\Targeting\Pad\PadForPadGroup>")
+     * @Field(name="pads", type="array<Dsl\MyTarget\Domain\V1\Targeting\Pad\PadForPadGroup>")
      */
     private $pads;
 

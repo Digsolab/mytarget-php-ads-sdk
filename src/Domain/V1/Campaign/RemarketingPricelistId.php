@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign;
+namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class RemarketingPricelistId
 {

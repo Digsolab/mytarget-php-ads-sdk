@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Transport\Middleware;
+namespace Dsl\MyTarget\Transport\Middleware;
 
-use MyTarget\Transport\HttpTransport;
-use MyTarget\Transport\Middleware\Impl\TerminatingMiddleware;
+use Dsl\MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Transport\Middleware\Impl\TerminatingMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

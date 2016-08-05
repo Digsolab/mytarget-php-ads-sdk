@@ -1,13 +1,13 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Client;
-use MyTarget\Domain\V1\Banner\Banner;
-use MyTarget\Domain\V1\Banner\BannerStat;
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\V1\Fields\BannerFields;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Banner\Banner;
+use Dsl\MyTarget\Domain\V1\Banner\BannerStat;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Operator\V1\Fields\BannerFields;
 
 class BannerOperator
 {
@@ -108,7 +108,7 @@ class BannerOperator
      * @param array|null        $withCampaignStatuses
      * @param array|null        $context
      *
-     * @return \MyTarget\Domain\V1\BannerStat[]
+     * @return \Dsl\MyTarget\Domain\V1\BannerStat[]
      */
     public function all(BannerFields $fields = null,
         array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)

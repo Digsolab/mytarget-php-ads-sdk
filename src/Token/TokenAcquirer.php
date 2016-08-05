@@ -1,15 +1,15 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use GuzzleHttp\Psr7\Request;
-use MyTarget\Token\ClientCredentials\CredentialsProvider;
-use MyTarget\Token\Exception\TokenDeletedException;
-use MyTarget\Token\Exception\TokenLimitReachedException;
-use MyTarget\Token\Exception\TokenRequestException;
-use MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Token\ClientCredentials\CredentialsProvider;
+use Dsl\MyTarget\Token\Exception\TokenDeletedException;
+use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
+use Dsl\MyTarget\Token\Exception\TokenRequestException;
+use Dsl\MyTarget\Transport\HttpTransport;
 use Psr\Http\Message\RequestInterface;
-use MyTarget as f;
+use Dsl\MyTarget as f;
 use GuzzleHttp\Psr7 as guzzle;
 use Psr\Http\Message\UriInterface;
 

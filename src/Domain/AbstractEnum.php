@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain;
+namespace Dsl\MyTarget\Domain;
 
-use MyTarget\Domain\Exception\InvalidEnumNameException;
-use MyTarget\Domain\Exception\InvalidEnumValueException;
+use Dsl\MyTarget\Domain\Exception\InvalidEnumNameException;
+use Dsl\MyTarget\Domain\Exception\InvalidEnumValueException;
 
 /**
  * Identity enum, makes sure that enum objects of the same value are always identical

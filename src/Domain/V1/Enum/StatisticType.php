@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Enum;
+namespace Dsl\MyTarget\Domain\V1\Enum;
 
-use MyTarget\Domain\AbstractEnum;
+use Dsl\MyTarget\Domain\AbstractEnum;
 
 class StatisticType extends AbstractEnum
 {

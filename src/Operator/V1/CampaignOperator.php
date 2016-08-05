@@ -1,14 +1,14 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Domain\V1\Campaign\Campaign;
-use MyTarget\Domain\V1\Campaign\CampaignStat;
-use MyTarget\Domain\V1\Campaign\MutateCampaign;
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\V1\Fields\CampaignFields;
-use MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
+use Dsl\MyTarget\Domain\V1\Campaign\CampaignStat;
+use Dsl\MyTarget\Domain\V1\Campaign\MutateCampaign;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Operator\V1\Fields\CampaignFields;
+use Dsl\MyTarget\Client;
 
 class CampaignOperator
 {

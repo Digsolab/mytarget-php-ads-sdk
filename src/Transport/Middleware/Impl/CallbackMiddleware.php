@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl;
+namespace Dsl\MyTarget\Transport\Middleware\Impl;
 
-use MyTarget\Transport\Middleware\HttpMiddleware;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
 
 class CallbackMiddleware implements HttpMiddleware

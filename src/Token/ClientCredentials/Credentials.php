@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Token\ClientCredentials;
+namespace Dsl\MyTarget\Token\ClientCredentials;
 
 use Psr\Http\Message\RequestInterface;
 

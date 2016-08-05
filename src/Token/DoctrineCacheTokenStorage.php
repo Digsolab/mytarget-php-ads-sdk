@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use Doctrine\Common\Cache\Cache;
 use Psr\Http\Message\RequestInterface;
-use MyTarget as f;
+use Dsl\MyTarget as f;
 
 /**
  * Token storage implementation that depends on "doctrine/cache" composer package

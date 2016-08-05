@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Mapper\Exception;
+namespace Dsl\MyTarget\Mapper\Exception;
 
 interface ContextUnawareException
 {

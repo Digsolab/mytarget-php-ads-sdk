@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Mapper;
+namespace Dsl\MyTarget\Mapper;
 
-use MyTarget\Domain\AbstractEnum;
-use MyTarget\Mapper\Exception\TypeParsingException;
-use MyTarget\Mapper\Type\Type;
+use Dsl\MyTarget\Domain\AbstractEnum;
+use Dsl\MyTarget\Mapper\Exception\TypeParsingException;
+use Dsl\MyTarget\Mapper\Type\Type;
 
 class Mapper
 {

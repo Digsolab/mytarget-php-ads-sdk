@@ -1,13 +1,13 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace Dsl\MyTarget\Limiting;
 
-use MyTarget\Limiting\Exception\ThrottleException;
-use MyTarget\Transport\Middleware\HttpMiddleware;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use Dsl\MyTarget\Limiting\Exception\ThrottleException;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
-use MyTarget\Exception\DecodingException;
-use MyTarget as f;
+use Dsl\MyTarget\Exception\DecodingException;
+use Dsl\MyTarget as f;
 
 class LimitingMiddleware implements HttpMiddleware
 {

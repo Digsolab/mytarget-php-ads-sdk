@@ -1,19 +1,19 @@
 <?php
 
-namespace MyTarget;
+namespace Dsl\MyTarget;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache as DoctrineCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
-use MyTarget\Exception\DecodingException;
-use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
-use MyTarget\Limiting as lim;
-use MyTarget\Token as tok;
-use MyTarget\Transport as trans;
-use MyTarget\Transport\Middleware as mid;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Mapper\Type as t;
+use Dsl\MyTarget\Exception\DecodingException;
+use Dsl\MyTarget\Operator\Exception\UnexpectedFileArgumentException;
+use Dsl\MyTarget\Limiting as lim;
+use Dsl\MyTarget\Token as tok;
+use Dsl\MyTarget\Transport as trans;
+use Dsl\MyTarget\Transport\Middleware as mid;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type as t;
 use Psr\Http\Message\StreamInterface;
 
 /**

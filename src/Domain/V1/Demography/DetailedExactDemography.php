@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Demography;
+namespace Dsl\MyTarget\Domain\V1\Demography;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class DetailedExactDemography
 {
@@ -14,7 +14,7 @@ class DetailedExactDemography
 
     /**
      * @var DemographyExactAge[]
-     * @Field(type="array<MyTarget\Domain\V1\DemographyExactAge>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\DemographyExactAge>")
      */
     private $histogram;
 

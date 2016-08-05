@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Operator\V2;
+namespace Dsl\MyTarget\Operator\V2;
 
-use MyTarget\Client;
-use MyTarget\Domain\V2\ReservedAmount;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V2\ReservedAmount;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class ReservedAmountsOperator
 {

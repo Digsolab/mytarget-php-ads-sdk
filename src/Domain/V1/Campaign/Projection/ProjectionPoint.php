@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign\Projection;
+namespace Dsl\MyTarget\Domain\V1\Campaign\Projection;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ProjectionPoint
 {
