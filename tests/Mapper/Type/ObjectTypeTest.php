@@ -161,7 +161,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testItMakesSnapshotSkippingEmptyProperties()
+    public function testItReturnsNullIfAllPropertiesAreEmpty()
     {
         $objectType = new ObjectType($this->annotations);
 
@@ -173,6 +173,6 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
             $this->mapper
         );
 
-        $this->assertSame([], $result);
+        $this->assertSame(null, $result);
     }
 }

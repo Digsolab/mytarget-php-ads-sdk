@@ -110,6 +110,18 @@ class Pad
     private $blockCpmLimit;
 
     /**
+     * @param int $id
+     * @return Pad
+     */
+    public static function withId($id)
+    {
+        $self = new Pad();
+        $self->id = $id;
+
+        return $self;
+    }
+
+    /**
      * @return int
      */
     public function getId()
