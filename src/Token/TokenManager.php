@@ -144,6 +144,8 @@ class TokenManager
     }
 
     /**
+     * @param string|null      $account
+     * @param string|null      $username
      * @return void
      */
     public function forceUnlockToken($account = null, $username = null)
