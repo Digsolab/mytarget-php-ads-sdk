@@ -81,8 +81,8 @@ class CampaignOperator
     {
         $fields = $fields ?: CampaignFields::create();
 
-        $query = ["fields" => implode(",", $this->mapFields($fields->getFields()))];
-
+        $query = ["fields" => $this->mapFields($fields->getFields())];
+\
         if ($withStatuses && null !== ($status = Status::inApiFormat($withStatuses))) {
             $query["status"] = $status;
         }
@@ -152,7 +152,7 @@ class CampaignOperator
      * TODO to be changed
      *
      * @param array $fields
-     * @return array
+     * @return string
      */
     private function mapFields(array $fields)
     {
@@ -160,8 +160,10 @@ class CampaignOperator
             return $field !== CampaignFields::FIELD_BANNERS;
         });
 
-        return array_map(function ($field) {
+        $fields = array_map(function ($field) {
             return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $field));
         }, $fields);
+
+        return implode(",", $fields);
     }
 }

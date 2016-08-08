@@ -1,12 +1,12 @@
 <?php
 
-namespace tests\MyTarget\Limiting;
+namespace tests\Dsl\MyTarget\Limiting;
 
 use GuzzleHttp\Psr7\Request;
-use MyTarget\Limiting\LimitingMiddleware;
-use MyTarget\Limiting\RateLimitProvider;
-use MyTarget\Limiting\Exception\ThrottleException;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use Dsl\MyTarget\Limiting\LimitingMiddleware;
+use Dsl\MyTarget\Limiting\RateLimitProvider;
+use Dsl\MyTarget\Limiting\Exception\ThrottleException;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\ResponseInterface;
 
 class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase

@@ -1,8 +1,8 @@
 <?php
 
-namespace tests\MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ObjectStub extends ObjectParentStub
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace tests\MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Instantiator\InstantiatorInterface;
-use MyTarget\Mapper\Annotation\Field;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Mapper\Type\ObjectType;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type\ObjectType;
 
 class ObjectTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +33,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \MyTarget\Mapper\Exception\ClassNotFoundException
+     * @expectedException \Dsl\MyTarget\Mapper\Exception\ClassNotFoundException
      */
     public function testItHydratesAndPanicsIfClassNotFound()
     {
@@ -88,7 +88,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \MyTarget\Mapper\Exception\ContextAwareException
+     * @expectedException \Dsl\MyTarget\Mapper\Exception\ContextAwareException
      */
     public function testItHydratesAndRethrowsException()
     {

@@ -1,14 +1,14 @@
 <?php
 
-namespace tests\MyTarget\Mapper;
+namespace tests\Dsl\MyTarget\Mapper;
 
-use MyTarget\Mapper\Mapper;
-use MyTarget\Mapper\Type\ArrayType;
-use MyTarget\Mapper\Type\ScalarType;
-use MyTarget\Mapper\Type\MixedType;
-use MyTarget\Mapper\Type\EnumType;
-use MyTarget\Mapper\Type\ObjectType;
-use tests\MyTarget\Mapper\Type\EnumTypeMock;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type\ArrayType;
+use Dsl\MyTarget\Mapper\Type\ScalarType;
+use Dsl\MyTarget\Mapper\Type\MixedType;
+use Dsl\MyTarget\Mapper\Type\EnumType;
+use Dsl\MyTarget\Mapper\Type\ObjectType;
+use tests\Dsl\MyTarget\Mapper\Type\EnumTypeMock;
 
 class MapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,7 +49,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \MyTarget\Mapper\Exception\TypeParsingException
+     * @expectedException \Dsl\MyTarget\Mapper\Exception\TypeParsingException
      */
     public function testItHydratesAndPanicsIfTypeNotGiven()
     {
@@ -83,7 +83,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \MyTarget\Mapper\Exception\TypeParsingException
+     * @expectedException \Dsl\MyTarget\Mapper\Exception\TypeParsingException
      */
     public function testItMakesSnapshotAndPanicsIfTypeNotGiven()
     {

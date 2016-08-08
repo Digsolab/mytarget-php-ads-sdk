@@ -11,6 +11,8 @@ use Dsl\MyTarget as f;
 
 class LimitingMiddleware implements HttpMiddleware
 {
+    const HTTP_STATUS_LIMIT_REACHED = 429;
+
     /**
      * @var RateLimitProvider
      */
@@ -42,7 +44,7 @@ class LimitingMiddleware implements HttpMiddleware
 
         $this->rateLimitProvider->refreshLimits($request, $response, $limitBy, $context);
 
-        if ($response->getStatusCode() === 429) {
+        if ($response->getStatusCode() === self::HTTP_STATUS_LIMIT_REACHED) {
             try {
                 $decoded = f\json_decode((string)$response->getBody());
             } catch (DecodingException $e) { }

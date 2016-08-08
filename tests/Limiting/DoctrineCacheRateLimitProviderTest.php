@@ -1,11 +1,11 @@
 <?php
 
-namespace tests\MyTarget\Limiting;
+namespace tests\Dsl\MyTarget\Limiting;
 
-use MyTarget\Limiting\DoctrineCacheRateLimitProvider;
-use MyTarget\Limiting\LimitExtractor;
+use Dsl\MyTarget\Limiting\DoctrineCacheRateLimitProvider;
+use Dsl\MyTarget\Limiting\LimitExtractor;
 use Doctrine\Common\Cache\Cache;
-use MyTarget\Limiting\Limits;
+use Dsl\MyTarget\Limiting\Limits;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

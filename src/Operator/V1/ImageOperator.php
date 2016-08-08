@@ -6,7 +6,7 @@ use Dsl\MyTarget\Client;
 use Dsl\MyTarget\Domain\V1\Image\Image;
 use Dsl\MyTarget\Domain\V1\Image\UploadImage;
 use Dsl\MyTarget\Mapper\Mapper;
-
+use Dsl\MyTarget as f;
 use Psr\Http\Message\StreamInterface;
 
 class ImageOperator
@@ -46,7 +46,7 @@ class ImageOperator
      */
     public function upload($file, UploadImage $image, array $context = null)
     {
-        $file = \Dsl\MyTarget\streamOrResource($file);
+        $file = f\streamOrResource($file);
 
         $imageInfo = $this->mapper->snapshot($image);
         $imageInfo = array_filter($imageInfo, function ($v) { return $v !== null; });

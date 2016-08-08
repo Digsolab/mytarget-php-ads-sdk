@@ -1,11 +1,11 @@
 <?php
 
-namespace tests\MyTarget\Transport\Middleware;
+namespace tests\Dsl\MyTarget\Transport\Middleware;
 
 use GuzzleHttp\Psr7\Response;
-use MyTarget\Transport\HttpTransport;
-use MyTarget\Transport\Middleware\HttpMiddleware;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use Dsl\MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
