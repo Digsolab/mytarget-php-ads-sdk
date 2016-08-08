@@ -144,15 +144,11 @@ class TokenManager
     }
 
     /**
-     * @param string|null      $account
-     * @param string|null      $username
-     * @return void
+     * @return LockManager
      */
-    public function forceUnlockToken($account = null, $username = null)
+    public function getLockManager()
     {
-        $id = $username ?: $account;
-
-        $this->lockManager->unlock($id);
+        return $this->lockManager;
     }
 
     /**
