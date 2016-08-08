@@ -144,6 +144,14 @@ class TokenManager
     }
 
     /**
+     * @return LockManager
+     */
+    public function getLockManager()
+    {
+        return $this->lockManager;
+    }
+
+    /**
      * @param Token            $token
      * @param RequestInterface $request
      * @param string|null      $account
