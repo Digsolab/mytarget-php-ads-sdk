@@ -144,6 +144,16 @@ class TokenManager
     }
 
     /**
+     * @return void
+     */
+    public function forceUnlockToken($account = null, $username = null)
+    {
+        $id = $username ?: $account;
+
+        $this->lockManager->unlock($id);
+    }
+
+    /**
      * @param Token            $token
      * @param RequestInterface $request
      * @param string|null      $account
