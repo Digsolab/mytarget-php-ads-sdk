@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1\Remarketing;
+namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use MyTarget\Domain\V1\Enum\RemarketingType;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\RemarketingType;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class RemarketingUserList
 {
@@ -15,7 +15,7 @@ class RemarketingUserList
 
     /**
      * @var RemarketingType
-     * @Field(type="MyTarget\Domain\V1\Enum\RemarketingType")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\RemarketingType")
      */
     private $type;
 

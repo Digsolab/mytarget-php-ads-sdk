@@ -2,7 +2,7 @@
 
 namespace Foo;
 
-use MyTarget\Operator\V2\ReservedAmountsOperator;
+use Dsl\MyTarget\Operator\V2\ReservedAmountsOperator;
 
 list($client, $mapper, $config) = require __DIR__ . "/bootstrap.php";
 

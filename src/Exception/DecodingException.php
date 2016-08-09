@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Exception;
+namespace Dsl\MyTarget\Exception;
 
 class DecodingException extends \RuntimeException
     implements MyTargetException

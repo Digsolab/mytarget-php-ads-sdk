@@ -2,11 +2,11 @@
 
 namespace foo;
 
-use MyTarget\Domain\V1\Enum\ObjectType;
-use MyTarget\Domain\V1\Enum\StatisticType;
-use MyTarget\Operator\V1\StatisticOperator;
-use MyTarget\Operator\V1\CampaignOperator;
-use MyTarget\Domain\V1\Campaign\CampaignStat;
+use Dsl\MyTarget\Domain\V1\Enum\ObjectType;
+use Dsl\MyTarget\Domain\V1\Enum\StatisticType;
+use Dsl\MyTarget\Operator\V1\StatisticOperator;
+use Dsl\MyTarget\Operator\V1\CampaignOperator;
+use Dsl\MyTarget\Domain\V1\Campaign\CampaignStat;
 
 list($client, $mapper, $config) = require __DIR__ . "/bootstrap.php";
 

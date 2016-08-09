@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Mapper\Annotation;
+namespace Dsl\MyTarget\Mapper\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 

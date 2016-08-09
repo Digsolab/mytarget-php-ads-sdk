@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Operator;
+namespace Dsl\MyTarget\Operator;
 
 abstract class AbstractFields
 {

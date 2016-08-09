@@ -1,14 +1,12 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace tests\Dsl\MyTarget\Limiting;
 
 use GuzzleHttp\Psr7\Request;
-use MyTarget\Limiting\LimitingMiddleware;
-use MyTarget\Limiting\RateLimitProvider;
-use MyTarget\Limiting\Exception\ThrottleException;
-use MyTarget\Transport\HttpTransport;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
-use Psr\Http\Message\RequestInterface;
+use Dsl\MyTarget\Limiting\LimitingMiddleware;
+use Dsl\MyTarget\Limiting\RateLimitProvider;
+use Dsl\MyTarget\Limiting\Exception\ThrottleException;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\ResponseInterface;
 
 class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
@@ -33,7 +31,7 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->rateLimitProvider->expects($this->once())
             ->method("isLimitReached")
-            ->with($context["limit-by"], $username)
+            ->with($context["limit-by"], $request, $context)
             ->willReturn($isLimitReached);
 
         $this->setExpectedException(ThrottleException::class);
@@ -45,7 +43,8 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
     {
         $middleware = new LimitingMiddleware($this->rateLimitProvider);
 
-        $request = new Request("GET", "/");        $response = $this->getMock(ResponseInterface::class);
+        $request = new Request("GET", "/");
+        $response = $this->getMock(ResponseInterface::class);
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)->disableOriginalConstructor()->getMock();
         $username = "12345@agency_client";
         $context = ["limit-by" => "campaigns-all", "username" => $username];
@@ -53,7 +52,7 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->rateLimitProvider->expects($this->once())
                                 ->method("isLimitReached")
-                                ->with($context["limit-by"], $username)
+                                ->with($context["limit-by"], $request, $context)
                                 ->willReturn($isLimitReached);
 
         $stack->expects($this->once())
@@ -63,7 +62,7 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->rateLimitProvider->expects($this->once())
                                 ->method("refreshLimits")
-                                ->with($response, $context["limit-by"], $username);
+                                ->with($request, $response, $context["limit-by"], $context);
 
         $middleware->request($request, $stack, $context);
     }

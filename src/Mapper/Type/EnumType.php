@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Domain\AbstractEnum;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Domain\AbstractEnum;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class EnumType implements Type
 {

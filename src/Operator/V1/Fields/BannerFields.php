@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Operator\V1\Fields;
+namespace Dsl\MyTarget\Operator\V1\Fields;
 
-use MyTarget\Operator\AbstractFields;
+use Dsl\MyTarget\Operator\AbstractFields;
 
 /**
  * @method BannerFields withId()

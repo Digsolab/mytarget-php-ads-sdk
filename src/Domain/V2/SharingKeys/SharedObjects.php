@@ -1,14 +1,14 @@
 <?php
 
-namespace MyTarget\Domain\V2\SharingKeys;
+namespace Dsl\MyTarget\Domain\V2\SharingKeys;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class SharedObjects extends ShareObjects
 {
     /**
      * @var ShareClient
-     * @Field(type="MyTarget\Domain\V2\SharingKeys\ShareClient")
+     * @Field(type="Dsl\MyTarget\Domain\V2\SharingKeys\ShareClient")
      */
     private $owner;
 

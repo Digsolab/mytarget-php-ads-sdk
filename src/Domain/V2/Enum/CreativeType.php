@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V2\Enum;
+namespace Dsl\MyTarget\Domain\V2\Enum;
 
-use MyTarget\Domain\AbstractEnum;
+use Dsl\MyTarget\Domain\AbstractEnum;
 
 class CreativeType extends AbstractEnum
 {

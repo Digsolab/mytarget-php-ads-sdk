@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Token\Exception;
+namespace Dsl\MyTarget\Token\Exception;
 
 class TokenDeletedException extends TokenRequestException
 {

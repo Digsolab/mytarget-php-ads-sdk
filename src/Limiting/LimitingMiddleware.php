@@ -1,16 +1,18 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace Dsl\MyTarget\Limiting;
 
-use MyTarget\Limiting\Exception\ThrottleException;
-use MyTarget\Transport\Middleware\HttpMiddleware;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use Dsl\MyTarget\Limiting\Exception\ThrottleException;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
-use MyTarget\Exception\DecodingException;
-use MyTarget as f;
+use Dsl\MyTarget\Exception\DecodingException;
+use Dsl\MyTarget as f;
 
 class LimitingMiddleware implements HttpMiddleware
 {
+    const HTTP_STATUS_LIMIT_REACHED = 429;
+
     /**
      * @var RateLimitProvider
      */
@@ -31,9 +33,8 @@ class LimitingMiddleware implements HttpMiddleware
         }
 
         $limitBy = $context["limit-by"];
-        $username = isset($context["username"]) ? $context["username"] : null;
 
-        $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $username);
+        $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $request, $context);
 
         if ($isLimitReached) {
             throw new ThrottleException("Preventively throttled: limit had been reached", $request);
@@ -41,9 +42,9 @@ class LimitingMiddleware implements HttpMiddleware
 
         $response = $stack->request($request, $context);
 
-        $this->rateLimitProvider->refreshLimits($response, $limitBy, $username);
+        $this->rateLimitProvider->refreshLimits($request, $response, $limitBy, $context);
 
-        if ($response->getStatusCode() === 429) {
+        if ($response->getStatusCode() === self::HTTP_STATUS_LIMIT_REACHED) {
             try {
                 $decoded = f\json_decode((string)$response->getBody());
             } catch (DecodingException $e) { }

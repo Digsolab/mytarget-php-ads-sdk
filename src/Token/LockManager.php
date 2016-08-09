@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use DSL\LockInterface;
-use MyTarget\Token\Exception\TokenLockException;
+use Dsl\MyTarget\Token\Exception\TokenLockException;
 
 class LockManager
 {
@@ -38,9 +38,10 @@ class LockManager
      */
     public function lock($id)
     {
-        $name = $this->hash($id);
+        $name = call_user_func($this->hashFunction, $id);
+
         if ( ! $this->lock->lock($name, $this->lifetime)) {
-            throw new TokenLockException(sprintf('Could not obtain temporary cache lock: %s', $name));
+            throw new TokenLockException(sprintf('Could not obtain temporary lock: %s', $name));
         }
     }
 
@@ -49,19 +50,6 @@ class LockManager
      */
     public function unlock($id)
     {
-        $this->lock->unlock($this->hash($id));
+        $this->lock->unlock(call_user_func($this->hashFunction, $id));
     }
-
-    /**
-     * @param string $id
-     *
-     * @return string
-     */
-    private function hash($id)
-    {
-        $f = $this->hashFunction;
-
-        return $f($id);
-    }
-
 }

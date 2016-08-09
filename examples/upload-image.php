@@ -3,8 +3,8 @@
 namespace Foo;
 
 
-use MyTarget\Domain\V1\Image\UploadImage;
-use MyTarget\Operator\V1\ImageOperator;
+use Dsl\MyTarget\Domain\V1\Image\UploadImage;
+use Dsl\MyTarget\Operator\V1\ImageOperator;
 
 list($client, $mapper) = require __DIR__ . "/bootstrap.php";
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1;
+namespace Dsl\MyTarget\Domain\V1;
 
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class AgencyClient
 {
@@ -21,19 +21,19 @@ class AgencyClient
 
     /**
      * @var Status
-     * @Field(type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $status;
 
     /**
      * @var AdditionalUserInfo
-     * @Field(name="additional_info", type="MyTarget\Domain\V1\AdditionalUserInfo")
+     * @Field(name="additional_info", type="Dsl\MyTarget\Domain\V1\AdditionalUserInfo")
      */
     private $additionalInfo;
 
     /**
      * @var UserAccount
-     * @Field(type="MyTarget\Domain\V1\UserAccount")
+     * @Field(type="Dsl\MyTarget\Domain\V1\UserAccount")
      */
     private $account;
 

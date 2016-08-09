@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace Dsl\MyTarget\Limiting;
 
 class Limits
 {

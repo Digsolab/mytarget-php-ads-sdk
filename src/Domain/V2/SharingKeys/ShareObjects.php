@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V2\SharingKeys;
+namespace Dsl\MyTarget\Domain\V2\SharingKeys;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ShareObjects
 {
@@ -14,13 +14,13 @@ class ShareObjects
 
     /**
      * @var ShareClient[]
-     * @Field(type="array<MyTarget\Domain\V2\SharingKeys\ShareClient>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V2\SharingKeys\ShareClient>")
      */
     private $users;
 
     /**
      * @var ShareSource[]
-     * @Field(type="array<MyTarget\Domain\V2\SharingKeys\ShareSource>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V2\SharingKeys\ShareSource>")
      */
     private $sources;
 

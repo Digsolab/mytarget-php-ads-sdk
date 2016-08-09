@@ -2,13 +2,13 @@
 
 namespace Foo;
 
-use MyTarget\Domain\V1\Targeting\CampaignTargeting;
-use MyTarget\Domain\V1\Enum\Sex;
-use MyTarget\Domain\V1\Campaign\Package;
-use MyTarget\Domain\V1\Targeting\Pad\Pad;
-use MyTarget\Domain\V1\Campaign\Projection\ProjectionCampaign;
-use MyTarget\Domain\V1\User;
-use MyTarget\Operator\V1\ProjectionOperator;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
+use Dsl\MyTarget\Domain\V1\Enum\Sex;
+use Dsl\MyTarget\Domain\V1\Campaign\Package;
+use Dsl\MyTarget\Domain\V1\Targeting\Pad\Pad;
+use Dsl\MyTarget\Domain\V1\Campaign\Projection\ProjectionCampaign;
+use Dsl\MyTarget\Domain\V1\User;
+use Dsl\MyTarget\Operator\V1\ProjectionOperator;
 
 list($client, $mapper, $config) = require __DIR__ . "/bootstrap.php";
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign;
+namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use MyTarget\Domain\V1\Targeting\Targeting;
-use MyTarget\Mapper\Annotation\Field;
-use MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Domain\V1\Targeting\Targeting;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
 
 class Package
 {
@@ -22,13 +22,13 @@ class Package
 
     /**
      * @var Status
-     * @Field(name="status", type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(name="status", type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $status;
 
     /**
      * @var Status
-     * @Field(name="system_status", type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(name="system_status", type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $systemStatus;
 
@@ -70,7 +70,7 @@ class Package
 
     /**
      * @var Targeting
-     * @Field(name="targetings", type="MyTarget\Domain\V1\Targeting\Targeting")
+     * @Field(name="targetings", type="Dsl\MyTarget\Domain\V1\Targeting\Targeting")
      */
     private $targetings;
 
