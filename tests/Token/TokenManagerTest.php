@@ -1,9 +1,15 @@
 <?php
 
-namespace MyTarget\Token;
+namespace tests\Dsl\MyTarget\Token;
 
-use MyTarget\Token\Exception\TokenDeletedException;
-use MyTarget\Token\Exception\TokenLimitReachedException;
+use Dsl\MyTarget\Token\ClientCredentials\Credentials;
+use Dsl\MyTarget\Token\Exception\TokenDeletedException;
+use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
+use Dsl\MyTarget\Token\LockManager;
+use Dsl\MyTarget\Token\Token;
+use Dsl\MyTarget\Token\TokenAcquirer;
+use Dsl\MyTarget\Token\TokenManager;
+use Dsl\MyTarget\Token\TokenStorage;
 use Psr\Http\Message\RequestInterface;
 
 class TokenManagerTest extends  \PHPUnit_Framework_TestCase
@@ -32,7 +38,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
         $this->storage = $this->getMock(TokenStorage::class);
         $this->lockManager = $this->getMock(LockManager::class, [], [], '', false);
         $this->request = $this->getMock(RequestInterface::class);
-        $this->manager = new TokenManager($this->acquirer, $this->storage, $this->lockManager);
+        $this->manager = new TokenManager($this->acquirer, $this->storage, new Credentials('', ''), $this->lockManager);
         $this->responseToken = new Token('access', 'foo', new \DateTime(), 'refresh');
         $this->storageToken = $this->getMock(Token::class, [], [], '', false);
         $this->id = uniqid('login');
@@ -40,7 +46,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
 
     public function testGetStorageToken()
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $momentGeneratorCall = false;
         $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
 
@@ -60,7 +66,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
 
     public function testGetStorageExpiredToken()
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $momentGeneratorCall = false;
         $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
 
@@ -88,7 +94,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
 
     public function testGetDeletedToken()
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $momentGeneratorCall = false;
         $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
 
@@ -104,7 +110,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
         $this->acquirer->method('acquire')->willReturn($this->responseToken);
         $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
 
-        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, null, null);
+        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $this->id, null);
 
         $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
 
@@ -118,14 +124,14 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
 
     public function testGetEmptyToken()
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $momentGeneratorCall = false;
         $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
 
         $this->acquirer->method('acquire')->willReturn($this->responseToken);
         $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
 
-        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, null, null);
+        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $this->id, null);
 
         $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
 

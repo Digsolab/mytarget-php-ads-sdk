@@ -32,10 +32,10 @@ class Token
     /**
      * @param string $accessToken
      * @param string $tokenType
-     * @param \DateTime $expiresAt
+     * @param \DateTimeInterface $expiresAt
      * @param string $refreshToken
      */
-    public function __construct($accessToken, $tokenType, \DateTime $expiresAt, $refreshToken)
+    public function __construct($accessToken, $tokenType, \DateTimeInterface $expiresAt, $refreshToken)
     {
         $this->accessToken = $accessToken;
         $this->tokenType = $tokenType;
@@ -121,7 +121,7 @@ class Token
      *
      * @return bool
      */
-    public function isExpiredAt(\DateTime $moment)
+    public function isExpiredAt(\DateTimeInterface $moment)
     {
         return $this->expiresAt->sub(new \DateInterval(self::SAFE_TIME_BUFFER)) < $moment;
     }

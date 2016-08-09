@@ -1,13 +1,15 @@
 <?php
 
-namespace MyTarget\Token;
+namespace tests\Dsl\MyTarget\Token;
 
+use Dsl\MyTarget\Token\Token;
+use Dsl\MyTarget\Token\TokenAcquirer;
 use GuzzleHttp\Psr7\Uri;
-use MyTarget\Token\ClientCredentials\Credentials;
-use MyTarget\Token\Exception\TokenDeletedException;
-use MyTarget\Token\Exception\TokenLimitReachedException;
-use MyTarget\Token\Exception\TokenRequestException;
-use MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Token\ClientCredentials\Credentials;
+use Dsl\MyTarget\Token\Exception\TokenDeletedException;
+use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
+use Dsl\MyTarget\Token\Exception\TokenRequestException;
+use Dsl\MyTarget\Transport\HttpTransport;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -155,7 +157,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSuccessfulRefresh($context, $statusCode, $body)
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $payload = [
             'grant_type'    => 'refresh_token',
@@ -209,7 +211,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailedRefresh($context, $statusCode, $body, $exception)
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $this->setExpectedException($exception);
 

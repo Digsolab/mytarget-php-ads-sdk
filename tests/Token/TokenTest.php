@@ -1,6 +1,8 @@
 <?php
 
-namespace MyTarget\Token;
+namespace tests\Dsl\MyTarget\Token;
+
+use Dsl\MyTarget\Token\Token;
 
 class TokenTest extends \PHPUnit_Framework_TestCase
 {
@@ -150,16 +152,6 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $token = new Token('', '', $expiresAt, '');
 
         $this->assertSame($expect, $token->isExpiredAt(new \DateTime()));
-    }
-
-    public function testInvalidate()
-    {
-        $moment = (new \DateTime())->add(new \DateInterval('P100D'));
-        $token = new Token('', '', $moment, '');
-
-        $token->invalidate();
-
-        $this->assertEquals(date(\DateTime::ISO8601), $token->getExpiresAt()->format(\DateTime::ISO8601));
     }
 
 }
