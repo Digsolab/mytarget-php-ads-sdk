@@ -14,127 +14,159 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
     private $storage;
     /** @var  LockManager|\PHPUnit_Framework_MockObject_MockObject */
     private $lockManager;
-
     /** @var  RequestInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $request;
-
     /** @var  TokenManager */
     private $manager;
+    /** @var  Token */
+    private $responseToken;
+    /** @var  Token|\PHPUnit_Framework_MockObject_MockObject */
+    private $storageToken;
+    /** @var  string */
+    private $id;
 
     public function setUp()
     {
         parent::setUp();
-
         $this->acquirer = $this->getMock(TokenAcquirer::class, [], [], '', false);
         $this->storage = $this->getMock(TokenStorage::class);
         $this->lockManager = $this->getMock(LockManager::class, [], [], '', false);
-
         $this->request = $this->getMock(RequestInterface::class);
-
         $this->manager = new TokenManager($this->acquirer, $this->storage, $this->lockManager);
+        $this->responseToken = new Token('access', 'foo', new \DateTime(), 'refresh');
+        $this->storageToken = $this->getMock(Token::class, [], [], '', false);
+        $this->id = uniqid('login');
+    }
+
+    public function testGetStorageToken()
+    {
+        $now = new \DateTime();
+        $momentGeneratorCall = false;
+        $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
+
+        $this->storageToken->method('getRefreshToken')->willReturn('refresh secret');
+        $this->storageToken->method('isExpiredAt')->willReturn(false);
+        $this->storageToken->expects($this->once())->method('isExpiredAt')->with($now);
+
+        $this->storage->method('getToken')->willReturn($this->storageToken);
+
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+
+        $token = $this->manager->getClientToken($this->request, $this->id, null);
+
+        $this->assertTrue($momentGeneratorCall);
+        $this->assertEquals($this->storageToken, $token);
+    }
+
+    public function testGetStorageExpiredToken()
+    {
+        $now = new \DateTime();
+        $momentGeneratorCall = false;
+        $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
+
+        $this->storageToken->method('getRefreshToken')->willReturn('refresh secret');
+        $this->storageToken->method('isExpiredAt')->willReturn(true);
+        $this->storageToken->expects($this->once())->method('isExpiredAt')->with($now);
+
+        $this->storage->method('getToken')->willReturn($this->storageToken);
+
+        $this->acquirer->method('refresh')->willReturn($this->responseToken);
+        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
+
+        $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', null);
+
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+
+        $this->lockManager->expects($this->once())->method('lock')->with($this->id);
+        $this->lockManager->expects($this->once())->method('unlock')->with($this->id);
+
+        $token = $this->manager->getClientToken($this->request, $this->id, null);
+
+        $this->assertTrue($momentGeneratorCall);
+        $this->assertEquals($this->responseToken, $token);
+    }
+
+    public function testGetDeletedToken()
+    {
+        $now = new \DateTime();
+        $momentGeneratorCall = false;
+        $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
+
+        $this->storageToken->method('getRefreshToken')->willReturn('refresh secret');
+        $this->storageToken->method('isExpiredAt')->willReturn(true);
+        $this->storageToken->expects($this->once())->method('isExpiredAt')->with($now);
+
+        $this->storage->method('getToken')->willReturn($this->storageToken);
+
+        $this->acquirer->method('refresh')->willThrowException(new TokenDeletedException('', $this->request));
+        $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', null);
+
+        $this->acquirer->method('acquire')->willReturn($this->responseToken);
+        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
+
+        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, null, null);
+
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+
+        $this->lockManager->expects($this->once())->method('lock')->with($this->id);
+        $this->lockManager->expects($this->once())->method('unlock')->with($this->id);
+        $token = $this->manager->getClientToken($this->request, $this->id, null);
+
+        $this->assertTrue($momentGeneratorCall);
+        $this->assertEquals($this->responseToken, $token);
+    }
+
+    public function testGetEmptyToken()
+    {
+        $now = new \DateTime();
+        $momentGeneratorCall = false;
+        $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
+
+        $this->acquirer->method('acquire')->willReturn($this->responseToken);
+        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
+
+        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, null, null);
+
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+
+        $this->lockManager->expects($this->once())->method('lock')->with($this->id);
+        $this->lockManager->expects($this->once())->method('unlock')->with($this->id);
+
+        $token = $this->manager->getClientToken($this->request, $this->id, null);
+
+        $this->assertTrue($momentGeneratorCall);
+        $this->assertTrue($token instanceof Token);
     }
 
     /**
      * @return array
      */
-    public function getTokenDataProvider()
+    public function getTokenFailedDataProvider()
     {
         return [
-            ['CLIENT-1.1', null, null, null, null, false],
-            ['CLIENT-1.2', null, null, null, TokenLimitReachedException::class, false],
-
-            ['CLIENT-2.1', null, [], false, null, false],
-            ['CLIENT-2.2', null, ['foo' => 'bar'], true, null, false],
-
-            ['CLIENT-3.1', null, ['bar' => 'foo'], true, null, true],
-            ['CLIENT-3.2', null, [], true, TokenLimitReachedException::class, true],
-
-            [null, 'USER-1.1', null, null, null, false],
-            [null, 'USER-1.2', null, null, TokenLimitReachedException::class, false],
-
-            [null, 'USER-2.1', [], false, null, false],
-            [null, 'USER-2.2', ['foo' => 'bar'], true, null, false],
-
-            [null, 'USER-3.1', ['bar' => 'foo'], true, null, true],
-            [null, 'USER-3.2', [], true, TokenLimitReachedException::class, true],
+            [true],
+            [false],
         ];
     }
 
     /**
-     * @param string|null $client
-     * @param string|null $username
-     * @param array|null  $context
-     * @param bool|null   $isExpiredAt
-     * @param string|null $exception
-     * @param bool        $isDeleted
+     * @param bool $exist
      *
-     * @dataProvider getTokenDataProvider
+     * @dataProvider getTokenFailedDataProvider
      */
-    public function testGetToken($client, $username, $context, $isExpiredAt, $exception, $isDeleted)
+    public function testGetTokenFailed($exist)
     {
-        $id = $username ?: $client;
+        $this->setExpectedException(TokenLimitReachedException::class);
 
-        $momentGeneratorCall = false;
-        $now = new \DateTime();
-        $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
-
-        if ($exception) {
-            $this->setExpectedException($exception);
-        }
-
-        $responseTokenMock = $this->getMock(Token::class, [], [], '', false);
-
-        // Token in storage
-        if (is_bool($isExpiredAt)) {
-            $storageTokenMock = $this->getMock(Token::class, [], [], '', false);
-            $storageTokenMock->method('getRefreshToken')->willReturn('refresh secret');
-            $storageTokenMock->method('isExpiredAt')->willReturn($isExpiredAt);
-            $storageTokenMock->expects($this->once())->method('isExpiredAt')->with($now);
-
-            $this->storage->method('getToken')->willReturn($storageTokenMock);
-
-            if ($isExpiredAt) {
-                if ($isDeleted) {
-                    $this->acquirer->method('refresh')->willThrowException(new TokenDeletedException('', $this->request));
-                } else {
-                    $this->acquirer->method('refresh')->willReturn($responseTokenMock);
-                    $this->storage->expects($this->once())->method('updateToken')->with($id, $responseTokenMock, $this->request, $context);
-                }
-
-                $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', $context);
-            }
-        }
-
-        // Empty storage or Token was deleted by Target
-        if (is_null($isExpiredAt) || $isDeleted) {
-            if ($exception) {
-                $this->acquirer->method('acquire')->willThrowException(new TokenLimitReachedException('', $this->request));
-            } else {
-                $this->acquirer->method('acquire')->willReturn($responseTokenMock);
-                $this->storage->expects($this->once())->method('updateToken')->with($id, $responseTokenMock, $this->request, $context);
-            }
-
-            $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $username, $context);
-        }
-
-        $this->storage->expects($this->once())->method('getToken')->with($id, $this->request, $context);
-
-        // Empty storage or Token expired
-        if (is_null($isExpiredAt) || $isExpiredAt) {
-            $this->lockManager->expects($this->once())->method('lock')->with($id);
-            if (TokenLimitReachedException::class !== $exception) {
-                $this->lockManager->expects($this->once())->method('unlock')->with($id);
-            }
-        }
-
-        if ($username) {
-            $token = $this->manager->getUserToken($this->request, $username, $context);
+        if ($exist) {
+            $this->storageToken->method('isExpiredAt')->willReturn(true);
+            $this->storage->method('getToken')->willReturn($this->storageToken);
+            $this->acquirer->method('refresh')->willThrowException(new TokenLimitReachedException('', $this->request));
         } else {
-            $token = $this->manager->getClientToken($this->request, $client, $context);
+            $this->acquirer->method('acquire')->willThrowException(new TokenLimitReachedException('', $this->request));
         }
 
-        $this->assertTrue($momentGeneratorCall);
-        $this->assertTrue($token instanceof Token);
+        $this->manager->getClientToken($this->request, $this->id, null);
     }
 
 }
