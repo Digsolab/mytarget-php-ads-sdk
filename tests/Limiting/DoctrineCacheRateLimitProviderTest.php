@@ -1,11 +1,11 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace tests\Dsl\MyTarget\Limiting;
 
-use GuzzleHttp\Psr7\Response;
-use MyTarget\Limiting\IdBuilder;
-use MyTarget\Limiting\LimitExtractor;
+use Dsl\MyTarget\Limiting\DoctrineCacheRateLimitProvider;
+use Dsl\MyTarget\Limiting\LimitExtractor;
 use Doctrine\Common\Cache\Cache;
+use Dsl\MyTarget\Limiting\Limits;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -13,16 +13,16 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject|Cache */
     protected $cache;
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $idBuilder;
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|LimitExtractor */
     protected $limitExtractor;
+    /** @var  \PHPUnit_Framework_MockObject_MockObject|RequestInterface */
+    protected $request;
 
     protected function setUp()
     {
         $this->cache = $this->getMock(Cache::class);
-        $this->idBuilder = $this->getMock(IdBuilder::class);
         $this->limitExtractor = $this->getMock(LimitExtractor::class);
+        $this->request = $this->getMockForAbstractClass(RequestInterface::class, [], "", false);
     }
 
     public function limits()
@@ -55,26 +55,20 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLimits(Limits $limits, \DateTimeImmutable $moment, $shouldFail)
     {
-        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
+        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->limitExtractor);
         $limitProvider->setMomentGenerator(function () use ($moment) {
             return $moment;
         });
 
         $username = "bar";
         $limitBy = "campaigns-all";
-        $id = "foo";
-
-        $this->idBuilder->expects($this->once())
-            ->method("buildId")
-            ->with($limitBy, $username)
-            ->willReturn($id);
 
         $this->cache->expects($this->once())
             ->method("fetch")
-            ->with($id)
+            ->with("{$limitBy}#{$username}")
             ->willReturn($limits->toArray());
 
-        $result = $limitProvider->isLimitReached($limitBy, $username);
+        $result = $limitProvider->isLimitReached($limitBy, $this->request, ["username" => $username]);
 
         if ($shouldFail) {
             $this->assertTrue($result, "This check should have failed (the limit is reached)");
@@ -85,42 +79,31 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testItDoesNotPanicWhenNoLimitsCached()
     {
-        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
+        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->limitExtractor);
 
         $username = "bar";
         $limitBy = "campaigns-all";
-        $id = "foo";
         $limits = false;
-
-        $this->idBuilder->expects($this->once())
-                        ->method("buildId")
-                        ->with($limitBy, $username)
-                        ->willReturn($id);
 
         $this->cache->expects($this->once())
                     ->method("fetch")
-                    ->with($id)
+                    ->with("{$limitBy}#{$username}")
                     ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($limitBy, $username);
+        $result = $limitProvider->isLimitReached($limitBy, $this->request, ["username" => $username]);
 
         $this->assertFalse($result);
     }
 
     public function testItUpdatesLimits()
     {
-        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->idBuilder, $this->limitExtractor);
+        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->limitExtractor);
 
-        $response = new Response();
+        $response = $this->getMockForAbstractClass(ResponseInterface::class, [], "", false);
         $username = "12345@agency_client";
         $limitBy = "campaigns-all";
         $id = "campaigns-all#12345@agency_client";
         $limits = Limits::create(new \DateTime(), 1, 1, 1, 1);
-
-        $this->idBuilder->expects($this->once())
-                        ->method("buildId")
-                        ->with($limitBy, $username)
-                        ->willReturn($id);
 
         $this->limitExtractor->expects($this->once())
                         ->method("extractLimits")
@@ -131,6 +114,40 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->method("save")
                     ->with($id, $limits->toArray());
 
-        $limitProvider->refreshLimits($response, $limitBy, $username);
+        $limitProvider->refreshLimits($this->request, $response, $limitBy, ["username" => $username]);
+    }
+
+    public function testItCorrectlyUsesProvidedHashFunction()
+    {
+        $expectedLimitBy = "foo";
+        $expectedCtx = ["username" => "bar"];
+        $expectedId = "foobarbarfoo";
+
+        $hashFunc = function ($limitBy, RequestInterface $request, array $context)
+            use ($expectedLimitBy, $expectedCtx, $expectedId) {
+
+            $this->assertSame($expectedLimitBy, $limitBy);
+            $this->assertSame($this->request, $request);
+            $this->assertSame($expectedCtx, $context);
+
+            return $expectedId;
+        };
+
+        $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->limitExtractor, $hashFunc);
+
+        $this->cache->expects($this->once())->method("fetch")
+            ->with($expectedId)->willReturn(null);
+
+        $limitProvider->isLimitReached($expectedLimitBy, $this->request, $expectedCtx);
+
+        $response = $this->getMockForAbstractClass(ResponseInterface::class, [], "", false);
+
+        $limits = Limits::create(new \DateTime(), 1, 1, 1, 1);
+        $this->limitExtractor->expects($this->once())->method("extractLimits")
+            ->with($response)->willReturn($limits);
+        $this->cache->expects($this->once())->method("save")
+            ->with($expectedId, $limits->toArray());
+
+        $limitProvider->refreshLimits($this->request, $response, $expectedLimitBy, $expectedCtx);
     }
 }

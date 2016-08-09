@@ -1,11 +1,11 @@
 <?php
 
-namespace MyTarget\Operator\V1\Remarketing;
+namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
-use MyTarget\Client;
-use MyTarget\Domain\V1\Remarketing\RemarketingVkApp;
-use MyTarget\Domain\V1\Remarketing\RemarketingVkAppStat;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingVkApp;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingVkAppStat;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class RemarketingVkAppsOperator
 {

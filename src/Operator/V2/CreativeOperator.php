@@ -1,13 +1,13 @@
 <?php
 
-namespace MyTarget\Operator\V2;
+namespace Dsl\MyTarget\Operator\V2;
 
-use MyTarget\Client;
-use MyTarget\Domain\V2\Enum\CreativeType;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
-use MyTarget\Domain\V2\Creative;
-use MyTarget\Domain\V2\UploadCreative;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V2\Enum\CreativeType;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Operator\Exception\UnexpectedFileArgumentException;
+use Dsl\MyTarget\Domain\V2\Creative;
+use Dsl\MyTarget\Domain\V2\UploadCreative;
 use Psr\Http\Message\StreamInterface;
 
 class CreativeOperator

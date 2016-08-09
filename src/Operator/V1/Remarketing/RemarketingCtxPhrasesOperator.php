@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Operator\V1\Remarketing;
+namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
-use MyTarget\Client;
-use MyTarget\Domain\V1\Remarketing\RemarketingContextPhrases;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingContextPhrases;
+use Dsl\MyTarget\Mapper\Mapper;
 use Psr\Http\Message\StreamInterface;
 
 class RemarketingCtxPhrasesOperator
@@ -34,7 +34,7 @@ class RemarketingCtxPhrasesOperator
      */
     public function create($file, $name, array $context = null)
     {
-        $file = \MyTarget\streamOrResource($file);
+        $file = \Dsl\MyTarget\streamOrResource($file);
 
         $body = [
             ["name" => "name", "contents" => $name],

@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V2\SharingKeys;
+namespace Dsl\MyTarget\Domain\V2\SharingKeys;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ShareClient
 {

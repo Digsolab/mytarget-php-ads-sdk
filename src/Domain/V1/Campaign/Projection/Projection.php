@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign\Projection;
+namespace Dsl\MyTarget\Domain\V1\Campaign\Projection;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Projection
 {
@@ -14,7 +14,7 @@ class Projection
 
     /**
      * @var ProjectionPoint[]
-     * @Field(type="array<MyTarget\Domain\V1\Campaign\Projection\ProjectionPoint>", name="offpoints_histogramm")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\Campaign\Projection\ProjectionPoint>", name="offpoints_histogramm")
      */
     private $offpointsHistogram;
 
@@ -32,7 +32,7 @@ class Projection
 
     /**
      * @var ProjectionPoint[]
-     * @Field(type="array<MyTarget\Domain\V1\Campaign\Projection\ProjectionPoint>", name="histogramm")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\Campaign\Projection\ProjectionPoint>", name="histogramm")
      */
     private $histogram;
 

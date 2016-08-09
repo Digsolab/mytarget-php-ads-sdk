@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Domain;
+namespace Dsl\MyTarget\Domain;
 
 class DateRange
 {

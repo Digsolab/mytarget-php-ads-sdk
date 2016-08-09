@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Exception;
+namespace Dsl\MyTarget\Exception;
 
 class UnexpectedValueException extends \UnexpectedValueException
     implements MyTargetException

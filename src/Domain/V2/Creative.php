@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V2;
+namespace Dsl\MyTarget\Domain\V2;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Creative
 {
@@ -13,7 +13,7 @@ class Creative
 
     /**
      * @var CreativeVariant[]
-     * @Field(type="MyTarget\Domain\V2\CreativeVariant")
+     * @Field(type="Dsl\MyTarget\Domain\V2\CreativeVariant")
      */
     private $variants;
 

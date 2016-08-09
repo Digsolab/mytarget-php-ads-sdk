@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Image;
+namespace Dsl\MyTarget\Domain\V1\Image;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class UploadImage
 {

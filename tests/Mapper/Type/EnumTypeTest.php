@@ -1,8 +1,9 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type\EnumType;
 
 class EnumTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,9 +21,9 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
     {
         $enumType = new EnumType();
 
-        $result = $enumType->hydrated(777, 'MyTarget\Mapper\Type\EnumTypeMock', $this->mapper);
+        $result = $enumType->hydrated(777, EnumTypeMock::class, $this->mapper);
 
-        $this->assertInstanceOf('MyTarget\Mapper\Type\EnumTypeMock', $result);
+        $this->assertInstanceOf(EnumTypeMock::class, $result);
 
         $this->assertSame(EnumTypeMock::TEST_CONST_VAL, $result->getValue());
     }
@@ -31,7 +32,7 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
     {
         $enumType = new EnumType();
 
-        $result = $enumType->hydrated(111, 'MyTarget\Mapper\Type\EnumTypeMock', $this->mapper);
+        $result = $enumType->hydrated(111, EnumTypeMock::class, $this->mapper);
 
         $this->assertSame(null, $result);
     }
@@ -42,7 +43,7 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
 
         $enum = EnumTypeMock::fromValue(777);
 
-        $result = $enumType->snapshot($enum, 'MyTarget\Mapper\Type\EnumTypeMock', $this->mapper);
+        $result = $enumType->snapshot($enum, EnumTypeMock::class, $this->mapper);
 
         $this->assertSame(777, $result);
     }
@@ -51,7 +52,7 @@ class EnumTypeTest extends \PHPUnit_Framework_TestCase
     {
         $enumType = new EnumType();
 
-        $result = $enumType->snapshot(new \stdClass(), 'MyTarget\Mapper\Type\EnumTypeMock', $this->mapper);
+        $result = $enumType->snapshot(new \stdClass(), EnumTypeMock::class, $this->mapper);
 
         $this->assertSame(null, $result);
     }

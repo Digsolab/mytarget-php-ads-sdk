@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1;
+namespace Dsl\MyTarget\Domain\V1;
 
-use MyTarget\Domain\V1\Enum\CreativeType;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\CreativeType;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Creative
 {
@@ -14,13 +14,13 @@ class Creative
 
     /**
      * @var CreativeType
-     * @Field(type="MyTarget\Domain\V1\Enum\CreativeType")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\CreativeType")
      */
     private $type;
 
     /**
      * @var CreativeVariant[]
-     * @Field(type="MyTarget\Domain\V1\CreativeVariant")
+     * @Field(type="Dsl\MyTarget\Domain\V1\CreativeVariant")
      */
     private $variants;
 

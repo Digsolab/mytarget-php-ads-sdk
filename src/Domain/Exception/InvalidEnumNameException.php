@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Domain\Exception;
+namespace Dsl\MyTarget\Domain\Exception;
 
 class InvalidEnumNameException extends \InvalidArgumentException
 {

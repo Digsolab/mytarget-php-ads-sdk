@@ -1,18 +1,18 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign\Projection;
+namespace Dsl\MyTarget\Domain\V1\Campaign\Projection;
 
-use MyTarget\Domain\V1\Campaign\Campaign;
-use MyTarget\Domain\V1\Campaign\Package;
-use MyTarget\Domain\V1\Targeting\CampaignTargeting;
-use MyTarget\Domain\V1\User;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
+use Dsl\MyTarget\Domain\V1\Campaign\Package;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
+use Dsl\MyTarget\Domain\V1\User;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ProjectionCampaign extends Campaign
 {
     /**
      * @var User
-     * @Field(type="MyTarget\Domain\V1\User")
+     * @Field(type="Dsl\MyTarget\Domain\V1\User")
      */
     private $user;
 

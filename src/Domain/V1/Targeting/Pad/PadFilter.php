@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1\Targeting\Pad;
+namespace Dsl\MyTarget\Domain\V1\Targeting\Pad;
 
-use MyTarget\Mapper\Annotation\Field;
-use MyTarget\Domain\V1\Enum\ImageType;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\ImageType;
 
 class PadFilter
 {
@@ -27,7 +27,7 @@ class PadFilter
 
     /**
      * @var ImageType[]
-     * @Field(name="allow_image_types", type="array<MyTarget\Domain\V1\Enum\ImageType>")
+     * @Field(name="allow_image_types", type="array<Dsl\MyTarget\Domain\V1\Enum\ImageType>")
      */
     private $allowImageTypes;
 
@@ -63,7 +63,7 @@ class PadFilter
 
     /**
      * @var ImageType[]
-     * @Field(name="deny_image_types", type="array<MyTarget\Domain\V1\Enum\ImageType>")
+     * @Field(name="deny_image_types", type="array<Dsl\MyTarget\Domain\V1\Enum\ImageType>")
      */
     private $denyImageTypes;
 

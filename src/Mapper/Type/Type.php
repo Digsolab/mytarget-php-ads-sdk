@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Exception\ContextAwareException;
-use MyTarget\Mapper\Exception\ContextUnawareException;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Exception\ContextAwareException;
+use Dsl\MyTarget\Mapper\Exception\ContextUnawareException;
+use Dsl\MyTarget\Mapper\Mapper;
 
 /**
  * Implements data mapper for a particular type (or a kind)

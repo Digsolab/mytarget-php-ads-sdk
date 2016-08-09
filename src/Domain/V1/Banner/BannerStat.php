@@ -1,41 +1,41 @@
 <?php
 
-namespace MyTarget\Domain\V1\Banner;
+namespace Dsl\MyTarget\Domain\V1\Banner;
 
 
-use MyTarget\Domain\V1\Creative;
-use MyTarget\Domain\V1\PeriodStat;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Creative;
+use Dsl\MyTarget\Domain\V1\PeriodStat;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class BannerStat extends Banner
 {
     /**
      * @var PeriodStat
-     * @Field(name="stats", type="MyTarget\Domain\V1\PeriodStat")
+     * @Field(name="stats", type="Dsl\MyTarget\Domain\V1\PeriodStat")
      */
     private $stats;
 
     /**
      * @var PeriodStat
-     * @Field(name="stats_today", type="MyTarget\Domain\V1\PeriodStat")
+     * @Field(name="stats_today", type="Dsl\MyTarget\Domain\V1\PeriodStat")
      */
     private $statsToday;
 
     /**
      * @var PeriodStat
-     * @Field(name="stats_yesterday", type="MyTarget\Domain\V1\PeriodStat")
+     * @Field(name="stats_yesterday", type="Dsl\MyTarget\Domain\V1\PeriodStat")
      */
     private $statsYesterday;
 
     /**
      * @var PeriodStat[]
-     * @Field(name="stats_full", type="array<MyTarget\Domain\V1\PeriodStat>")
+     * @Field(name="stats_full", type="array<Dsl\MyTarget\Domain\V1\PeriodStat>")
      */
     private $statsFull;
 
     /**
      * @var Creative[]
-     * @Field(type="array<MyTarget\Domain\V1\Creative>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\Creative>")
      */
     private $content;
 

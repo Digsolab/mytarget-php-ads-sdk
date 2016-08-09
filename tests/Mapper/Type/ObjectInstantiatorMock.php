@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
 use Doctrine\Instantiator\InstantiatorInterface;
 

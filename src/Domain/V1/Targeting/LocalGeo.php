@@ -1,29 +1,29 @@
 <?php
 
-namespace MyTarget\Domain\V1\Targeting;
+namespace Dsl\MyTarget\Domain\V1\Targeting;
 
 
-use MyTarget\Mapper\Annotation\Field;
-use MyTarget\Domain\V1\Enum\LocalGeoLocType;
-use MyTarget\Domain\V1\Enum\LocalGeoVisitType;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\LocalGeoLocType;
+use Dsl\MyTarget\Domain\V1\Enum\LocalGeoVisitType;
 
 class LocalGeo
 {
     /**
      * @var LocalGeoVisitType
-     * @Field(name="type", type="MyTarget\Domain\V1\Enum\LocalGeoVisitType")
+     * @Field(name="type", type="Dsl\MyTarget\Domain\V1\Enum\LocalGeoVisitType")
      */
     private $type;
 
     /**
      * @var Location[]
-     * @Field(name="regions", type="array<\MyTarget\Domain\V1\Targeting\Location>")
+     * @Field(name="regions", type="array<\Dsl\MyTarget\Domain\V1\Targeting\Location>")
      */
     private $regions;
 
     /**
      * @var LocalGeoLocType
-     * @Field(name="loc_type", type="MyTarget\Domain\V1\Enum\LocalGeoLocType")
+     * @Field(name="loc_type", type="Dsl\MyTarget\Domain\V1\Enum\LocalGeoLocType")
      */
     private $locType;
 
