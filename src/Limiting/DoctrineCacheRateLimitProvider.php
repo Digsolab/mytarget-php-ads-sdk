@@ -71,21 +71,21 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
         }
 
         $limits = Limits::buildFromArray($limitsArray);
-        if (null === $limits->moment) {
+        if ( ! $limits) {
             return false;
         }
 
         $now = call_user_func($this->momentGenerator); /** @var \DateTimeInterface $now */
-        $diff = $now->diff($limits->moment);
+        $diff = $now->diff($limits->getMoment());
 
-        if (( ! $diff->invert && $now != $limits->moment) || $diff->days) {
+        if (( ! $diff->invert && $now != $limits->getMoment()) || $diff->days) {
             return false;
         }
 
-        if (($limits->bySecond === 0 && $now->format("dHis") === $limits->moment->format("dHis")) ||
-            ($limits->byMinute === 0 && $now->format("dHi" ) === $limits->moment->format("dHi" )) ||
-            ($limits->byHour   === 0 && $now->format("dH"  ) === $limits->moment->format("dH"  )) ||
-            ($limits->byDay    === 0 && $now->format("d"   ) === $limits->moment->format("d"   ))) {
+        if (($limits->getBySecond() === 0 && $now->format("dHis") === $limits->getMoment()->format("dHis")) ||
+            ($limits->getByMinute() === 0 && $now->format("dHi" ) === $limits->getMoment()->format("dHi" )) ||
+            ($limits->getByHour()   === 0 && $now->format("dH"  ) === $limits->getMoment()->format("dH"  )) ||
+            ($limits->getByDay()    === 0 && $now->format("d"   ) === $limits->getMoment()->format("d"   ))) {
 
             return true;
         }
@@ -98,8 +98,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
      */
     public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, array $context = null)
     {
-        $limits = $this->limitExtractor->extractLimits($response);
-        $limits->moment = call_user_func($this->momentGenerator);
+        $limits = $this->limitExtractor->extractLimits($response, call_user_func($this->momentGenerator));
 
         $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
 

@@ -34,19 +34,19 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
             // 1. Limit ----------------------------------- 2. moment at which this limit should be tested
             // ---------------------------------------------------- 3. should it fail or not in the end
 
-            [Limits::create($moment, 0, null, null, null), $moment, true], // should fail
-            [Limits::create($moment, 0, null, null, null), $moment->add(new \DateInterval("PT1S")), false], // should not fail nor falter I shall succeed. my perception is altered I do believe
-            [Limits::create($moment, 1, 1, 1, 1), $moment, false],
-            [Limits::create($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT59S")), true],
-            [Limits::create($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT1M")), false],
-            [Limits::create($moment, 0, 0, 1, 1), $moment->add(new \DateInterval("PT1M")), false],
-            [Limits::create($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT59M")), true],
-            [Limits::create($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT1H")), false],
-            [Limits::create($moment, 1, 1, 1, 0), $moment, true],
-            [Limits::create($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("PT23H59M59S")), true],
-            [Limits::create($moment2, 1, 1, 1, 0), $moment2->add(new \DateInterval("PT23H59M59S")), false],
-            [Limits::create($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("P1D")), false],
-            [Limits::create($moment, 0, 0, 0, 0), $moment->sub(new \DateInterval("PT1S")), false] // we went back in time there clearly are no limits for us
+            [new Limits($moment, 0, null, null, null), $moment, true], // should fail
+            [new Limits($moment, 0, null, null, null), $moment->add(new \DateInterval("PT1S")), false], // should not fail nor falter I shall succeed. my perception is altered I do believe
+            [new Limits($moment, 1, 1, 1, 1), $moment, false],
+            [new Limits($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT59S")), true],
+            [new Limits($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT1M")), false],
+            [new Limits($moment, 0, 0, 1, 1), $moment->add(new \DateInterval("PT1M")), false],
+            [new Limits($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT59M")), true],
+            [new Limits($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT1H")), false],
+            [new Limits($moment, 1, 1, 1, 0), $moment, true],
+            [new Limits($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("PT23H59M59S")), true],
+            [new Limits($moment2, 1, 1, 1, 0), $moment2->add(new \DateInterval("PT23H59M59S")), false],
+            [new Limits($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("P1D")), false],
+            [new Limits($moment, 0, 0, 0, 0), $moment->sub(new \DateInterval("PT1S")), false] // we went back in time there clearly are no limits for us
         ];
     }
 
@@ -103,7 +103,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
         $username = "12345@agency_client";
         $limitBy = "campaigns-all";
         $id = "campaigns-all#12345@agency_client";
-        $limits = Limits::create(new \DateTimeImmutable(), 1, 1, 1, 1);
+        $limits = new Limits(new \DateTimeImmutable(), 1, 1, 1, 1);
 
         $this->limitExtractor->expects($this->once())
                         ->method("extractLimits")
@@ -142,7 +142,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         $response = $this->getMockForAbstractClass(ResponseInterface::class, [], "", false);
 
-        $limits = Limits::create(new \DateTimeImmutable(), 1, 1, 1, 1);
+        $limits = new Limits(new \DateTimeImmutable(), 1, 1, 1, 1);
         $this->limitExtractor->expects($this->once())->method("extractLimits")
             ->with($response)->willReturn($limits);
         $this->cache->expects($this->once())->method("save")
