@@ -102,7 +102,7 @@ class TokenAcquirer
      * @return Token|null
      * @throws TokenRequestException
      */
-    public function refresh(RequestInterface $request, \DateTimeImmutable $now, $refreshToken, array $context = null)
+    public function refresh(RequestInterface $request, \DateTimeInterface $now, $refreshToken, array $context = null)
     {
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);

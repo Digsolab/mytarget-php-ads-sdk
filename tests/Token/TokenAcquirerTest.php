@@ -67,7 +67,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSuccessfulAcquire($username, $context, $statusCode, $body)
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $payload = [
             'grant_type'    => $username === null ? 'client_credentials' : 'agency_client_credentials',
@@ -124,7 +124,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailedAcquire($username, $context, $statusCode, $body, $exception)
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $this->setExpectedException($exception);
 

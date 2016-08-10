@@ -2,6 +2,8 @@
 
 namespace Dsl\MyTarget\Token;
 
+use Dsl\MyTarget as f;
+
 class Token
 {
     /**
@@ -20,7 +22,7 @@ class Token
     private $tokenType;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $expiresAt;
 
@@ -39,7 +41,7 @@ class Token
     {
         $this->accessToken = $accessToken;
         $this->tokenType = $tokenType;
-        $this->expiresAt = $expiresAt;
+        $this->expiresAt = f\date_immutable($expiresAt);
         $this->refreshToken = $refreshToken;
     }
 
@@ -53,7 +55,7 @@ class Token
             return null;
         }
 
-        $expiresAt = \DateTime::createFromFormat(\DateTime::ISO8601, $token["expires_at"]);
+        $expiresAt = \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $token["expires_at"]);
         if ($expiresAt === false) {
             return null;
         }
@@ -72,9 +74,7 @@ class Token
             return null;
         }
 
-        /** @var \DateTime|\DateTimeImmutable $now */
-        $now = clone $now;
-        $expiresAt = $now->add(new \DateInterval(sprintf("PT%dS", $token["expires_in"])));
+        $expiresAt = f\date_immutable($now)->add(new \DateInterval(sprintf("PT%dS", $token["expires_in"])));
 
         return new Token($token["access_token"], $token["token_type"], $expiresAt, $token["refresh_token"]);
     }
@@ -109,7 +109,7 @@ class Token
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getExpiresAt()
     {

@@ -72,3 +72,35 @@ function streamOrResource($file)
 
     return $file;
 }
+
+/**
+ * @param \DateTimeInterface $dt
+ * @return \DateTimeImmutable
+ */
+function date_immutable(\DateTimeInterface $dt)
+{
+    if ($dt instanceof \DateTimeImmutable) {
+        return $dt;
+    }
+
+    $immutable = \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $dt->format(\DateTime::ISO8601));
+    $immutable = $immutable->setTimezone($dt->getTimezone());
+
+    return $immutable;
+}
+
+/**
+ * @param \DateTimeInterface $dt
+ * @return \DateTime
+ */
+function date_mutable(\DateTimeInterface $dt)
+{
+    if ($dt instanceof \DateTime) {
+        return $dt;
+    }
+
+    $mutable = \DateTime::createFromFormat(\DateTime::ISO8601, $dt->format(\DateTime::ISO8601));
+    $mutable->setTimezone($dt->getTimezone());
+
+    return $mutable;
+}

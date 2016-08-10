@@ -32,7 +32,7 @@ class CampaignStat extends Campaign
     private $statsFull;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="last_stats_updated", type="DateTime")
      */
     private $lastStatsUpdated;
@@ -62,7 +62,7 @@ class CampaignStat extends Campaign
     }
 
     /**
-     * @return \Dsl\MyTarget\Domain\V1\PeriodStat[]
+     * @return PeriodStat[]
      */
     public function getStatsFull()
     {
@@ -70,7 +70,7 @@ class CampaignStat extends Campaign
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getLastStatsUpdated()
     {

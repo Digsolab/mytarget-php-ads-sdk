@@ -2,8 +2,7 @@
 
 namespace Dsl\MyTarget\Token\Exception;
 
-use Dsl\MyTarget\Exception\MyTargetException;
-
-class TokenLockException extends \RuntimeException implements MyTargetException
+class TokenLockException extends \RuntimeException
+    implements TokenException
 {
 }

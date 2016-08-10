@@ -2,26 +2,28 @@
 
 namespace Dsl\MyTarget\Domain;
 
+use Dsl\MyTarget as f;
+
 class DateRange
 {
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $from;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $to;
 
-    public function __construct(\DateTime $from, \DateTime $to)
+    public function __construct(\DateTimeInterface $from, \DateTimeInterface $to)
     {
-        $this->from = $from;
-        $this->to = $to;
+        $this->from = f\date_immutable($from);
+        $this->to = f\date_immutable($to);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getFrom()
     {
@@ -29,7 +31,7 @@ class DateRange
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getTo()
     {

@@ -12,21 +12,21 @@ class TokenTest extends \PHPUnit_Framework_TestCase
     public function constructDataProvider()
     {
         return [
-            [null, null, new \DateTime(), null],
-            [0, 1, new \DateTime(), 2],
-            [[], new \stdClass(), new \DateTime(), 'foo']
+            [null, null, new \DateTimeImmutable(), null],
+            [0, 1, new \DateTimeImmutable(), 2],
+            [[], new \stdClass(), new \DateTimeImmutable(), 'foo']
         ];
     }
 
     /**
      * @param mixed     $access
      * @param mixed     $type
-     * @param \DateTime $expiresAt
+     * @param \DateTimeImmutable $expiresAt
      * @param mixed     $refresh
      *
      * @dataProvider constructDataProvider
      */
-    public function testConstruct($access, $type, \DateTime $expiresAt, $refresh)
+    public function testConstruct($access, $type, \DateTimeImmutable $expiresAt, $refresh)
     {
         $token = new Token($access, $type, $expiresAt, $refresh);
 
@@ -95,7 +95,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testFromResponse($array, $class)
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $token = Token::fromResponse($array, $now);
 
@@ -114,7 +114,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
         $token = new Token('access', 'type', $now, 'refresh');
 
         $this->assertSame(

@@ -3,6 +3,7 @@
 namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
 use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget as f;
 
 class RemarketingPricelist
 {
@@ -37,13 +38,13 @@ class RemarketingPricelist
     private $feedId;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="created", type="DateTime")
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="last_import_finished", type="DateTime")
      */
     private $lastImportFinished;
@@ -129,7 +130,7 @@ class RemarketingPricelist
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getCreated()
     {
@@ -137,15 +138,15 @@ class RemarketingPricelist
     }
 
     /**
-     * @param \DateTime $created
+     * @param \DateTimeInterface $created
      */
-    public function setCreated($created)
+    public function setCreated(\DateTimeInterface $created)
     {
-        $this->created = $created;
+        $this->created = f\date_immutable($created);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getLastImportFinished()
     {
@@ -153,10 +154,10 @@ class RemarketingPricelist
     }
 
     /**
-     * @param \DateTime $lastImportFinished
+     * @param \DateTimeInterface $lastImportFinished
      */
-    public function setLastImportFinished($lastImportFinished)
+    public function setLastImportFinished(\DateTimeInterface $lastImportFinished)
     {
-        $this->lastImportFinished = $lastImportFinished;
+        $this->lastImportFinished = f\date_immutable($lastImportFinished);
     }
 }

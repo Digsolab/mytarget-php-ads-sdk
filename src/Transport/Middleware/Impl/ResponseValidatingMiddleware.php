@@ -26,7 +26,7 @@ class ResponseValidatingMiddleware implements HttpMiddleware
         }
 
         if ($code >= 300 && $code < 400) { // safety net
-            throw new ex\RequestException("MyTarget: {$code} Redirect is not supported", $request, $response);
+            throw new ex\RedirectUnexpectedException("MyTarget: {$code} Redirect is not supported", $request, $response);
         }
 
         return $response;

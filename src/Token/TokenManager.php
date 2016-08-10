@@ -32,7 +32,7 @@ class TokenManager
     private $lockManager;
 
     /**
-     * @var callable callable(): \DateTime Returns current moment
+     * @var callable callable(): \DateTimeInterface Returns current moment
      */
     private $momentGenerator;
 
@@ -140,7 +140,7 @@ class TokenManager
             } catch (TokenLimitReachedException $e) {
                 throw $e;
             } catch (\Exception $e) {
-                // @todo finally works incorrectly with Redis in php5.5
+                // finally works incorrectly with Redis in php5.5
                 if ($this->lockManager) {
                     $this->lockManager->unlock($id);
                 }

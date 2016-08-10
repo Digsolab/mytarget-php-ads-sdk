@@ -2,16 +2,13 @@
 
 namespace Dsl\MyTarget\Domain\V1\Banner;
 
-
 use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
-
 use Dsl\MyTarget\Domain\V1\Image\Image;
-
 use Dsl\MyTarget\Domain\V1\User;
-
 use Dsl\MyTarget\Mapper\Annotation\Field;
 use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget\Domain\V1\Enum\ModerationStatus;
+use Dsl\MyTarget as f;
 
 class Banner
 {
@@ -34,13 +31,13 @@ class Banner
     private $systemStatus;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="created", type="DateTime")
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="updated", type="DateTime")
      */
     private $updated;
@@ -262,7 +259,7 @@ class Banner
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getCreated()
     {
@@ -270,15 +267,15 @@ class Banner
     }
 
     /**
-     * @param \DateTime $created
+     * @param \DateTimeInterface $created
      */
-    public function setCreated($created)
+    public function setCreated(\DateTimeInterface $created)
     {
-        $this->created = $created;
+        $this->created = f\date_immutable($created);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getUpdated()
     {
@@ -286,11 +283,11 @@ class Banner
     }
 
     /**
-     * @param \DateTime $updated
+     * @param \DateTimeInterface $updated
      */
-    public function setUpdated($updated)
+    public function setUpdated(\DateTimeInterface $updated)
     {
-        $this->updated = $updated;
+        $this->updated = f\date_immutable($updated);
     }
 
     /**

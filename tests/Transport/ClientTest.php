@@ -63,7 +63,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             HttpMiddlewareStackPrototype::newEmpty(new GuzzleHttpTransport($guzzle))
         );
 
-        $this->setExpectedException(ex\HttpTransportException::class);
+        $this->setExpectedException(ex\NetworkException::class);
 
         $client->get('/any/path');
     }

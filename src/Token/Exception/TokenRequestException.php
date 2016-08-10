@@ -2,12 +2,12 @@
 
 namespace Dsl\MyTarget\Token\Exception;
 
-use Dsl\MyTarget\Exception\MyTargetException;
 use Dsl\MyTarget\Transport\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class TokenRequestException extends RequestException implements MyTargetException
+class TokenRequestException extends RequestException
+    implements TokenException
 {
     /**
      * @param RequestInterface  $request
