@@ -133,25 +133,27 @@ class TokenTest extends \PHPUnit_Framework_TestCase
      */
     public function isExpiredAtDataProvider()
     {
+        $now = new \DateTimeImmutable('2016-01-01 00:00:00');
+
         return [
-            [(new \DateTime())->sub(new \DateInterval('P1D')), true],
-            [new \DateTime(), true],
-            [(new \DateTime())->add(new \DateInterval('PT29M')), true],
-            [(new \DateTime())->add(new \DateInterval('PT30M')), false],
+            [$now->sub(new \DateInterval('P1D')), true],
+            [$now, true],
+            [$now->add(new \DateInterval('PT29M')), true],
+            [$now->add(new \DateInterval('PT30M')), false],
         ];
     }
 
     /**
-     * @param \DateTime $expiresAt
+     * @param \DateTimeInterface $expiresAt
      * @param           $expect
      *
      * @dataProvider isExpiredAtDataProvider
      */
-    public function testIsExpiredAt(\DateTime $expiresAt, $expect)
+    public function testIsExpiredAt(\DateTimeInterface $expiresAt, $expect)
     {
         $token = new Token('', '', $expiresAt, '');
 
-        $this->assertSame($expect, $token->isExpiredAt(new \DateTime()));
+        $this->assertSame($expect, $token->isExpiredAt(new \DateTimeImmutable('2016-01-01 00:00:00')));
     }
 
 }
