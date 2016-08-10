@@ -2,8 +2,6 @@
 
 namespace Dsl\MyTarget\Exception;
 
-use Dsl\MyTarget\Exception\ApiException;
-
 class DecodingException extends \RuntimeException
     implements MyTargetException, ApiException
 {

@@ -95,7 +95,7 @@ class TokenAcquirer
 
     /**
      * @param RequestInterface $request
-     * @param \DateTimeImmutable $now
+     * @param \DateTimeInterface $now
      * @param string $refreshToken
      * @param array|null $context
      *

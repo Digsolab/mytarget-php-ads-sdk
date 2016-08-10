@@ -82,7 +82,7 @@ class CampaignOperator
         $fields = $fields ?: CampaignFields::create();
 
         $query = ["fields" => $this->mapFields($fields->getFields())];
-\
+
         if ($withStatuses && null !== ($status = Status::inApiFormat($withStatuses))) {
             $query["status"] = $status;
         }
