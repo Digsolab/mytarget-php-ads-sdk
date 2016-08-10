@@ -9,7 +9,7 @@ class HeaderLimitExtractor implements LimitExtractor
     /**
      * @inheritdoc
      */
-    public function extractLimits(ResponseInterface $response, \DateTimeInterface $moment = null)
+    public function extractLimits(ResponseInterface $response, \DateTimeInterface $moment)
     {
         $bySecond = $byMinute = $byHour = $byDay = null;
 

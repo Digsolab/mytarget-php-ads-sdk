@@ -7,7 +7,7 @@ use Dsl\MyTarget as f;
 class Limits
 {
     /**
-     * @var \DateTimeImmutable|null
+     * @var \DateTimeImmutable
      */
     private $moment;
 
@@ -32,15 +32,15 @@ class Limits
     private $byDay = null;
 
     /**
-     * @param \DateTimeInterface|null $moment
-     * @param int|null                $bySecond
-     * @param int|null                $byMinute
-     * @param int|null                $byHour
-     * @param int|null                $byDay
+     * @param \DateTimeInterface $moment
+     * @param int|null           $bySecond
+     * @param int|null           $byMinute
+     * @param int|null           $byHour
+     * @param int|null           $byDay
      */
-    public function __construct(\DateTimeInterface $moment = null, $bySecond, $byMinute, $byHour, $byDay)
+    public function __construct(\DateTimeInterface $moment, $bySecond, $byMinute, $byHour, $byDay)
     {
-        $this->moment   = $moment ? f\date_immutable($moment) : null;
+        $this->moment   = f\date_immutable($moment);
         $this->bySecond = $bySecond;
         $this->byMinute = $byMinute;
         $this->byHour   = $byHour;
@@ -68,7 +68,9 @@ class Limits
      */
     public static function buildFromArray(array $limitsArray)
     {
-        $moment   = isset($limitsArray['moment']) ? \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $limitsArray['moment']) : null;
+        if (empty($limitsArray['moment']) || ! $moment = \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $limitsArray['moment'])) {
+            return null;
+        }
         $bySecond = isset($limitsArray['by_second']) && is_numeric($limitsArray['by_second']) ? (int) $limitsArray['by_second'] : null;
         $byMinute = isset($limitsArray['by_minute']) && is_numeric($limitsArray['by_minute']) ? (int) $limitsArray['by_minute'] : null;
         $byHour   = isset($limitsArray['by_hour']) && is_numeric($limitsArray['by_hour']) ? (int) $limitsArray['by_hour'] : null;

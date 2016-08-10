@@ -71,7 +71,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
         }
 
         $limits = Limits::buildFromArray($limitsArray);
-        if (null === $limits->getMoment()) {
+        if ( ! $limits) {
             return false;
         }
 

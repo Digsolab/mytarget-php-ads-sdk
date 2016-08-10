@@ -6,18 +6,35 @@ use Dsl\MyTarget\Limiting\Limits;
 
 class LimitsTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
+    public function buildFromArrayFailedDataProvider()
+    {
+        return [
+            [[]],
+            [['moment' => '']],
+            [['moment' => '2016-01-01']],
+        ];
+    }
 
+    /**
+     * @param array $data
+     *
+     * @dataProvider buildFromArrayFailedDataProvider
+     */
+    public function testBuildFromArrayFailed($data)
+    {
+        $limits = Limits::buildFromArray($data);
+        $this->assertNull($limits);
+    }
+
+    /**
+     * @return array
+     */
     public function buildFromArrayDataProvider()
     {
         return [
-            [
-                [],
-                null,
-                null,
-                null,
-                null,
-                null,
-            ],
             [
                 ['moment' => '2016-01-01T00:00:00+0000'],
                 new \DateTimeImmutable('2016-01-01T00:00:00+0000'),
