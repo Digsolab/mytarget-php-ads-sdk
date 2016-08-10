@@ -49,7 +49,7 @@ class TokenManager
         $this->credentials = $credentials;
         $this->lockManager = $lockManager;
         $this->momentGenerator = function () {
-            return new \DateTime();
+            return new \DateTimeImmutable();
         };
     }
 
