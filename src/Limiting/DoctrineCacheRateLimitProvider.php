@@ -98,7 +98,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
      */
     public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, array $context = null)
     {
-        $limits = $this->limitExtractor->extractLimits($response, $this->momentGenerator);
+        $limits = $this->limitExtractor->extractLimits($response, call_user_func($this->momentGenerator));
 
         $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
 

@@ -7,10 +7,10 @@ use Psr\Http\Message\ResponseInterface;
 interface LimitExtractor
 {
     /**
-     * @param ResponseInterface $response
-     * @param callable|null     $momentGenerator
+     * @param ResponseInterface       $response
+     * @param \DateTimeInterface|null $moment
      *
      * @return Limits
      */
-    public function extractLimits(ResponseInterface $response, callable $momentGenerator = null);
+    public function extractLimits(ResponseInterface $response, \DateTimeInterface $moment = null);
 }

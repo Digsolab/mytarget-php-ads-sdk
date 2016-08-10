@@ -9,9 +9,9 @@ class HeaderLimitExtractor implements LimitExtractor
     /**
      * @inheritdoc
      */
-    public function extractLimits(ResponseInterface $response, callable $momentGenerator = null)
+    public function extractLimits(ResponseInterface $response, \DateTimeInterface $moment = null)
     {
-        $moment = $bySecond = $byMinute = $byHour = $byDay = null;
+        $bySecond = $byMinute = $byHour = $byDay = null;
 
         if ($header = $response->getHeader('X-RateLimit-RPS-Remaining')) {
             $bySecond = (int) $header[0];
@@ -27,10 +27,6 @@ class HeaderLimitExtractor implements LimitExtractor
 
         if ($header = $response->getHeader('X-RateLimit-Daily-Remaining')) {
             $byDay = (int) $header[0];
-        }
-
-        if ($momentGenerator) {
-            $moment = call_user_func($momentGenerator);
         }
 
         $limits = new Limits($moment, $bySecond, $byMinute, $byHour, $byDay);
