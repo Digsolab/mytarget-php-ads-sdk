@@ -108,7 +108,7 @@ class BannerOperator
      * @param array|null        $withCampaignStatuses
      * @param array|null        $context
      *
-     * @return \Dsl\MyTarget\Domain\V1\BannerStat[]
+     * @return BannerStat[]
      */
     public function all(BannerFields $fields = null,
         array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)

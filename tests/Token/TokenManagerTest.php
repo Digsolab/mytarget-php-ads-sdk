@@ -39,7 +39,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
         $this->lockManager = $this->getMock(LockManager::class, [], [], '', false);
         $this->request = $this->getMock(RequestInterface::class);
         $this->manager = new TokenManager($this->acquirer, $this->storage, new Credentials('', ''), $this->lockManager);
-        $this->responseToken = new Token('access', 'foo', new \DateTime(), 'refresh');
+        $this->responseToken = new Token('access', 'foo', new \DateTimeImmutable(), 'refresh');
         $this->storageToken = $this->getMock(Token::class, [], [], '', false);
         $this->id = uniqid('login');
     }

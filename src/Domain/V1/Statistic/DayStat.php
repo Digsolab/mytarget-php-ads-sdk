@@ -7,13 +7,13 @@ use Dsl\MyTarget\Mapper\Annotation\Field;
 class DayStat extends DatedStat
 {
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(type="DateTime<d.m.Y|>")
      */
     private $date;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDate()
     {

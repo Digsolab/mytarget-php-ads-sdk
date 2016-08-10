@@ -2,7 +2,7 @@
 
 namespace Dsl\MyTarget\Transport;
 
-use Dsl\MyTarget\Transport\Exception\HttpTransportException;
+use Dsl\MyTarget\Transport\Exception\NetworkException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -13,7 +13,7 @@ interface HttpTransport
      * @param array|null $context
      *
      * @return ResponseInterface
-     * @throws HttpTransportException
+     * @throws NetworkException
      */
     public function request(RequestInterface $request, array $context = null);
 }

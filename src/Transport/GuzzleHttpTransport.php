@@ -30,7 +30,13 @@ class GuzzleHttpTransport implements HttpTransport
         try {
             return $this->guzzle->send($request, ["http_errors" => false]);
         } catch (guzzleEx\GuzzleException $e) {
-            throw new mtEx\HttpTransportException($e->getMessage(), $request, null, $e);
+            if ($e instanceof guzzleEx\RequestException) {
+                $response = $e->getResponse();
+            } else {
+                $response = null;
+            }
+
+            throw new mtEx\NetworkException($e->getMessage(), $request, $response, $e);
         }
     }
 }

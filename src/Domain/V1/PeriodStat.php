@@ -25,7 +25,7 @@ class PeriodStat
     private $amount;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="date", type="DateTime")
      */
     private $date;
@@ -55,7 +55,7 @@ class PeriodStat
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDate()
     {

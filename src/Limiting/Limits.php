@@ -2,10 +2,12 @@
 
 namespace Dsl\MyTarget\Limiting;
 
+use Dsl\MyTarget as f;
+
 class Limits
 {
     /**
-     * @var \DateTimeInterface
+     * @var \DateTimeImmutable
      */
     public $moment;
 
@@ -41,7 +43,7 @@ class Limits
     public static function create(\DateTimeInterface $moment, $bySecond, $byMinute, $byHour, $byDay)
     {
         $self = new Limits();
-        $self->moment = $moment;
+        $self->moment = f\date_immutable($moment);
         $self->bySecond = $bySecond;
         $self->byMinute = $byMinute;
         $self->byHour = $byHour;
@@ -73,7 +75,7 @@ class Limits
     {
         $limits = new self();
 
-        $limits->moment = isset($limitsArray['moment']) ? new \DateTimeImmutable($limitsArray['moment']) : null;
+        $limits->moment = isset($limitsArray['moment']) ? \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $limitsArray['moment']) : null;
         $limits->bySecond = isset($limitsArray['by_second']) && is_numeric($limitsArray['by_second']) ? (int) $limitsArray['by_second'] : null;
         $limits->byMinute = isset($limitsArray['by_minute']) && is_numeric($limitsArray['by_minute']) ? (int) $limitsArray['by_minute'] : null;
         $limits->byHour = isset($limitsArray['by_hour']) && is_numeric($limitsArray['by_hour']) ? (int) $limitsArray['by_hour'] : null;

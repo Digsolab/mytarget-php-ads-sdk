@@ -103,7 +103,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
         $username = "12345@agency_client";
         $limitBy = "campaigns-all";
         $id = "campaigns-all#12345@agency_client";
-        $limits = Limits::create(new \DateTime(), 1, 1, 1, 1);
+        $limits = Limits::create(new \DateTimeImmutable(), 1, 1, 1, 1);
 
         $this->limitExtractor->expects($this->once())
                         ->method("extractLimits")
@@ -142,7 +142,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         $response = $this->getMockForAbstractClass(ResponseInterface::class, [], "", false);
 
-        $limits = Limits::create(new \DateTime(), 1, 1, 1, 1);
+        $limits = Limits::create(new \DateTimeImmutable(), 1, 1, 1, 1);
         $this->limitExtractor->expects($this->once())->method("extractLimits")
             ->with($response)->willReturn($limits);
         $this->cache->expects($this->once())->method("save")
