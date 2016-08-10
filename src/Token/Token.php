@@ -117,7 +117,7 @@ class Token
     }
 
     /**
-     * @param \DateTime $moment
+     * @param \DateTimeInterface $moment
      *
      * @return bool
      */
