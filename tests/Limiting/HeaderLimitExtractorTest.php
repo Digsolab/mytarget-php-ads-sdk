@@ -21,11 +21,7 @@ class HeaderLimitExtractorTest extends \PHPUnit_Framework_TestCase
 
         $result = $limitExtractor->extractLimits($response);
 
-        $expected = new Limits();
-        $expected->bySecond = 1;
-        $expected->byMinute = 2;
-        $expected->byHour = 3;
-        $expected->byDay = 4;
+        $expected = new Limits(null, 1, 2, 3, 4);
 
         $this->assertEquals($expected, $result);
     }
