@@ -146,3 +146,10 @@ class LoggingMiddleware implements HttpMiddleware
       - MyTarget\Limiting\Exception\ThrottleException - thrown before the request if you've reached the rate limit, or after the response is parsed and it contains a 429 code
   - MyTarget\Exception\DecodingException - thrown during response decoding phase
 ```
+
+Помимо этого они все разделены на два вида: `Dsl\MyTarget\Exception\ApiException` и `Dsl\MyTarget\Transport\Exception\NetworkException`.
+
+### How to contribute
+
+Для того чтобы предложить свои изменения, вы можете сделать форк этого репозитория и создать PR с произвольным сообщением описывающим изменения.
+Перед мержем мы попросим вас сделать squash коммитов в один и rebase на ветку master.
