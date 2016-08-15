@@ -8,6 +8,7 @@ use Dsl\MyTarget\Domain\V1\Banner\BannerStat;
 use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Operator\V1\Fields\BannerFields;
+use Dsl\MyTarget as f;
 
 class BannerOperator
 {
@@ -155,6 +156,7 @@ class BannerOperator
 
         $path = sprintf("/api/v1/banners%s.json", $ids ? "/" . implode(";", $ids) : "");
         $json = $this->client->get($path, $query, $context);
+        $json = f\objects_array_fixup($json, count($ids));
 
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(BannerStat::class, $json);
