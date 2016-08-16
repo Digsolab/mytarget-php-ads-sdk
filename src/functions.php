@@ -115,5 +115,5 @@ function date_mutable(\DateTimeInterface $dt)
  */
 function objects_array_fixup($json, $howMuch)
 {
-    return $howMuch > 1 ? $json : [$json];
+    return $howMuch === 1 ? [$json] : $json;
 }
