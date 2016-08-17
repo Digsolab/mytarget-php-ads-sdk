@@ -30,7 +30,7 @@ class RemarketingUserListsOperator
      * @param resource|string|StreamInterface $file
      * @param UploadUserList $upload
      * @param array|null $context
-     * @return object
+     * @return RemarketingUserList
      */
     public function create($file, UploadUserList $upload, array $context = null)
     {

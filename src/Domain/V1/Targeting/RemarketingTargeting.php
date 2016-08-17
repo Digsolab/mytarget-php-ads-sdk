@@ -10,34 +10,53 @@ class RemarketingTargeting
      * @var int
      * @Field(name="score_threshold", type="int")
      */
-    private $scoreThreshold;
+    private $id;
 
     /**
-     * @param int $scoreThreshold
-     *
-     * @return RemarketingTargeting
+     * @var string
+     * @Field(type="string")
      */
-    public static function create($scoreThreshold)
-    {
-        $self = new RemarketingTargeting();
-        $self->scoreThreshold = $scoreThreshold;
-
-        return $self;
-    }
+    private $name;
 
     /**
-     * @param int $scoreThreshold
+     * @param int $id
+     * @param string $name
      */
-    public function setScoreThreshold($scoreThreshold)
+    public function __construct($id, $name)
     {
-        $this->scoreThreshold = $scoreThreshold;
+        $this->id = $id;
+        $this->name = $name;
     }
 
     /**
      * @return int
      */
-    public function getScoreThreshold()
+    public function getId()
     {
-        return $this->scoreThreshold;
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

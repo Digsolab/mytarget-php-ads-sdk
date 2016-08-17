@@ -4,6 +4,9 @@ namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
+/**
+ * Called `Targetings` in MyTarget documentation
+ */
 class RemarketingItem
 {
     /**

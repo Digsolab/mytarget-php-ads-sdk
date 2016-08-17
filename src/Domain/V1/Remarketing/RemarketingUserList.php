@@ -2,46 +2,93 @@
 
 namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use Dsl\MyTarget\Domain\V1\Enum\RemarketingType;
 use Dsl\MyTarget\Mapper\Annotation\Field;
+use MyTarget\Domain\V1\Enum\RemarketingUserListStatus;
+use MyTarget\Domain\V1\Enum\RemarketingUserListType;
 
 class RemarketingUserList
 {
     /**
      * @var int
-     * @Field(name="remarketing_users_list_id", type="int")
+     * @Field(type="int")
      */
-    private $listId;
+    private $id;
 
     /**
-     * @var RemarketingType
-     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\RemarketingType")
+     * @var string
+     * @Field(type="string")
+     */
+    private $name;
+
+    /**
+     * @var RemarketingUserListType
+     * @Field(type="MyTarget\Domain\V1\Enum\RemarketingUserListType")
      */
     private $type;
 
     /**
-     * @param int $listId
-     * @param RemarketingType $type
+     * @var int
+     * @Field(type="int", name="users_count")
      */
-    public function __construct($listId, RemarketingType $type)
+    private $usersCount;
+
+    /**
+     * @var RemarketingUserListStatus
+     * @Field(type="MyTarget\Domain\V1\Enum\RemarketingUserListStatus")
+     */
+    private $status;
+
+    /**
+     * @var int
+     * @Field(type="int")
+     */
+    private $base;
+
+    /**
+     * @return int
+     */
+    public function getId()
     {
-        $this->listId = $listId;
-        $this->type = $type;
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return RemarketingUserListType
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
      * @return int
      */
-    public function getListId()
+    public function getUsersCount()
     {
-        return $this->listId;
+        return $this->usersCount;
     }
 
     /**
-     * @return RemarketingType
+     * @return RemarketingUserListStatus
      */
-    public function getType()
+    public function getStatus()
     {
-        return $this->type;
+        return $this->status;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBase()
+    {
+        return $this->base;
     }
 }
