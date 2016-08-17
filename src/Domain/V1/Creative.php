@@ -9,6 +9,7 @@ class Creative
 {
     /**
      * @var int
+     * @Field(type="int")
      */
     private $id;
 
@@ -20,7 +21,7 @@ class Creative
 
     /**
      * @var CreativeVariant[]
-     * @Field(type="Dsl\MyTarget\Domain\V1\CreativeVariant")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\CreativeVariant>")
      */
     private $variants;
 
