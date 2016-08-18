@@ -12,7 +12,7 @@ class Education extends AbstractEnum
     /**
      * @return Education
      */
-    public function yes()
+    public static function yes()
     {
         return self::fromValue(self::YES);
     }
@@ -20,7 +20,7 @@ class Education extends AbstractEnum
     /**
      * @return Education
      */
-    public function no()
+    public static function no()
     {
         return self::fromValue(self::NO);
     }

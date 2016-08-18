@@ -12,7 +12,7 @@ class Employment extends AbstractEnum
     /**
      * @return Employment
      */
-    public function yes()
+    public static function yes()
     {
         return Employment::fromValue(self::YES);
     }
@@ -20,7 +20,7 @@ class Employment extends AbstractEnum
     /**
      * @return Employment
      */
-    public function no()
+    public static function no()
     {
         return Employment::fromValue(self::NO);
     }

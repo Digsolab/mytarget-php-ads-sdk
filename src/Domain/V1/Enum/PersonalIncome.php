@@ -15,7 +15,7 @@ class PersonalIncome extends AbstractEnum
     /**
      * @return PersonalIncome
      */
-    public function income1()
+    public static function income1()
     {
         return PersonalIncome::fromValue(self::INCOME1);
     }
@@ -23,7 +23,7 @@ class PersonalIncome extends AbstractEnum
     /**
      * @return PersonalIncome
      */
-    public function income2()
+    public static function income2()
     {
         return PersonalIncome::fromValue(self::INCOME2);
     }
@@ -31,7 +31,7 @@ class PersonalIncome extends AbstractEnum
     /**
      * @return PersonalIncome
      */
-    public function income3()
+    public static function income3()
     {
         return PersonalIncome::fromValue(self::INCOME3);
     }
@@ -39,7 +39,7 @@ class PersonalIncome extends AbstractEnum
     /**
      * @return PersonalIncome
      */
-    public function income4()
+    public static function income4()
     {
         return PersonalIncome::fromValue(self::INCOME4);
     }
@@ -47,7 +47,7 @@ class PersonalIncome extends AbstractEnum
     /**
      * @return PersonalIncome
      */
-    public function income5()
+    public static function income5()
     {
         return PersonalIncome::fromValue(self::INCOME5);
     }
