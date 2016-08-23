@@ -27,12 +27,12 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)->disableOriginalConstructor()->getMock();
         $username = "12345@agency_client";
         $context = ["limit-by" => "campaigns-all", "username" => $username];
-        $isLimitReached = true;
+        $limitTimeout = 1;
 
         $this->rateLimitProvider->expects($this->once())
-            ->method("isLimitReached")
+            ->method("rateLimitTimeout")
             ->with($context["limit-by"], $request, $context)
-            ->willReturn($isLimitReached);
+            ->willReturn($limitTimeout);
 
         $this->setExpectedException(ThrottleException::class);
 
@@ -51,7 +51,7 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $isLimitReached = false;
 
         $this->rateLimitProvider->expects($this->once())
-                                ->method("isLimitReached")
+                                ->method("rateLimitTimeout")
                                 ->with($context["limit-by"], $request, $context)
                                 ->willReturn($isLimitReached);
 
