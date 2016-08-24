@@ -14,6 +14,7 @@
 
 1. Fixed `Creative->variants` hydrating type
 2. Add `Banner->content` field (for banners of newer packages)
+3. `V2\Creative->variants` should have a type of `dict<Variant>` now (it was `Variant` before which is wrong)
 
 #### Features
 

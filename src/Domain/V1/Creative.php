@@ -21,7 +21,7 @@ class Creative
 
     /**
      * @var CreativeVariant[]
-     * @Field(type="array<Dsl\MyTarget\Domain\V1\CreativeVariant>")
+     * @Field(type="dict<Dsl\MyTarget\Domain\V1\CreativeVariant>")
      */
     private $variants;
 
