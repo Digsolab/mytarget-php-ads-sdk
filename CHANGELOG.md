@@ -15,6 +15,11 @@
 1. Fixed `Creative->variants` hydrating type
 2. Add `Banner->content` field (for banners of newer packages)
 
+#### Features
+
+1. `ClientErrorException` was specified to 403- and 404-HTTP-specific exceptions: `AccessForbiddenException` and
+    `NotFoundException`. Otherwise `ClientErrorException` will be thrown as always.
+
 ### 0.1.0
 
 Initial release
