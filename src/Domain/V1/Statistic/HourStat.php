@@ -4,7 +4,7 @@ namespace Dsl\MyTarget\Domain\V1\Statistic;
 
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
-class HourStat extends DatedStat
+class HourStat extends StatisticRow
 {
     /**
      * @var \DateTimeImmutable

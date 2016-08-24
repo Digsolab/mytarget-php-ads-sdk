@@ -9,6 +9,7 @@
 4. `RemarketingItem::usersLists` type was changed to `RemarketingItemUserList`
 5. `RateLimitProvider::isLimitReached()` was removed in favour of `RateLimitProvider::rateLimitTimeout()`.
     A new method has to return a number of seconds to wait while rate limit is held.
+6. `Dsl\MyTarget\Domain\V1\Statistic\DatedStat` was completely removed as it was redundant in the hierarchy.
 
 #### Fixes
 
