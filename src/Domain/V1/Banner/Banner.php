@@ -4,6 +4,7 @@ namespace Dsl\MyTarget\Domain\V1\Banner;
 
 use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
 use Dsl\MyTarget\Domain\V1\Image\Image;
+use Dsl\MyTarget\Domain\V1\Creative;
 use Dsl\MyTarget\Domain\V1\User;
 use Dsl\MyTarget\Mapper\Annotation\Field;
 use Dsl\MyTarget\Domain\V1\Enum\Status;
@@ -143,6 +144,12 @@ class Banner
      * @Field(name="image", type="Dsl\MyTarget\Domain\V1\Image\Image")
      */
     private $image;
+
+    /**
+     * @var Creative[]
+     * @Field(type="dict<Dsl\MyTarget\Domain\V1\Creative>")
+     */
+    private $content;
 
     /**
      * @var string
@@ -742,6 +749,22 @@ class Banner
     public function setCallToAction($callToAction)
     {
         $this->callToAction = $callToAction;
+    }
+
+    /**
+     * @return Creative[]
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param Creative[] $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 
     /**

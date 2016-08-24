@@ -34,12 +34,6 @@ class BannerStat extends Banner
     private $statsFull;
 
     /**
-     * @var Creative[]
-     * @Field(type="array<Dsl\MyTarget\Domain\V1\Creative>")
-     */
-    private $content;
-
-    /**
      * @return PeriodStat
      */
     public function getStats()
@@ -69,13 +63,5 @@ class BannerStat extends Banner
     public function getStatsFull()
     {
         return $this->statsFull;
-    }
-
-    /**
-     * @return Creative[]
-     */
-    public function getContent()
-    {
-        return $this->content;
     }
 }

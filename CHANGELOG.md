@@ -13,6 +13,7 @@
 #### Fixes
 
 1. Fixed `Creative->variants` hydrating type
+2. Add `Banner->content` field (for banners of newer packages)
 
 ### 0.1.0
 
