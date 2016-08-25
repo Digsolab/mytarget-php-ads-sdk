@@ -52,7 +52,7 @@ class BannerRequest
     /**
      * @return BannerRequest
      */
-    public function create()
+    public static function create()
     {
         return new BannerRequest();
     }
