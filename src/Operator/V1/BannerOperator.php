@@ -9,6 +9,7 @@ use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Operator\V1\Fields\BannerFields;
 use Dsl\MyTarget as f;
+use MyTarget\Operator\V1\Fields\BannerRequest;
 
 class BannerOperator
 {
@@ -114,7 +115,9 @@ class BannerOperator
     public function all(BannerFields $fields = null,
         array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)
     {
-        return $this->findAll([], $fields, $withStatuses, $withCampaignStatuses, $context);
+        $request = new BannerRequest(null, $withStatuses, $withCampaignStatuses);
+
+        return $this->findAll($request, $fields, $context);
     }
 
     /**
@@ -126,37 +129,42 @@ class BannerOperator
      */
     public function find($id, BannerFields $fields = null, array $context = null)
     {
-        $banners = $this->findAll([$id], $fields, null, null, $context);
+        $request = new BannerRequest([$id]);
+        $banners = $this->findAll($request, $fields, $context);
 
         return $banners ? reset($banners) : null;
     }
 
     /**
-     * @param int[] $ids
+     * @param BannerRequest $request
      * @param BannerFields $fields
-     * @param Status[]|null $withStatuses
-     * @param Status[]|null $withCampaignStatuses
      * @param array|null $context
      *
      * @return BannerStat[]
      */
-    public function findAll(array $ids, BannerFields $fields = null,
-        array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)
+    public function findAll(BannerRequest $request = null, BannerFields $fields = null, array $context = null)
     {
         $context = (array)$context + ["limit-by" => "banners-find"];
         $fields = $fields ?: BannerFields::create();
+        $request = $request ?: new BannerRequest();
 
         $query = ["fields" => $this->mapFields($fields->getFields())];
-        if ($withStatuses && null !== ($status = Status::inApiFormat($withStatuses))) {
+        if ($request->getWithStatuses() && null !== ($status = Status::inApiFormat($request->getWithStatuses()))) {
             $query["status"] = $status;
         }
-        if ($withCampaignStatuses && null !== ($campaignStatus = Status::inApiFormat($withCampaignStatuses))) {
+        if ($request->getWithCampaignStatuses() && null !== ($campaignStatus = Status::inApiFormat($request->getWithCampaignStatuses()))) {
             $query["campaign__status"] = $campaignStatus;
         }
+        if ($request->getStatsChangedAfter()) {
+            $query["last_stats_updated__gte"] = $request->getStatsChangedAfter()->format("Y-m-d H:i:s");
+        }
+        if ($request->getUpdatedAfter()) {
+            $query["updated__gte"] = $request->getUpdatedAfter()->format("Y-m-d H:i:s");
+        }
 
-        $path = sprintf("/api/v1/banners%s.json", $ids ? "/" . implode(";", $ids) : "");
+        $path = sprintf("/api/v1/banners%s.json", $request->getIds() ? "/" . implode(";", $request->getIds()) : "");
         $json = $this->client->get($path, $query, $context);
-        $json = f\objects_array_fixup($json, count($ids));
+        $json = f\objects_array_fixup($json, count($request->getIds()));
 
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(BannerStat::class, $json);
