@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Domain\V1\Enum;
+namespace Dsl\MyTarget\Domain\V1\Enum;
 
 use Dsl\MyTarget\Domain\AbstractEnum;
 

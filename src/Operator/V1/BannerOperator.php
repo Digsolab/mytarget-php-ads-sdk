@@ -9,7 +9,7 @@ use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Operator\V1\Fields\BannerFields;
 use Dsl\MyTarget as f;
-use MyTarget\Operator\V1\Fields\BannerRequest;
+use Dsl\MyTarget\Operator\V1\Fields\BannerRequest;
 
 class BannerOperator
 {

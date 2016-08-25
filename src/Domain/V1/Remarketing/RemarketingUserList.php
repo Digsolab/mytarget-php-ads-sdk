@@ -3,8 +3,8 @@
 namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
 use Dsl\MyTarget\Mapper\Annotation\Field;
-use MyTarget\Domain\V1\Enum\RemarketingUserListStatus;
-use MyTarget\Domain\V1\Enum\RemarketingUserListType;
+use Dsl\MyTarget\Domain\V1\Enum\RemarketingUserListStatus;
+use Dsl\MyTarget\Domain\V1\Enum\RemarketingUserListType;
 
 class RemarketingUserList
 {

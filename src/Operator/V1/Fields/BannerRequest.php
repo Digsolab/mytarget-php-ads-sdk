@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Operator\V1\Fields;
+namespace Dsl\MyTarget\Operator\V1\Fields;
 
 use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget as f;
