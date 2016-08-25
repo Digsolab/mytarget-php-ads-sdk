@@ -50,6 +50,14 @@ class BannerRequest
     }
 
     /**
+     * @return BannerRequest
+     */
+    public function create()
+    {
+        return new BannerRequest();
+    }
+
+    /**
      * @param int[] $ids
      * @return BannerRequest
      */
