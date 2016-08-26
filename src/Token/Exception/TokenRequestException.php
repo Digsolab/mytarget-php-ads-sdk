@@ -1,13 +1,13 @@
 <?php
 
-namespace MyTarget\Token\Exception;
+namespace Dsl\MyTarget\Token\Exception;
 
-use MyTarget\Exception\MyTargetException;
-use MyTarget\Transport\Exception\RequestException;
+use Dsl\MyTarget\Transport\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class TokenRequestException extends RequestException implements MyTargetException
+class TokenRequestException extends RequestException
+    implements TokenException
 {
     /**
      * @param RequestInterface  $request

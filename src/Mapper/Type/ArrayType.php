@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class ArrayType implements Type
 {

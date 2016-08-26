@@ -1,19 +1,19 @@
 <?php
 
-namespace MyTarget;
+namespace Dsl\MyTarget;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache as DoctrineCache;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
-use MyTarget\Exception\DecodingException;
-use MyTarget\Operator\Exception\UnexpectedFileArgumentException;
-use MyTarget\Limiting as lim;
-use MyTarget\Token as tok;
-use MyTarget\Transport as trans;
-use MyTarget\Transport\Middleware as mid;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Mapper\Type as t;
+use Dsl\MyTarget\Exception\DecodingException;
+use Dsl\MyTarget\Operator\Exception\UnexpectedFileArgumentException;
+use Dsl\MyTarget\Limiting as lim;
+use Dsl\MyTarget\Token as tok;
+use Dsl\MyTarget\Transport as trans;
+use Dsl\MyTarget\Transport\Middleware as mid;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type as t;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -71,4 +71,49 @@ function streamOrResource($file)
     }
 
     return $file;
+}
+
+/**
+ * @param \DateTimeInterface $dt
+ * @return \DateTimeImmutable
+ */
+function date_immutable(\DateTimeInterface $dt)
+{
+    if ($dt instanceof \DateTimeImmutable) {
+        return $dt;
+    }
+
+    $immutable = \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $dt->format(\DateTime::ISO8601));
+    $immutable = $immutable->setTimezone($dt->getTimezone());
+
+    return $immutable;
+}
+
+/**
+ * @param \DateTimeInterface $dt
+ * @return \DateTime
+ */
+function date_mutable(\DateTimeInterface $dt)
+{
+    if ($dt instanceof \DateTime) {
+        return $dt;
+    }
+
+    $mutable = \DateTime::createFromFormat(\DateTime::ISO8601, $dt->format(\DateTime::ISO8601));
+    $mutable->setTimezone($dt->getTimezone());
+
+    return $mutable;
+}
+
+/**
+ * The API will give us `{...}`, instead of `[{...}]` in the response
+ * if we select the object by ID and give it only one ID.
+ *
+ * @param array $json
+ * @param int $howMuch
+ * @return array
+ */
+function objects_array_fixup($json, $howMuch)
+{
+    return $howMuch === 1 ? [$json] : $json;
 }

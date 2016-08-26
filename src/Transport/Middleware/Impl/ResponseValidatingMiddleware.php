@@ -1,10 +1,10 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl;
+namespace Dsl\MyTarget\Transport\Middleware\Impl;
 
-use MyTarget\Transport\Exception as ex;
-use MyTarget\Transport\Middleware\HttpMiddleware;
-use MyTarget\Transport\Middleware\HttpMiddlewareStack;
+use Dsl\MyTarget\Transport\Exception as ex;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
 
 class ResponseValidatingMiddleware implements HttpMiddleware
@@ -26,7 +26,7 @@ class ResponseValidatingMiddleware implements HttpMiddleware
         }
 
         if ($code >= 300 && $code < 400) { // safety net
-            throw new ex\RequestException("MyTarget: {$code} Redirect is not supported", $request, $response);
+            throw new ex\RedirectUnexpectedException("MyTarget: {$code} Redirect is not supported", $request, $response);
         }
 
         return $response;

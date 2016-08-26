@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1\Remarketing;
+namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use MyTarget\Domain\V1\Enum\RemarketingAppType;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\RemarketingAppType;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class RemarketingApp
 {
@@ -21,7 +21,7 @@ class RemarketingApp
 
     /**
      * @var RemarketingAppType
-     * @Field(name="app_type", type="MyTarget\Domain\V1\Enum\RemarketingAppType")
+     * @Field(name="app_type", type="Dsl\MyTarget\Domain\V1\Enum\RemarketingAppType")
      */
     private $appType;
 

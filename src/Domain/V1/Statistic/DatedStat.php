@@ -1,11 +1,11 @@
 <?php
 
-namespace MyTarget\Domain\V1\Statistic;
+namespace Dsl\MyTarget\Domain\V1\Statistic;
 
 abstract class DatedStat extends StatisticRow
 {
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public abstract function getDate();
 }

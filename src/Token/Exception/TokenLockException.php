@@ -1,9 +1,8 @@
 <?php
 
-namespace MyTarget\Token\Exception;
+namespace Dsl\MyTarget\Token\Exception;
 
-use MyTarget\Exception\MyTargetException;
-
-class TokenLockException extends \RuntimeException implements MyTargetException
+class TokenLockException extends \RuntimeException
+    implements TokenException
 {
 }

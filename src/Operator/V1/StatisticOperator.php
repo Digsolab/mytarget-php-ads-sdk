@@ -1,15 +1,16 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Client;
-use MyTarget\Domain\DateRange;
-use MyTarget\Domain\V1\Enum\ObjectType;
-use MyTarget\Domain\V1\Enum\StatisticType;
-use MyTarget\Domain\V1\Statistic\ObjectDailyStat;
-use MyTarget\Domain\V1\Statistic\ObjectHourlyStat;
-use MyTarget\Domain\V1\Statistic\ObjectStat;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\DateRange;
+use Dsl\MyTarget\Domain\V1\Enum\ObjectType;
+use Dsl\MyTarget\Domain\V1\Enum\StatisticType;
+use Dsl\MyTarget\Domain\V1\Statistic\ObjectDailyStat;
+use Dsl\MyTarget\Domain\V1\Statistic\ObjectHourlyStat;
+use Dsl\MyTarget\Domain\V1\Statistic\ObjectStat;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget as f;
 
 class StatisticOperator
 {
@@ -72,6 +73,7 @@ class StatisticOperator
     {
         $path = $this->path($ids, $objectType, $statType, $datesPredicate);
         $json = $this->client->get($path, null, $context);
+        $json = f\objects_array_fixup($json, count($ids));
 
         $type = $statType === StatisticType::day() ? ObjectDailyStat::class : ObjectHourlyStat::class;
         return array_map(function ($json) use ($type) {

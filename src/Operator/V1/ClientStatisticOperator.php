@@ -1,12 +1,12 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Client;
-use MyTarget\Domain\DateRange;
-use MyTarget\Domain\V1\Enum\ObjectType;
-use MyTarget\Domain\V1\Enum\StatisticType;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\DateRange;
+use Dsl\MyTarget\Domain\V1\Enum\ObjectType;
+use Dsl\MyTarget\Domain\V1\Enum\StatisticType;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class ClientStatisticOperator extends StatisticOperator
 {

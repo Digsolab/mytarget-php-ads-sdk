@@ -1,8 +1,9 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type\ScalarType;
 
 class ScalarTypeTest extends \PHPUnit_Framework_TestCase
 {

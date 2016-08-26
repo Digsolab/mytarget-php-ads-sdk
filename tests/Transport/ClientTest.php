@@ -1,17 +1,17 @@
 <?php
 
-namespace MyTarget\Transport\Middleware\Impl;
+namespace tests\Dsl\MyTarget\Transport\Middleware\Impl;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception as guzzleEx;
 use GuzzleHttp\Psr7 as psr;
 use MyTarget as f;
-use MyTarget\Client;
-use MyTarget\Transport\Exception as ex;
-use MyTarget\Transport\GuzzleHttpTransport;
-use MyTarget\Transport\HttpTransport;
-use MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
-use MyTarget\Transport\RequestFactory;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Transport\Exception as ex;
+use Dsl\MyTarget\Transport\GuzzleHttpTransport;
+use Dsl\MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
+use Dsl\MyTarget\Transport\RequestFactory;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -63,7 +63,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             HttpMiddlewareStackPrototype::newEmpty(new GuzzleHttpTransport($guzzle))
         );
 
-        $this->setExpectedException(ex\HttpTransportException::class);
+        $this->setExpectedException(ex\NetworkException::class);
 
         $client->get('/any/path');
     }

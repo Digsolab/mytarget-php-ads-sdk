@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Mapper\Exception;
+namespace Dsl\MyTarget\Mapper\Exception;
 
-use MyTarget\Exception\MyTargetException;
+use Dsl\MyTarget\Exception\MyTargetException;
 
 class ClassNotFoundException extends \LogicException
     implements MyTargetException, ContextUnawareException

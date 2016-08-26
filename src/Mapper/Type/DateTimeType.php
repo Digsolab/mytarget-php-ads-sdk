@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class DateTimeType implements Type
 {
@@ -22,10 +22,10 @@ class DateTimeType implements Type
     public function hydrated($value, $type, Mapper $mapper)
     {
         if (strpos($type, "<") !== false && preg_match('!^DateTime\<(?<format>.+?)\>$!', $type, $tParam)) {
-            return \DateTime::createFromFormat($tParam["format"], $value, $this->tz) ?: null;
+            return \DateTimeImmutable::createFromFormat($tParam["format"], $value, $this->tz) ?: null;
         }
 
-        return \DateTime::createFromFormat("Y-m-d H:i:s", $value, $this->tz) ?: null;
+        return \DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $value, $this->tz) ?: null;
     }
 
     /**
@@ -33,7 +33,7 @@ class DateTimeType implements Type
      */
     public function snapshot($value, $type, Mapper $mapper)
     {
-        if ( ! $value instanceof \DateTime) {
+        if ( ! $value instanceof \DateTimeInterface) {
             return null;
         }
 

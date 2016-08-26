@@ -2,8 +2,8 @@
 
 namespace Foo;
 
-use MyTarget\Client;
-use MyTarget\Operator\V1\ClientOperator;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Operator\V1\ClientOperator;
 
 list($client, $mapper) = require __DIR__ . "/bootstrap.php";
 

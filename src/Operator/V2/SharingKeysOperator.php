@@ -1,12 +1,12 @@
 <?php
 
-namespace MyTarget\Operator\V2;
+namespace Dsl\MyTarget\Operator\V2;
 
-use MyTarget\Client;
-use MyTarget\Domain\V2\Id;
-use MyTarget\Domain\V2\SharingKeys\SharedObjects;
-use MyTarget\Domain\V2\SharingKeys\ShareObjects;
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V2\Id;
+use Dsl\MyTarget\Domain\V2\SharingKeys\SharedObjects;
+use Dsl\MyTarget\Domain\V2\SharingKeys\ShareObjects;
+use Dsl\MyTarget\Mapper\Mapper;
 
 class SharingKeysOperator
 {

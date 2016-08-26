@@ -1,14 +1,14 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign;
+namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use MyTarget\Domain\V1\Banner\Banner;
-use MyTarget\Domain\V1\Targeting\CampaignTargeting;
-use MyTarget\Domain\V1\Enum\Mixing;
-use MyTarget\Domain\V1\Enum\Status;
-
-use MyTarget\Domain\V1\Remarketing\RemarketingPricelist;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Banner\Banner;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
+use Dsl\MyTarget\Domain\V1\Enum\Mixing;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingPricelist;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget as f;
 
 class Campaign
 {
@@ -26,43 +26,43 @@ class Campaign
 
     /**
      * @var Status
-     * @Field(type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $status;
 
     /**
      * @var Status
-     * @Field(name="system_status", type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(name="system_status", type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $systemStatus;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(type="DateTime")
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(type="DateTime")
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="date_start", type="DateTime")
      */
     private $dateStart;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="date_end", type="DateTime")
      */
     private $dateEnd;
 
     /**
      * @var Package
-     * @Field(type="MyTarget\Domain\V1\Campaign\Package")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Campaign\Package")
      */
     private $package;
 
@@ -103,13 +103,13 @@ class Campaign
 
     /**
      * @var Mixing
-     * @Field(name="mixing", type="MyTarget\Domain\V1\Enum\Mixing")
+     * @Field(name="mixing", type="Dsl\MyTarget\Domain\V1\Enum\Mixing")
      */
     private $mixing;
 
     /**
      * @var CampaignTargeting
-     * @Field(name="targetings", type="MyTarget\Domain\V1\Targeting\CampaignTargeting")
+     * @Field(name="targetings", type="Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting")
      */
     private $targetings;
 
@@ -145,7 +145,7 @@ class Campaign
 
     /**
      * @var string
-     * @Field(name="auto_bidding_mode", type="MyTarget\Domain\V1\Enum\AutobiddingMode")
+     * @Field(name="auto_bidding_mode", type="Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode")
      */
     private $autoBiddingMode;
 
@@ -157,18 +157,18 @@ class Campaign
 
     /**
      * @var RemarketingPricelist
-     * @Field(name="price_list", type="MyTarget\Domain\V1\Remarketing\RemarketingPricelist")
+     * @Field(name="price_list", type="Dsl\MyTarget\Domain\V1\Remarketing\RemarketingPricelist")
      */
     private $pricelist;
 
     /**
      * @var Banner[]
-     * @Field(name="banners", type="array<MyTarget\Domain\V1\Banner\Banner>")
+     * @Field(name="banners", type="array<Dsl\MyTarget\Domain\V1\Banner\Banner>")
      */
     private $banners;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="last_updated", type="DateTime")
      */
     private $lastUpdated;
@@ -304,7 +304,7 @@ class Campaign
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getCreated()
     {
@@ -312,15 +312,15 @@ class Campaign
     }
 
     /**
-     * @param \DateTime $created
+     * @param \DateTimeInterface $created
      */
-    public function setCreated($created)
+    public function setCreated(\DateTimeInterface $created)
     {
-        $this->created = $created;
+        $this->created = f\date_immutable($created);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getUpdated()
     {
@@ -328,15 +328,15 @@ class Campaign
     }
 
     /**
-     * @param \DateTime $updated
+     * @param \DateTimeInterface $updated
      */
-    public function setUpdated($updated)
+    public function setUpdated(\DateTimeInterface $updated)
     {
-        $this->updated = $updated;
+        $this->updated = f\date_immutable($updated);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDateStart()
     {
@@ -344,15 +344,15 @@ class Campaign
     }
 
     /**
-     * @param \DateTime $dateStart
+     * @param \DateTimeInterface $dateStart
      */
-    public function setDateStart($dateStart)
+    public function setDateStart(\DateTimeInterface $dateStart)
     {
-        $this->dateStart = $dateStart;
+        $this->dateStart = f\date_immutable($dateStart);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDateEnd()
     {
@@ -360,11 +360,11 @@ class Campaign
     }
 
     /**
-     * @param \DateTime $dateEnd
+     * @param \DateTimeInterface $dateEnd
      */
-    public function setDateEnd($dateEnd)
+    public function setDateEnd(\DateTimeInterface $dateEnd)
     {
-        $this->dateEnd = $dateEnd;
+        $this->dateEnd = f\date_immutable($dateEnd);
     }
 
     /**
@@ -656,7 +656,7 @@ class Campaign
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getLastUpdated()
     {
@@ -664,11 +664,11 @@ class Campaign
     }
 
     /**
-     * @param \DateTime $lastUpdated
+     * @param \DateTimeInterface $lastUpdated
      */
-    public function setLastUpdated($lastUpdated)
+    public function setLastUpdated(\DateTimeInterface $lastUpdated)
     {
-        $this->lastUpdated = $lastUpdated;
+        $this->lastUpdated = f\date_immutable($lastUpdated);
     }
 
     /**

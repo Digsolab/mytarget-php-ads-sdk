@@ -1,8 +1,9 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace Dsl\MyTarget\Limiting;
 
 use Doctrine\Common\Cache\Cache;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class DoctrineCacheRateLimitProvider implements RateLimitProvider
@@ -13,16 +14,13 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     private $cache;
 
     /**
-     * @var IdBuilder
-     */
-    private $idBuilder;
-
-    /**
      * @var LimitExtractor
      */
     private $limitExtractor;
 
-    /** @var callable  */
+    /**
+     * @var callable callable($id, $username)
+     */
     private $hashFunction;
 
     /**
@@ -34,20 +32,19 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
      * DoctrineCacheRateLimitProvider constructor.
      *
      * @param Cache               $cache
-     * @param IdBuilder|null      $idBuilder
      * @param LimitExtractor|null $limitExtractor
-     * @param callable|null       $hashFunction
+     * @param callable|null       $hashFunction callable(string $limitBy, RequestInterface, array $context)
      */
-    public function __construct(
-        Cache $cache,
-        IdBuilder $idBuilder = null,
-        LimitExtractor $limitExtractor = null,
-        callable $hashFunction = null)
+    public function __construct(Cache $cache, LimitExtractor $limitExtractor = null, callable $hashFunction = null)
     {
         $this->cache = $cache;
-        $this->idBuilder = $idBuilder ?: new SimpleIdBuilder();
         $this->limitExtractor = $limitExtractor ?: new HeaderLimitExtractor();
-        $this->hashFunction = $hashFunction ?: function($id) { return $id; };
+
+        $this->hashFunction = $hashFunction ?: function($limitBy, RequestInterface $request, array $context) {
+            $username = isset($context["username"]) ? $context["username"] : "";
+            return sprintf("%s#%s", $limitBy, $username);
+        };
+
         $this->momentGenerator = function () {
             return new \DateTimeImmutable();
         };
@@ -64,31 +61,31 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function isLimitReached($limitBy, $username = null)
+    public function isLimitReached($limitBy, RequestInterface $request, array $context = null)
     {
-        $id = $this->idBuilder->buildId($limitBy, $username);
-        $limitsArray = $this->cache->fetch($this->hash($id));
+        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
+        $limitsArray = $this->cache->fetch($id);
 
         if ( ! is_array($limitsArray) || ! $limitsArray) {
             return false;
         }
 
         $limits = Limits::buildFromArray($limitsArray);
-        if (null === $limits->moment) {
+        if ( ! $limits) {
             return false;
         }
 
         $now = call_user_func($this->momentGenerator); /** @var \DateTimeInterface $now */
-        $diff = $now->diff($limits->moment);
+        $diff = $now->diff($limits->getMoment());
 
-        if (( ! $diff->invert && $now != $limits->moment) || $diff->days) {
+        if (( ! $diff->invert && $now != $limits->getMoment()) || $diff->days) {
             return false;
         }
 
-        if (($limits->bySecond === 0 && $now->format("dHis") === $limits->moment->format("dHis")) ||
-            ($limits->byMinute === 0 && $now->format("dHi" ) === $limits->moment->format("dHi" )) ||
-            ($limits->byHour   === 0 && $now->format("dH"  ) === $limits->moment->format("dH"  )) ||
-            ($limits->byDay    === 0 && $now->format("d"   ) === $limits->moment->format("d"   ))) {
+        if (($limits->getBySecond() === 0 && $now->format("dHis") === $limits->getMoment()->format("dHis")) ||
+            ($limits->getByMinute() === 0 && $now->format("dHi" ) === $limits->getMoment()->format("dHi" )) ||
+            ($limits->getByHour()   === 0 && $now->format("dH"  ) === $limits->getMoment()->format("dH"  )) ||
+            ($limits->getByDay()    === 0 && $now->format("d"   ) === $limits->getMoment()->format("d"   ))) {
 
             return true;
         }
@@ -99,25 +96,12 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function refreshLimits(ResponseInterface $response, $limitBy, $username = null)
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, array $context = null)
     {
-        $limits = $this->limitExtractor->extractLimits($response);
-        $limits->moment = call_user_func($this->momentGenerator);
+        $limits = $this->limitExtractor->extractLimits($response, call_user_func($this->momentGenerator));
 
-        $id = $this->idBuilder->buildId($limitBy, $username);
+        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
 
-        $this->cache->save($this->hash($id), $limits->toArray());
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return string
-     */
-    private function hash($id)
-    {
-        $f = $this->hashFunction;
-
-        return $f($id);
+        $this->cache->save($id, $limits->toArray());
     }
 }

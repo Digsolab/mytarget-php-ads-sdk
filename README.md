@@ -39,9 +39,12 @@ use MyTarget\Client;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use MyTarget\Transport\GuzzleHttpTransport;
+use MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
+use MyTarget\Transport\Middleware\Impl\CallbackMiddleware;
 use MyTarget\Transport\Middleware\Impl\ResponseValidatingMiddleware;
 use MyTarget\Token\Token;
+use Psr\Http\Message\RequestInterface;
 
 $baseUri = new Uri('https://target.my.com');
 $token = new Token("ACCESS_TOKEN", "bearer", new \DateTime(), ""); // библиотека также в состоянии управлять набором токенов в любом типе хранилища (а также получать новые и рефрешить)
@@ -49,7 +52,13 @@ $token = new Token("ACCESS_TOKEN", "bearer", new \DateTime(), ""); // библи
 $http = new GuzzleHttpTransport(new GuzzleClient());
 $httpStack = HttpMiddlewareStackPrototype::newEmpty($http);
 $httpStack->push(new ResponseValidatingMiddleware());
-$httpStack->push(new SimpleGrantMiddleware($token));
+
+// подпишем все запросы заранее полученным токеном (также можно использовать более сложный TokenGrantMiddleware, который способен хранить токен в любых хранилищах, обновлять и получать его)
+$accessToken = "foo bar";
+$httpStack->push(new CallbackMiddleware(function (RequestInterface $req, HttpMiddlewareStack $stack, $context = null) use ($accessToken) {
+    $req = $req->withHeader('Authorization', sprintf('Bearer %s', $accessToken));
+    return $stack->request($req, $context);
+}));
 
 $client = new Client(new RequestFactory($baseUri), $httpStack);
 ```
@@ -137,3 +146,10 @@ class LoggingMiddleware implements HttpMiddleware
       - MyTarget\Limiting\Exception\ThrottleException - thrown before the request if you've reached the rate limit, or after the response is parsed and it contains a 429 code
   - MyTarget\Exception\DecodingException - thrown during response decoding phase
 ```
+
+Помимо этого они все разделены на два вида: `Dsl\MyTarget\Exception\ApiException` и `Dsl\MyTarget\Transport\Exception\NetworkException`.
+
+### How to contribute
+
+Для того чтобы предложить свои изменения, вы можете сделать форк этого репозитория и создать PR с произвольным сообщением описывающим изменения.
+Перед мержем мы попросим вас сделать squash коммитов в один и rebase на ветку master.

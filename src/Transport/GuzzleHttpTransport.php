@@ -1,12 +1,15 @@
 <?php
 
-namespace MyTarget\Transport;
+namespace Dsl\MyTarget\Transport;
 
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Exception as guzzleEx;
-use MyTarget\Transport\Exception as mtEx;
+use Dsl\MyTarget\Transport\Exception as mtEx;
 
+/**
+ * An implementation of HttpTransport that uses Guzzle and depends on "guzzlehttp/guzzle" composer package
+ */
 class GuzzleHttpTransport implements HttpTransport
 {
     /**
@@ -27,7 +30,13 @@ class GuzzleHttpTransport implements HttpTransport
         try {
             return $this->guzzle->send($request, ["http_errors" => false]);
         } catch (guzzleEx\GuzzleException $e) {
-            throw new mtEx\HttpTransportException($e->getMessage(), $request, null, $e);
+            if ($e instanceof guzzleEx\RequestException) {
+                $response = $e->getResponse();
+            } else {
+                $response = null;
+            }
+
+            throw new mtEx\NetworkException($e->getMessage(), $request, $response, $e);
         }
     }
 }

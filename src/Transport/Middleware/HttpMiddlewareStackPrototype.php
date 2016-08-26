@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Transport\Middleware;
+namespace Dsl\MyTarget\Transport\Middleware;
 
-use MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Transport\HttpTransport;
 
 class HttpMiddlewareStackPrototype extends HttpMiddlewareStack
 {
@@ -35,7 +35,7 @@ class HttpMiddlewareStackPrototype extends HttpMiddlewareStack
      */
     public function freeze()
     {
-        return new HttpMiddlewareStack($this->middlewares, $this->http);
+        return new HttpMiddlewareStack(clone $this->middlewares, $this->http);
     }
 
     /**

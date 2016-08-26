@@ -1,14 +1,14 @@
 <?php
 
-namespace MyTarget\Domain\V1\Statistic;
+namespace Dsl\MyTarget\Domain\V1\Statistic;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ObjectDailyStat extends ObjectStat
 {
     /**
      * @var DayStat[]
-     * @Field(name="detailed_stat", type="array<MyTarget\Domain\V1\Statistic\DayStat>")
+     * @Field(name="detailed_stat", type="array<Dsl\MyTarget\Domain\V1\Statistic\DayStat>")
      */
     private $detailed;
 

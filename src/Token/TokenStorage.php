@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use Psr\Http\Message\RequestInterface;
 
@@ -22,5 +22,4 @@ interface TokenStorage
      * @param array|null $context
      */
     public function updateToken($id, Token $token, RequestInterface $request, array $context = null);
-
 }

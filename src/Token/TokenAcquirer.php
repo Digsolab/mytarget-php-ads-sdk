@@ -1,15 +1,15 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
 
 use GuzzleHttp\Psr7\Request;
-use MyTarget\Token\ClientCredentials\CredentialsProvider;
-use MyTarget\Token\Exception\TokenDeletedException;
-use MyTarget\Token\Exception\TokenLimitReachedException;
-use MyTarget\Token\Exception\TokenRequestException;
-use MyTarget\Transport\HttpTransport;
+use Dsl\MyTarget\Token\ClientCredentials\CredentialsProvider;
+use Dsl\MyTarget\Token\Exception\TokenDeletedException;
+use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
+use Dsl\MyTarget\Token\Exception\TokenRequestException;
+use Dsl\MyTarget\Transport\HttpTransport;
 use Psr\Http\Message\RequestInterface;
-use MyTarget as f;
+use Dsl\MyTarget as f;
 use GuzzleHttp\Psr7 as guzzle;
 use Psr\Http\Message\UriInterface;
 
@@ -32,13 +32,6 @@ class TokenAcquirer
      */
     private $credentials;
 
-    /**
-     * TokenAcquirer constructor.
-     *
-     * @param UriInterface        $baseAddress
-     * @param HttpTransport       $http
-     * @param CredentialsProvider $credentials
-     */
     public function __construct(UriInterface $baseAddress, HttpTransport $http, CredentialsProvider $credentials)
     {
         $this->baseAddress = $baseAddress;
@@ -48,20 +41,20 @@ class TokenAcquirer
 
     /**
      * @param RequestInterface $request
-     * @param \DateTime $now
+     * @param \DateTimeInterface $now
      * @param string|null $username
      * @param array $context
      *
      * @return Token|null
      *
+     * @throws TokenLimitReachedException
      * @throws TokenRequestException
      */
-    public function acquire(RequestInterface $request, \DateTime $now, $username = null, array $context = null)
+    public function acquire(RequestInterface $request, \DateTimeInterface $now, $username = null, array $context = null)
     {
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);
 
-        // @todo переписать на Operator
         $payload = [
             "grant_type" => $username === null ? "client_credentials" : "agency_client_credentials",
             "client_id" => $credentials->getClientId(),
@@ -80,20 +73,20 @@ class TokenAcquirer
 
         $body = (string) $response->getBody();
 
-        if ($response->getStatusCode() === HttpTransport::STATUS_ACCESS_DENIED
-            && false !== stripos($body, 'limit reached')
-        ) {
+        if ($response->getStatusCode() === 403 && false !== stripos($body, 'limit reached')) {
             throw TokenLimitReachedException::forCredentials($tokenRequest, $response, $username);
         }
 
-        if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
+        if ($response->getStatusCode() !== 200) {
             throw TokenRequestException::forCredentials($tokenRequest, $response, $username);
         }
 
         $tokenArray = f\json_decode($body);
-        $token = Token::fromResponse($tokenArray, $now);
+        if (is_array($tokenArray)) {
+            $token = Token::fromResponse($tokenArray, $now);
+        }
 
-        if ($token === null) {
+        if (empty($token)) {
             throw TokenRequestException::invalidResponse($tokenRequest, $response, $username);
         }
 
@@ -102,20 +95,18 @@ class TokenAcquirer
 
     /**
      * @param RequestInterface $request
-     * @param \DateTime $now
+     * @param \DateTimeInterface $now
      * @param string $refreshToken
      * @param array|null $context
      *
      * @return Token|null
-     *
      * @throws TokenRequestException
      */
-    public function refresh(RequestInterface $request, \DateTime $now, $refreshToken, array $context = null)
+    public function refresh(RequestInterface $request, \DateTimeInterface $now, $refreshToken, array $context = null)
     {
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);
 
-        // @todo переписать на Operator
         $payload = [
             "grant_type" => "refresh_token",
             "refresh_token" => $refreshToken,
@@ -131,31 +122,23 @@ class TokenAcquirer
 
         $body = (string) $response->getBody();
 
-        if ($response->getStatusCode() === HttpTransport::STATUS_UNAUTHORIZED
-            && false !== stripos($body, 'deleted')
-        ) {
+        if ($response->getStatusCode() === 401 && false !== stripos($body, 'deleted')) {
             throw TokenDeletedException::refreshFailed($tokenRequest, $response);
         }
 
-        if ($response->getStatusCode() !== HttpTransport::STATUS_OK) {
+        if ($response->getStatusCode() !== 200) {
             throw TokenRequestException::refreshFailed($tokenRequest, $response);
         }
 
         $tokenArray = f\json_decode($body);
-        $token = Token::fromResponse($tokenArray, $now);
+        if (is_array($tokenArray)) {
+            $token = Token::fromResponse($tokenArray, $now);
+        }
 
-        if ($token === null) {
+        if (empty($token)) {
             throw TokenRequestException::invalidResponse($tokenRequest, $response);
         }
 
         return $token;
-    }
-
-    /**
-     * @return CredentialsProvider
-     */
-    public function getCredentials()
-    {
-        return $this->credentials;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace MyTarget\Exception;
+namespace Dsl\MyTarget\Exception;
 
 /**
  * Marker for all exceptions being thrown from MyTarget API

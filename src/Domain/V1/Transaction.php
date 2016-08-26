@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1;
+namespace Dsl\MyTarget\Domain\V1;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Transaction
 {
@@ -31,7 +31,7 @@ class Transaction
     private $clientUsername;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="created_at", type="DateTime<H:m d.m.Y>")
      */
     private $createdAt;
@@ -101,7 +101,7 @@ class Transaction
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getCreatedAt()
     {

@@ -1,53 +1,50 @@
 <?php
 
-namespace MyTarget\Limiting;
+namespace Dsl\MyTarget\Limiting;
+
+use Dsl\MyTarget as f;
 
 class Limits
 {
     /**
-     * @var \DateTimeInterface
+     * @var \DateTimeImmutable
      */
-    public $moment;
+    private $moment;
 
     /**
      * @var int
      */
-    public $bySecond = null;
+    private $bySecond = null;
 
     /**
      * @var int
      */
-    public $byMinute = null;
+    private $byMinute = null;
 
     /**
      * @var int
      */
-    public $byHour = null;
+    private $byHour = null;
 
     /**
      * @var int
      */
-    public $byDay = null;
+    private $byDay = null;
 
     /**
      * @param \DateTimeInterface $moment
-     * @param int|null $bySecond
-     * @param int|null $byMinute
-     * @param int|null $byHour
-     * @param int|null $byDay
-     *
-     * @return Limits
+     * @param int|null           $bySecond
+     * @param int|null           $byMinute
+     * @param int|null           $byHour
+     * @param int|null           $byDay
      */
-    public static function create(\DateTimeInterface $moment, $bySecond, $byMinute, $byHour, $byDay)
+    public function __construct(\DateTimeInterface $moment, $bySecond, $byMinute, $byHour, $byDay)
     {
-        $self = new Limits();
-        $self->moment = $moment;
-        $self->bySecond = $bySecond;
-        $self->byMinute = $byMinute;
-        $self->byHour = $byHour;
-        $self->byDay = $byDay;
-
-        return $self;
+        $this->moment   = f\date_immutable($moment);
+        $this->bySecond = $bySecond;
+        $this->byMinute = $byMinute;
+        $this->byHour   = $byHour;
+        $this->byDay    = $byDay;
     }
 
     /**
@@ -71,14 +68,55 @@ class Limits
      */
     public static function buildFromArray(array $limitsArray)
     {
-        $limits = new self();
+        if (empty($limitsArray['moment']) || ! $moment = \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $limitsArray['moment'])) {
+            return null;
+        }
+        $bySecond = isset($limitsArray['by_second']) && is_numeric($limitsArray['by_second']) ? (int) $limitsArray['by_second'] : null;
+        $byMinute = isset($limitsArray['by_minute']) && is_numeric($limitsArray['by_minute']) ? (int) $limitsArray['by_minute'] : null;
+        $byHour   = isset($limitsArray['by_hour']) && is_numeric($limitsArray['by_hour']) ? (int) $limitsArray['by_hour'] : null;
+        $byDay    = isset($limitsArray['by_day']) && is_numeric($limitsArray['by_day']) ? (int) $limitsArray['by_day'] : null;
 
-        $limits->moment = isset($limitsArray['moment']) ? new \DateTimeImmutable($limitsArray['moment']) : null;
-        $limits->bySecond = isset($limitsArray['by_second']) && is_numeric($limitsArray['by_second']) ? (int) $limitsArray['by_second'] : null;
-        $limits->byMinute = isset($limitsArray['by_minute']) && is_numeric($limitsArray['by_minute']) ? (int) $limitsArray['by_minute'] : null;
-        $limits->byHour = isset($limitsArray['by_hour']) && is_numeric($limitsArray['by_hour']) ? (int) $limitsArray['by_hour'] : null;
-        $limits->byDay = isset($limitsArray['by_day']) && is_numeric($limitsArray['by_day']) ? (int) $limitsArray['by_day'] : null;
-
-        return $limits;
+        return new self($moment, $bySecond, $byMinute, $byHour, $byDay);
     }
+
+    /**
+     * @return \DateTimeImmutable|null
+     */
+    public function getMoment()
+    {
+        return $this->moment;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBySecond()
+    {
+        return $this->bySecond;
+    }
+
+    /**
+     * @return int
+     */
+    public function getByMinute()
+    {
+        return $this->byMinute;
+    }
+
+    /**
+     * @return int
+     */
+    public function getByHour()
+    {
+        return $this->byHour;
+    }
+
+    /**
+     * @return int
+     */
+    public function getByDay()
+    {
+        return $this->byDay;
+    }
+
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1\Remarketing;
+namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Remarketing
 {
@@ -14,7 +14,7 @@ class Remarketing
 
     /**
      * @var RemarketingItem[]
-     * @Field(type="array<MyTarget\Domain\V1\Remarketing\RemarketingItem>")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\Remarketing\RemarketingItem>")
      */
     private $disjunctions;
 

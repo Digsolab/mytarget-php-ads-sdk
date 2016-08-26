@@ -1,6 +1,8 @@
 <?php
 
-namespace MyTarget\Token;
+namespace Dsl\MyTarget\Token;
+
+use Dsl\MyTarget as f;
 
 class Token
 {
@@ -20,7 +22,7 @@ class Token
     private $tokenType;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $expiresAt;
 
@@ -32,14 +34,14 @@ class Token
     /**
      * @param string $accessToken
      * @param string $tokenType
-     * @param \DateTime $expiresAt
+     * @param \DateTimeInterface $expiresAt
      * @param string $refreshToken
      */
-    public function __construct($accessToken, $tokenType, \DateTime $expiresAt, $refreshToken)
+    public function __construct($accessToken, $tokenType, \DateTimeInterface $expiresAt, $refreshToken)
     {
         $this->accessToken = $accessToken;
         $this->tokenType = $tokenType;
-        $this->expiresAt = $expiresAt;
+        $this->expiresAt = f\date_immutable($expiresAt);
         $this->refreshToken = $refreshToken;
     }
 
@@ -53,7 +55,7 @@ class Token
             return null;
         }
 
-        $expiresAt = \DateTime::createFromFormat(\DateTime::ISO8601, $token["expires_at"]);
+        $expiresAt = \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $token["expires_at"]);
         if ($expiresAt === false) {
             return null;
         }
@@ -63,17 +65,16 @@ class Token
 
     /**
      * @param array $token
-     * @param \DateTime $now
+     * @param \DateTimeInterface $now
      * @return Token|null
      */
-    public static function fromResponse(array $token, \DateTime $now)
+    public static function fromResponse(array $token, \DateTimeInterface $now)
     {
         if ( ! isset($token["access_token"], $token["token_type"], $token["expires_in"], $token["refresh_token"])) {
             return null;
         }
 
-        $now = clone $now;
-        $expiresAt = $now->add(new \DateInterval(sprintf("PT%dS", $token["expires_in"])));
+        $expiresAt = f\date_immutable($now)->add(new \DateInterval(sprintf("PT%dS", $token["expires_in"])));
 
         return new Token($token["access_token"], $token["token_type"], $expiresAt, $token["refresh_token"]);
     }
@@ -108,7 +109,7 @@ class Token
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getExpiresAt()
     {
@@ -116,11 +117,11 @@ class Token
     }
 
     /**
-     * @param \DateTime $moment
+     * @param \DateTimeInterface $moment
      *
      * @return bool
      */
-    public function isExpiredAt(\DateTime $moment)
+    public function isExpiredAt(\DateTimeInterface $moment)
     {
         return $this->expiresAt->sub(new \DateInterval(self::SAFE_TIME_BUFFER)) < $moment;
     }
@@ -134,12 +135,12 @@ class Token
     }
 
     /**
-     * It makes the the token invalid by setting its value to current time
+     * @param Token $token
      *
-     * @return void
+     * @return bool
      */
-    public function invalidate()
+    public function isEqual(Token $token)
     {
-        $this->expiresAt = new \DateTime("now", $this->expiresAt->getTimezone());
+        return $this->accessToken === $token->accessToken;
     }
 }

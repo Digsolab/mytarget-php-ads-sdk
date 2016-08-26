@@ -1,9 +1,9 @@
 <?php
 
-namespace MyTarget\Domain\V1\Remarketing;
+namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class RemarketingCounter
 {
@@ -15,13 +15,13 @@ class RemarketingCounter
 
     /**
      * @var Status
-     * @Field(type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $status;
 
     /**
      * @var Status
-     * @Field(name="system_status", type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(name="system_status", type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $systemStatus;
 

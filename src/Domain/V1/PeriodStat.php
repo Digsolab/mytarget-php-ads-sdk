@@ -1,8 +1,8 @@
 <?php
 
-namespace MyTarget\Domain\V1;
+namespace Dsl\MyTarget\Domain\V1;
 
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class PeriodStat
 {
@@ -25,7 +25,7 @@ class PeriodStat
     private $amount;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="date", type="DateTime")
      */
     private $date;
@@ -55,7 +55,7 @@ class PeriodStat
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDate()
     {

@@ -1,13 +1,12 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Instantiator\InstantiatorInterface;
-use MyTarget\Mapper\Annotation\Field;
-use MyTarget\Mapper\Exception\ContextAwareException;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Mapper\Exception\ClassNotFoundException;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type\ObjectType;
 
 class ObjectTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +33,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \MyTarget\Mapper\Exception\ClassNotFoundException
+     * @expectedException \Dsl\MyTarget\Mapper\Exception\ClassNotFoundException
      */
     public function testItHydratesAndPanicsIfClassNotFound()
     {
@@ -47,7 +46,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     {
         $objectType = new ObjectType($this->annotations);
 
-        $class = new \ReflectionClass('MyTarget\Mapper\Type\ObjectStub');
+        $class = new \ReflectionClass(ObjectStub::class);
         $parentClass = $class->getParentClass();
 
         $this->annotations->expects($this->exactly(2))
@@ -78,24 +77,24 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
                 'integerValue' => 1,
                 'stringValue' => 'A'
             ],
-            'MyTarget\Mapper\Type\ObjectStub',
+            ObjectStub::class,
             $this->mapper
         );
 
-        $this->assertInstanceOf('MyTarget\Mapper\Type\ObjectStub', $result);
+        $this->assertInstanceOf(ObjectStub::class, $result);
 
         $this->assertSame(1, $result->getIntegerValue());
         $this->assertSame('A', $result->getStringValue());
     }
 
     /**
-     * @expectedException \MyTarget\Mapper\Exception\ContextAwareException
+     * @expectedException \Dsl\MyTarget\Mapper\Exception\ContextAwareException
      */
     public function testItHydratesAndRethrowsException()
     {
         $objectType = new ObjectType($this->annotations);
 
-        $class = new \ReflectionClass('MyTarget\Mapper\Type\ObjectStub');
+        $class = new \ReflectionClass(ObjectStub::class);
 
         $this->annotations->expects($this->once())
                           ->method('getPropertyAnnotation')
@@ -110,7 +109,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
             [
                 'integerValue' => 1
             ],
-            'MyTarget\Mapper\Type\ObjectStub',
+            ObjectStub::class,
             $this->mapper
         );
     }
@@ -119,7 +118,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     {
         $objectType = new ObjectType($this->annotations);
 
-        $class = new \ReflectionClass('MyTarget\Mapper\Type\ObjectStub');
+        $class = new \ReflectionClass(ObjectStub::class);
         $parentClass = $class->getParentClass();
 
         $this->annotations->expects($this->exactly(2))
@@ -148,7 +147,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
 
         $result = $objectType->snapshot(
             $object,
-            'MyTarget\Mapper\Type\ObjectStub',
+            ObjectStub::class,
             $this->mapper
         );
 
@@ -161,7 +160,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testItMakesSnapshotSkippingEmptyProperties()
+    public function testItReturnsNullIfAllPropertiesAreEmpty()
     {
         $objectType = new ObjectType($this->annotations);
 
@@ -169,10 +168,10 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
 
         $result = $objectType->snapshot(
             $object,
-            'MyTarget\Mapper\Type\ObjectStub',
+            ObjectStub::class,
             $this->mapper
         );
 
-        $this->assertSame([], $result);
+        $this->assertSame(null, $result);
     }
 }

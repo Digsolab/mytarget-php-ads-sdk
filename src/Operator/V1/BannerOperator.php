@@ -1,13 +1,14 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Client;
-use MyTarget\Domain\V1\Banner\Banner;
-use MyTarget\Domain\V1\Banner\BannerStat;
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\V1\Fields\BannerFields;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Banner\Banner;
+use Dsl\MyTarget\Domain\V1\Banner\BannerStat;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Operator\V1\Fields\BannerFields;
+use Dsl\MyTarget as f;
 
 class BannerOperator
 {
@@ -108,7 +109,7 @@ class BannerOperator
      * @param array|null        $withCampaignStatuses
      * @param array|null        $context
      *
-     * @return \MyTarget\Domain\V1\BannerStat[]
+     * @return BannerStat[]
      */
     public function all(BannerFields $fields = null,
         array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)
@@ -155,6 +156,7 @@ class BannerOperator
 
         $path = sprintf("/api/v1/banners%s.json", $ids ? "/" . implode(";", $ids) : "");
         $json = $this->client->get($path, $query, $context);
+        $json = f\objects_array_fixup($json, count($ids));
 
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(BannerStat::class, $json);
@@ -165,12 +167,14 @@ class BannerOperator
      * TODO to be changed
      *
      * @param array $fields
-     * @return array
+     * @return string
      */
     private function mapFields(array $fields)
     {
-        return array_map(function ($field) {
+        $fields = array_map(function ($field) {
             return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $field));
         }, $fields);
+
+        return implode(",", $fields);
     }
 }

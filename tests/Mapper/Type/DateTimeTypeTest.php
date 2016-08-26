@@ -1,8 +1,9 @@
 <?php
 
-namespace MyTarget\Mapper\Type;
+namespace tests\Dsl\MyTarget\Mapper\Type;
 
-use MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Mapper\Type\DateTimeType;
 
 class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +24,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $result = $datetimeType->hydrated('2016-07-27 13:58:27', 'DateTime', $this->mapper);
 
         $this->assertEquals(
-            \DateTime::createFromFormat(
+            \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 '2016-07-27 13:58:27',
                 new \DateTimeZone('Europe/Moscow')
@@ -36,10 +37,10 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
     {
         $datetimeType = new DateTimeType(new \DateTimeZone('Pacific/Chuuk'));
 
-        $result = $datetimeType->hydrated('2016-07-27 13:58:27', 'DateTime', $this->mapper);
+        $result = $datetimeType->hydrated('2016-07-27 13:58:27', 'DateTimeImmutable', $this->mapper);
 
         $this->assertEquals(
-            \DateTime::createFromFormat(
+            \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 '2016-07-27 13:58:27',
                 new \DateTimeZone("Pacific/Chuuk")
@@ -55,7 +56,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $result = $datetimeType->hydrated('_20160727135827_', 'DateTime<_YmdHis_>', $this->mapper);
 
         $this->assertEquals(
-            \DateTime::createFromFormat(
+            \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 '2016-07-27 13:58:27',
                 new \DateTimeZone("Pacific/Chuuk")
@@ -96,7 +97,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $datetimeType = new DateTimeType();
 
         $result = $datetimeType->snapshot(
-            \DateTime::createFromFormat(
+            \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 '2016-07-27 13:58:27',
                 new \DateTimeZone('Europe/Moscow')
@@ -115,7 +116,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $datetimeType = new DateTimeType(new \DateTimeZone('Pacific/Chuuk'));
 
         $result = $datetimeType->snapshot(
-            \DateTime::createFromFormat(
+            \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 '2016-07-27 13:58:27',
                 new \DateTimeZone("Pacific/Chuuk")
@@ -135,7 +136,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $datetimeType = new DateTimeType(new \DateTimeZone('Pacific/Chuuk'));
 
         $result = $datetimeType->snapshot(
-            \DateTime::createFromFormat(
+            \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 '2016-07-27 13:58:27',
                 new \DateTimeZone("Pacific/Chuuk")

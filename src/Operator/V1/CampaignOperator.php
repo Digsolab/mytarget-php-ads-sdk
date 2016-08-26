@@ -1,14 +1,15 @@
 <?php
 
-namespace MyTarget\Operator\V1;
+namespace Dsl\MyTarget\Operator\V1;
 
-use MyTarget\Domain\V1\Campaign\Campaign;
-use MyTarget\Domain\V1\Campaign\CampaignStat;
-use MyTarget\Domain\V1\Campaign\MutateCampaign;
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Operator\V1\Fields\CampaignFields;
-use MyTarget\Client;
+use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
+use Dsl\MyTarget\Domain\V1\Campaign\CampaignStat;
+use Dsl\MyTarget\Domain\V1\Campaign\MutateCampaign;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Operator\V1\Fields\CampaignFields;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget as f;
 
 class CampaignOperator
 {
@@ -81,7 +82,7 @@ class CampaignOperator
     {
         $fields = $fields ?: CampaignFields::create();
 
-        $query = ["fields" => implode(",", $this->mapFields($fields->getFields()))];
+        $query = ["fields" => $this->mapFields($fields->getFields())];
 
         if ($withStatuses && null !== ($status = Status::inApiFormat($withStatuses))) {
             $query["status"] = $status;
@@ -142,6 +143,7 @@ class CampaignOperator
 
         $path = sprintf("/api/v1/campaigns/%s.json", implode(";", $ids));
         $json = $this->client->get($path, $query, $context);
+        $json = f\objects_array_fixup($json, count($ids));;
 
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(CampaignStat::class, $json);
@@ -152,7 +154,7 @@ class CampaignOperator
      * TODO to be changed
      *
      * @param array $fields
-     * @return array
+     * @return string
      */
     private function mapFields(array $fields)
     {
@@ -160,8 +162,10 @@ class CampaignOperator
             return $field !== CampaignFields::FIELD_BANNERS;
         });
 
-        return array_map(function ($field) {
+        $fields = array_map(function ($field) {
             return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $field));
         }, $fields);
+
+        return implode(",", $fields);
     }
 }

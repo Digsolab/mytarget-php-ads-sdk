@@ -1,12 +1,13 @@
 <?php
 
-namespace MyTarget\Domain\V1\Campaign;
+namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use MyTarget\Domain\V1\Enum\AutobiddingMode;
-use MyTarget\Domain\V1\Enum\Mixing;
-use MyTarget\Domain\V1\Enum\Status;
-use MyTarget\Domain\V1\Targeting\CampaignTargeting;
-use MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode;
+use Dsl\MyTarget\Domain\V1\Enum\Mixing;
+use Dsl\MyTarget\Domain\V1\Enum\Status;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
+use Dsl\MyTarget\Mapper\Annotation\Field;
+use Dsl\MyTarget as f;
 
 class MutateCampaign
 {
@@ -18,25 +19,25 @@ class MutateCampaign
 
     /**
      * @var Status
-     * @Field(type="MyTarget\Domain\V1\Enum\Status")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\Status")
      */
     private $status;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="date_start", type="DateTime")
      */
     private $dateStart;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      * @Field(name="date_end", type="DateTime")
      */
     private $dateEnd;
 
     /**
      * @var PackageId
-     * @Field(type="MyTarget\Domain\V1\Campaign\PackageId")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Campaign\PackageId")
      */
     private $package;
 
@@ -78,19 +79,19 @@ class MutateCampaign
 
     /**
      * @var Mixing
-     * @Field(name="mixing", type="MyTarget\Domain\V1\Enum\Mixing")
+     * @Field(name="mixing", type="Dsl\MyTarget\Domain\V1\Enum\Mixing")
      */
     private $mixing;
 
     /**
      * @var CampaignTargeting
-     * @Field(name="targetings", type="MyTarget\Domain\V1\Targeting\CampaignTargeting")
+     * @Field(name="targetings", type="Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting")
      */
     private $targetings;
 
     /**
      * @var AutobiddingMode
-     * @Field(name="auto_bidding_mode", type="MyTarget\Domain\V1\Enum\AutobiddingMode")
+     * @Field(name="auto_bidding_mode", type="Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode")
      */
     private $autoBiddingMode;
 
@@ -102,7 +103,7 @@ class MutateCampaign
 
     /**
      * @var RemarketingPricelistId
-     * @Field(name="price_list", type="MyTarget\Domain\V1\Campaign\RemarketingPricelistId")
+     * @Field(name="price_list", type="Dsl\MyTarget\Domain\V1\Campaign\RemarketingPricelistId")
      */
     private $pricelist;
 
@@ -204,7 +205,7 @@ class MutateCampaign
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDateStart()
     {
@@ -212,15 +213,15 @@ class MutateCampaign
     }
 
     /**
-     * @param \DateTime $dateStart
+     * @param \DateTimeInterface $dateStart
      */
-    public function setDateStart(\DateTime $dateStart = null)
+    public function setDateStart(\DateTimeInterface $dateStart = null)
     {
-        $this->dateStart = $dateStart;
+        $this->dateStart = f\date_immutable($dateStart);
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getDateEnd()
     {
@@ -228,11 +229,11 @@ class MutateCampaign
     }
 
     /**
-     * @param \DateTime $dateEnd
+     * @param \DateTimeInterface $dateEnd
      */
-    public function setDateEnd(\DateTime $dateEnd = null)
+    public function setDateEnd(\DateTimeInterface $dateEnd = null)
     {
-        $this->dateEnd = $dateEnd;
+        $this->dateEnd = f\date_immutable($dateEnd);
     }
 
     /**

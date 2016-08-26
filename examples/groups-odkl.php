@@ -1,7 +1,7 @@
 <?php
 
 namespace Foo;
-use MyTarget\Operator\V1\GroupsOperator;
+use Dsl\MyTarget\Operator\V1\GroupsOperator;
 
 list($client, $mapper) = require __DIR__ . "/bootstrap.php";
 
