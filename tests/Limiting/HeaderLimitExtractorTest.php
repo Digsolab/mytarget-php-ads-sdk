@@ -19,13 +19,11 @@ class HeaderLimitExtractorTest extends \PHPUnit_Framework_TestCase
             "X-RateLimit-Daily-Remaining" => 4
         ]);
 
-        $result = $limitExtractor->extractLimits($response);
+        $now = new \DateTimeImmutable();
 
-        $expected = new Limits();
-        $expected->bySecond = 1;
-        $expected->byMinute = 2;
-        $expected->byHour = 3;
-        $expected->byDay = 4;
+        $result = $limitExtractor->extractLimits($response, $now);
+
+        $expected = new Limits($now, 1, 2, 3, 4);
 
         $this->assertEquals($expected, $result);
     }

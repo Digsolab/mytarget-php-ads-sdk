@@ -9,6 +9,7 @@ use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Operator\V1\Fields\CampaignFields;
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget as f;
 
 class CampaignOperator
 {
@@ -142,6 +143,7 @@ class CampaignOperator
 
         $path = sprintf("/api/v1/campaigns/%s.json", implode(";", $ids));
         $json = $this->client->get($path, $query, $context);
+        $json = f\objects_array_fixup($json, count($ids));;
 
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(CampaignStat::class, $json);

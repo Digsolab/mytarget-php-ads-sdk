@@ -6,6 +6,7 @@ use Dsl\MyTarget\Client;
 use Dsl\MyTarget\Domain\DateRange;
 use Dsl\MyTarget\Domain\V1\Demography\DetailedExactDemographyCampaigns;
 use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget as f;
 
 class DetailedExactDemographyOperator
 {
@@ -48,6 +49,7 @@ class DetailedExactDemographyOperator
         $path = sprintf('/api/v1/statistics/campaigns/%s/detailed_exact_demography.json', implode(';', $ids));
 
         $json = $this->client->get($path, $query, $context);
+        $json = f\objects_array_fixup($json, count($ids));
 
         return $this->mapper->hydrateNew(DetailedExactDemographyCampaigns::class, $json);
     }

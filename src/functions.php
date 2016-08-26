@@ -104,3 +104,16 @@ function date_mutable(\DateTimeInterface $dt)
 
     return $mutable;
 }
+
+/**
+ * The API will give us `{...}`, instead of `[{...}]` in the response
+ * if we select the object by ID and give it only one ID.
+ *
+ * @param array $json
+ * @param int $howMuch
+ * @return array
+ */
+function objects_array_fixup($json, $howMuch)
+{
+    return $howMuch === 1 ? [$json] : $json;
+}
