@@ -158,6 +158,12 @@ class Banner
 
     /**
      * @var Image
+     * @Field(name="vk_feed", type="Dsl\MyTarget\Domain\V1\Image\Image")
+     */
+    private $vkFeed;
+
+    /**
+     * @var Image
      * @Field(name="background_image", type="Dsl\MyTarget\Domain\V1\Image\Image")
      */
     private $backgroundImage;
@@ -736,5 +742,25 @@ class Banner
     public function setCallToAction($callToAction)
     {
         $this->callToAction = $callToAction;
+    }
+
+    /**
+     * @return Image
+     */
+    public function getVkFeed()
+    {
+        return $this->vkFeed;
+    }
+
+    /**
+     * @param Image $vkFeed
+     *
+     * @return self
+     */
+    public function setVkFeed($vkFeed)
+    {
+        $this->vkFeed = $vkFeed;
+
+        return $this;
     }
 }
