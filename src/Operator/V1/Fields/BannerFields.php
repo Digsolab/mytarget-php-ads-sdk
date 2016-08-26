@@ -39,6 +39,7 @@ use Dsl\MyTarget\Operator\AbstractFields;
  * @method BannerFields withDeeplink()
  * @method BannerFields withCallToAction()
  * @method BannerFields withContent()
+ * @method BannerFields withVkFeed()
  */
 class BannerFields extends AbstractFields
 {
@@ -58,7 +59,7 @@ class BannerFields extends AbstractFields
         return ['id', 'status', 'systemStatus', 'created', 'updated', 'moderationStatus', 'title',
             'text', 'telephone', 'companyName', 'url', 'urlTypes', 'jsonUrl', 'editUrl', 'previewImageUrl',
             'user', 'campaign', 'category', 'moderationReasonDisplay', 'moderationReasonsDisplay',
-            'bannerModeration', 'image', 'urlObjectId', 'promoImage', 'backgroundImage', 'html5',
+            'bannerModeration', 'image', 'urlObjectId', 'promoImage', 'vkFeed', 'backgroundImage', 'html5',
             'videoParams', 'products', 'bannerFields', 'links', 'pixels', 'deeplink', 'callToAction', 'content'];
     }
 }
