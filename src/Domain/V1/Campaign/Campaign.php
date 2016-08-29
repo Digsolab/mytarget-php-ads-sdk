@@ -50,13 +50,13 @@ class Campaign
 
     /**
      * @var \DateTimeImmutable
-     * @Field(name="date_start", type="DateTime")
+     * @Field(name="date_start", type="DateTime<d.m.Y>")
      */
     private $dateStart;
 
     /**
      * @var \DateTimeImmutable
-     * @Field(name="date_end", type="DateTime")
+     * @Field(name="date_end", type="DateTime<d.m.Y>")
      */
     private $dateEnd;
 
