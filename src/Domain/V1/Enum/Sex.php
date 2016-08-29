@@ -8,7 +8,7 @@ class Sex extends AbstractEnum
 {
     const MALE = 'M';
     const FEMALE = 'F';
-    const BOTH = 'MF';
+    const BOTH = 'FM';
 
     /**
      * @return Sex
