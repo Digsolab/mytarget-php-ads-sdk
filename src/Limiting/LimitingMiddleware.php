@@ -34,10 +34,10 @@ class LimitingMiddleware implements HttpMiddleware
 
         $limitBy = $context["limit-by"];
 
-        $isLimitReached = $this->rateLimitProvider->isLimitReached($limitBy, $request, $context);
+        $timeout = $this->rateLimitProvider->rateLimitTimeout($limitBy, $request, $context);
 
-        if ($isLimitReached) {
-            throw new ThrottleException("Preventively throttled: limit had been reached", $request);
+        if ($timeout) {
+            throw new ThrottleException($timeout, "Preventively throttled: limit had been reached", $request);
         }
 
         $response = $stack->request($request, $context);
@@ -50,7 +50,9 @@ class LimitingMiddleware implements HttpMiddleware
             } catch (DecodingException $e) { }
 
             if (isset($decoded["remaining"], $decoded["limits"])) {
-                throw new ThrottleException("Throttle response: limit had been reached", $request, $response);
+                $timeout = $this->rateLimitProvider->rateLimitTimeout($limitBy, $request, $context);
+
+                throw new ThrottleException($timeout ?: null, "Throttle response: limit had been reached", $request, $response);
             }
         }
 

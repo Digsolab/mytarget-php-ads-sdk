@@ -53,7 +53,7 @@ class Remarketing
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getFlags()
     {

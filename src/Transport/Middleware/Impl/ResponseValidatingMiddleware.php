@@ -22,7 +22,7 @@ class ResponseValidatingMiddleware implements HttpMiddleware
         }
 
         if ($code >= 400 && $code < 500) {
-            throw new ex\ClientErrorException("MyTarget: {$code} Client Error", $request, $response);
+            throw ex\ClientErrorException::fromResponse($request, $response);
         }
 
         if ($code >= 300 && $code < 400) { // safety net

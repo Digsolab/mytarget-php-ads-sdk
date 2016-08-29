@@ -49,7 +49,7 @@ abstract class ObjectStat
     }
 
     /**
-     * @return DatedStat[]
+     * @return StatisticRow[]
      */
     public abstract function getDetailed();
 }

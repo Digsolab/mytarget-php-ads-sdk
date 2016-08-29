@@ -4,6 +4,9 @@ namespace Dsl\MyTarget\Domain\V1\Remarketing;
 
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
+/**
+ * Called `Targetings` in MyTarget documentation
+ */
 class RemarketingItem
 {
     /**
@@ -43,8 +46,8 @@ class RemarketingItem
     private $groups;
 
     /**
-     * @var RemarketingUserList[]
-     * @Field(name="remarketing_users_lists", type="array<Dsl\MyTarget\Domain\V1\Remarketing\RemarketingUserList>")
+     * @var RemarketingItemUserList[]
+     * @Field(name="remarketing_users_lists", type="array<Dsl\MyTarget\Domain\V1\Remarketing\RemarketingItemUserList>")
      */
     private $usersLists;
 
@@ -187,7 +190,7 @@ class RemarketingItem
     }
 
     /**
-     * @return RemarketingUserList[]
+     * @return RemarketingItemUserList[]
      */
     public function getUsersLists()
     {
@@ -195,7 +198,7 @@ class RemarketingItem
     }
 
     /**
-     * @param RemarketingUserList[] $usersLists
+     * @param RemarketingItemUserList[] $usersLists
      */
     public function setUsersLists($usersLists)
     {

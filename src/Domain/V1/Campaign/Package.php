@@ -2,7 +2,7 @@
 
 namespace Dsl\MyTarget\Domain\V1\Campaign;
 
-use Dsl\MyTarget\Domain\V1\Targeting\Targeting;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
 use Dsl\MyTarget\Mapper\Annotation\Field;
 use Dsl\MyTarget\Domain\V1\Enum\Status;
 
@@ -69,8 +69,8 @@ class Package
     private $bannerFormat;
 
     /**
-     * @var Targeting
-     * @Field(name="targetings", type="Dsl\MyTarget\Domain\V1\Targeting\Targeting")
+     * @var CampaignTargeting
+     * @Field(name="targetings", type="Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting")
      */
     private $targetings;
 
@@ -267,7 +267,7 @@ class Package
     }
 
     /**
-     * @return Targeting
+     * @return CampaignTargeting
      */
     public function getTargetings()
     {
@@ -275,7 +275,7 @@ class Package
     }
 
     /**
-     * @param Targeting $targetings
+     * @param CampaignTargeting $targetings
      */
     public function setTargetings($targetings)
     {

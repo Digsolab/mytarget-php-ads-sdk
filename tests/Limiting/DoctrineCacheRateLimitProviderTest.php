@@ -32,18 +32,18 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
 
         return [
             // 1. Limit ----------------------------------- 2. moment at which this limit should be tested
-            // ---------------------------------------------------- 3. should it fail or not in the end
+            // ---------------------------------------------------- 3. how much we should wait while limit is held
 
-            [new Limits($moment, 0, null, null, null), $moment, true], // should fail
+            [new Limits($moment, 0, null, null, null), $moment, 1], // should fail
             [new Limits($moment, 0, null, null, null), $moment->add(new \DateInterval("PT1S")), false], // should not fail nor falter I shall succeed. my perception is altered I do believe
             [new Limits($moment, 1, 1, 1, 1), $moment, false],
-            [new Limits($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT59S")), true],
+            [new Limits($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT59S")), 1],
             [new Limits($moment, 1, 0, null, null), $moment->add(new \DateInterval("PT1M")), false],
             [new Limits($moment, 0, 0, 1, 1), $moment->add(new \DateInterval("PT1M")), false],
-            [new Limits($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT59M")), true],
+            [new Limits($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT59M")), 60],
             [new Limits($moment, 1, 1, 0, 1), $moment->add(new \DateInterval("PT1H")), false],
-            [new Limits($moment, 1, 1, 1, 0), $moment, true],
-            [new Limits($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("PT23H59M59S")), true],
+            [new Limits($moment, 1, 1, 1, 0), $moment, 3600 * 24],
+            [new Limits($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("PT23H59M59S")), 1],
             [new Limits($moment2, 1, 1, 1, 0), $moment2->add(new \DateInterval("PT23H59M59S")), false],
             [new Limits($moment, 1, 1, 1, 0), $moment->add(new \DateInterval("P1D")), false],
             [new Limits($moment, 0, 0, 0, 0), $moment->sub(new \DateInterval("PT1S")), false] // we went back in time there clearly are no limits for us
@@ -53,7 +53,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider limits
      */
-    public function testLimits(Limits $limits, \DateTimeImmutable $moment, $shouldFail)
+    public function testLimits(Limits $limits, \DateTimeImmutable $moment, $shouldReturn)
     {
         $limitProvider = new DoctrineCacheRateLimitProvider($this->cache, $this->limitExtractor);
         $limitProvider->setMomentGenerator(function () use ($moment) {
@@ -68,13 +68,9 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
             ->with("{$limitBy}#{$username}")
             ->willReturn($limits->toArray());
 
-        $result = $limitProvider->isLimitReached($limitBy, $this->request, ["username" => $username]);
+        $result = $limitProvider->rateLimitTimeout($limitBy, $this->request, ["username" => $username]);
 
-        if ($shouldFail) {
-            $this->assertTrue($result, "This check should have failed (the limit is reached)");
-        } else {
-            $this->assertFalse($result, "This check should have succeeded (the limit is not reached)");
-        }
+        $this->assertSame($shouldReturn, $result);
     }
 
     public function testItDoesNotPanicWhenNoLimitsCached()
@@ -90,7 +86,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with("{$limitBy}#{$username}")
                     ->willReturn($limits);
 
-        $result = $limitProvider->isLimitReached($limitBy, $this->request, ["username" => $username]);
+        $result = $limitProvider->rateLimitTimeout($limitBy, $this->request, ["username" => $username]);
 
         $this->assertFalse($result);
     }
@@ -138,7 +134,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())->method("fetch")
             ->with($expectedId)->willReturn(null);
 
-        $limitProvider->isLimitReached($expectedLimitBy, $this->request, $expectedCtx);
+        $limitProvider->rateLimitTimeout($expectedLimitBy, $this->request, $expectedCtx);
 
         $response = $this->getMockForAbstractClass(ResponseInterface::class, [], "", false);
 

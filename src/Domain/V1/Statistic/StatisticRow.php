@@ -4,7 +4,7 @@ namespace Dsl\MyTarget\Domain\V1\Statistic;
 
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
-class StatisticRow
+abstract class StatisticRow
 {
     /**
      * @var int
@@ -61,4 +61,9 @@ class StatisticRow
     {
         return $this->ctr;
     }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public abstract function getDate();
 }

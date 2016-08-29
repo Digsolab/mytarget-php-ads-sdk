@@ -61,7 +61,7 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function isLimitReached($limitBy, RequestInterface $request, array $context = null)
+    public function rateLimitTimeout($limitBy, RequestInterface $request, array $context = null)
     {
         $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
         $limitsArray = $this->cache->fetch($id);
@@ -75,22 +75,27 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
             return false;
         }
 
-        $now = call_user_func($this->momentGenerator); /** @var \DateTimeInterface $now */
+        $now = call_user_func($this->momentGenerator); /** @var \DateTimeImmutable $now */
+        $moment = $limits->getMoment();
         $diff = $now->diff($limits->getMoment());
 
         if (( ! $diff->invert && $now != $limits->getMoment()) || $diff->days) {
             return false;
         }
 
-        if (($limits->getBySecond() === 0 && $now->format("dHis") === $limits->getMoment()->format("dHis")) ||
-            ($limits->getByMinute() === 0 && $now->format("dHi" ) === $limits->getMoment()->format("dHi" )) ||
-            ($limits->getByHour()   === 0 && $now->format("dH"  ) === $limits->getMoment()->format("dH"  )) ||
-            ($limits->getByDay()    === 0 && $now->format("d"   ) === $limits->getMoment()->format("d"   ))) {
-
-            return true;
+        $delay = null;
+        if ($limits->getByDay() === 0 && $now->format("d") === $moment->format("d")) {
+            $nextDay = $now->modify("next day 00:00");
+            $delay = $nextDay->getTimestamp() - $now->getTimestamp();
+        } elseif ($limits->getByHour() === 0 && $now->format("dH") === $moment->format("dH")) {
+            $delay = (59 - (int)$now->format("i")) * 60 + (60 - (int)$now->format("s"));
+        } elseif ($limits->getByMinute() === 0 && $now->format("dHi") === $moment->format("dHi")) {
+            $delay = 60 - (int)$now->format("s");
+        } elseif ($limits->getBySecond() === 0 && $now->format("dHis") === $moment->format("dHis")) {
+            $delay = 1;
         }
 
-        return false;
+        return $delay ?: false;
     }
 
     /**

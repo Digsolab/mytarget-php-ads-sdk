@@ -24,7 +24,7 @@ use Dsl\MyTarget\Operator\AbstractFields;
  * @method BannerFields withCampaign()
  * @method BannerFields withCategory()
  * @method BannerFields withModerationReasonDisplay()
- * @method BannerFields withModerationResonsDisplay()
+ * @method BannerFields withModerationReasonsDisplay()
  * @method BannerFields withBannerModeration()
  * @method BannerFields withImage()
  * @method BannerFields withUrlObjectId()
