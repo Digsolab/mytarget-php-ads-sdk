@@ -22,7 +22,7 @@ class RemarketingUserList
 
     /**
      * @var RemarketingUserListType
-     * @Field(type="MyTarget\Domain\V1\Enum\RemarketingUserListType")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\RemarketingUserListType")
      */
     private $type;
 
@@ -34,7 +34,7 @@ class RemarketingUserList
 
     /**
      * @var RemarketingUserListStatus
-     * @Field(type="MyTarget\Domain\V1\Enum\RemarketingUserListStatus")
+     * @Field(type="Dsl\MyTarget\Domain\V1\Enum\RemarketingUserListStatus")
      */
     private $status;
 
