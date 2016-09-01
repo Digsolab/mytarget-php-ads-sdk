@@ -41,10 +41,11 @@ class ImageOperator
      * @param resource|string|StreamInterface $file Can be a StreamInterface instance, resource or a file path
      * @param UploadImage $image
      * @param array|null $context
+     * @param str|null $filename
      *
      * @return Image
      */
-    public function upload($file, UploadImage $image, array $context = null)
+    public function upload($file, UploadImage $image, array $context = null, $filename = null)
     {
         $file = f\streamOrResource($file);
 
@@ -56,7 +57,12 @@ class ImageOperator
             $body[] = ["name" => $key, "contents" => $value];
         }
 
-        $body[] = ["name" => "image_file", "contents" => $file];
+        $parameters = ["name" => "image_file", "contents" => $file];
+        if (null !== $filename) {
+            $parameters['filename'] = $filename;
+        }
+
+        $body[] = $parameters;
 
         $json = $this->client->postMultipart("/api/v1/images.json", $body, null, $context);
 
