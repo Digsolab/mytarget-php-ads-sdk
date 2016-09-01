@@ -8,7 +8,7 @@ class RemarketingTargeting
 {
     /**
      * @var int
-     * @Field(name="score_threshold", type="int")
+     * @Field(name="id", type="int")
      */
     private $id;
 
