@@ -33,10 +33,11 @@ class CreativeOperator
      * @param CreativeType $type
      * @param UploadCreative $creative
      * @param array|null $context
+     * @param str|null $filename
      *
      * @return Creative
      */
-    public function create($file, CreativeType $type, UploadCreative $creative, array $context = null)
+    public function create($file, CreativeType $type, UploadCreative $creative, array $context = null, $filename = null)
     {
         if (is_string($file)) { // assume it's a file path
             $file = fopen($file, 'r');
@@ -49,6 +50,9 @@ class CreativeOperator
         $body = [
             ["name" => "file", "contents" => $file],
             ["name" => "data", "contents" => \json_encode($rawCreative)]];
+        if (null !== $filename) {
+            $body[0]['filename'] = $filename;
+        }
 
         $path = sprintf("/api/v2/content/%s.json", $type->getValue());
         $json = $this->client->postMultipart($path, $body, null, $context);
