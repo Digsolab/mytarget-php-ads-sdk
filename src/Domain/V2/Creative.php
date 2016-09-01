@@ -8,6 +8,7 @@ class Creative
 {
     /**
      * @var int
+     * @Field(name="id", type="int")
      */
     private $id;
 
