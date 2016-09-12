@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Domain\V2;
 
+use Dsl\MyTarget\Domain\V2\Enum\CreativeType;
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class Creative
@@ -17,6 +18,12 @@ class Creative
      * @Field(type="dict<Dsl\MyTarget\Domain\V2\CreativeVariant>")
      */
     private $variants;
+
+    /**
+     * @var CreativeType
+     * @Field(type="Dsl\MyTarget\Domain\V2\Enum\CreativeType")
+     */
+    private $type;
 
     /**
      * @param int $id
@@ -42,5 +49,21 @@ class Creative
     public function getVariants()
     {
         return $this->variants;
+    }
+
+    /**
+     * @return CreativeType
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param CreativeType $type
+     */
+    public function setType(CreativeType $type)
+    {
+        $this->type = $type;
     }
 }

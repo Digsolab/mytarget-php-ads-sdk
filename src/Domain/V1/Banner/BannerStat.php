@@ -3,7 +3,7 @@
 namespace Dsl\MyTarget\Domain\V1\Banner;
 
 
-use Dsl\MyTarget\Domain\V1\Creative;
+use Dsl\MyTarget\Domain\V2\Creative;
 use Dsl\MyTarget\Domain\V1\PeriodStat;
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
