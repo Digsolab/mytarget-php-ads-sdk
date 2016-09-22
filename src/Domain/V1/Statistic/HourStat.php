@@ -8,7 +8,7 @@ class HourStat extends StatisticRow
 {
     /**
      * @var \DateTimeImmutable
-     * @Field(type="DateTime<d.m.Y H:i:s>")
+     * @Field(type="DateTime<d.m.Y H:i>")
      */
     private $date;
 
