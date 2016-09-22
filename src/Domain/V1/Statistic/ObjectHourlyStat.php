@@ -13,10 +13,24 @@ class ObjectHourlyStat extends ObjectStat
     private $detailed;
 
     /**
+     * @var HourStat
+     * @Field(type="Dsl\MyTarget\Domain\V1\Statistic\HourStat")
+     */
+    private $total;
+
+    /**
      * @return HourStat[]
      */
     public function getDetailed()
     {
         return $this->detailed;
+    }
+
+    /**
+     * @return HourStat
+     */
+    public function getTotal()
+    {
+        return $this->total;
     }
 }

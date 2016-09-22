@@ -13,10 +13,24 @@ class ObjectDailyStat extends ObjectStat
     private $detailed;
 
     /**
+     * @var DayStat
+     * @Field(type="Dsl\MyTarget\Domain\V1\Statistic\DayStat")
+     */
+    private $total;
+
+    /**
      * @return DayStat[]
      */
     public function getDetailed()
     {
         return $this->detailed;
+    }
+
+    /**
+     * @return DayStat
+     */
+    public function getTotal()
+    {
+        return $this->total;
     }
 }

@@ -19,12 +19,6 @@ abstract class ObjectStat
     private $name;
 
     /**
-     * @var StatisticRow
-     * @Field(type="Dsl\MyTarget\Domain\V1\Statistic\StatisticRow")
-     */
-    private $total;
-
-    /**
      * @return int
      */
     public function getId()
@@ -43,10 +37,7 @@ abstract class ObjectStat
     /**
      * @return StatisticRow
      */
-    public function getTotal()
-    {
-        return $this->total;
-    }
+    abstract public function getTotal();
 
     /**
      * @return StatisticRow[]
