@@ -1,11 +1,11 @@
 <?php
 
-namespace MyTarget\Operator\V2;
+namespace Dsl\MyTarget\Operator\V2;
 
-use MyTarget\Client;
-use MyTarget\Domain\V2\Token;
-use MyTarget\Mapper\Mapper;
-use MyTarget\Token\ClientCredentials\Credentials;
+use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Domain\V2\Token;
+use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Token\ClientCredentials\Credentials;
 
 class TokenOperator
 {
