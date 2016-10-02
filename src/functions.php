@@ -25,13 +25,13 @@ function simpleMapper($debug = false)
     $annotationReader = new CachedReader(new AnnotationReader(), new DoctrineCache\ArrayCache(), $debug);
 
     $mapper = new Mapper([
-        "array" => new t\ArrayType(),
-        "scalar" => new t\ScalarType(),
-        "date" => new t\DateTimeType(),
-        "enum" => new t\EnumType(),
-        "object" => new t\ObjectType($annotationReader, new DoctrineInstantiator()),
-        "mixed" => new t\MixedType(),
-        "dict" => new t\DictType()
+        'array' => new t\ArrayType(),
+        'scalar' => new t\ScalarType(),
+        'date' => new t\DateTimeType(),
+        'enum' => new t\EnumType(),
+        'object' => new t\ObjectType($annotationReader, new DoctrineInstantiator()),
+        'mixed' => new t\MixedType(),
+        'dict' => new t\DictType()
     ]);
 
     return $mapper;
@@ -44,13 +44,13 @@ function simpleMapper($debug = false)
  */
 function json_decode($json)
 {
-    if ($json === "") {
+    if ('' === $json) {
         return null;
     }
 
     $decoded = @\json_decode($json, true);
 
-    if ($decoded === null && null !== ($error = json_last_error_msg())) {
+    if (null === $decoded && null !== ($error = json_last_error_msg())) {
         throw new DecodingException($error);
     }
 
@@ -74,12 +74,12 @@ function streamOrResource($file)
 }
 
 /**
- * @param \DateTimeInterface $dt
- * @return \DateTimeImmutable
+ * @param \DateTimeInterface|null $dt
+ * @return \DateTimeImmutable|null
  */
-function date_immutable(\DateTimeInterface $dt)
+function date_immutable(\DateTimeInterface $dt = null)
 {
-    if ($dt instanceof \DateTimeImmutable) {
+    if ((null === $dt) || ($dt instanceof \DateTimeImmutable)) {
         return $dt;
     }
 
@@ -90,12 +90,12 @@ function date_immutable(\DateTimeInterface $dt)
 }
 
 /**
- * @param \DateTimeInterface $dt
- * @return \DateTime
+ * @param \DateTimeInterface|null $dt
+ * @return \DateTime|null
  */
-function date_mutable(\DateTimeInterface $dt)
+function date_mutable(\DateTimeInterface $dt = null)
 {
-    if ($dt instanceof \DateTime) {
+    if ((null === $dt) || ($dt instanceof \DateTime)) {
         return $dt;
     }
 
