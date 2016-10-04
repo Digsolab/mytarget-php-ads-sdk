@@ -99,6 +99,11 @@ class BannerOperator
         $path = sprintf("/api/v1/banners/%s.json", implode(";", $ids));
         $json = $this->client->post($path, $query, $rawBanners, $context);
 
+        // MyTarget would return an object instead of array in case there is only one banner in result
+        if (0 !== count($json) && !is_array(reset($json))) {
+            $json = [$json];
+        }
+        
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(Banner::class, $json);
         }, $json);
