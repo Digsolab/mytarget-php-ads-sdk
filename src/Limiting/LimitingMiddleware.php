@@ -2,7 +2,7 @@
 
 namespace Dsl\MyTarget\Limiting;
 
-use Dsl\MyTarget\Limiting\Exception\ThrottleException;
+use Dsl\MyTarget\Limiting\Exception as Ex;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
@@ -37,7 +37,7 @@ class LimitingMiddleware implements HttpMiddleware
         $timeout = $this->rateLimitProvider->rateLimitTimeout($limitBy, $request, $context);
 
         if ($timeout) {
-            throw new ThrottleException($timeout, "Preventively throttled: limit had been reached", $request);
+            throw new Ex\ThrottleException($timeout, "Preventively throttled: limit had been reached", $request);
         }
 
         $response = $stack->request($request, $context);
@@ -45,14 +45,16 @@ class LimitingMiddleware implements HttpMiddleware
         $this->rateLimitProvider->refreshLimits($request, $response, $limitBy, $context);
 
         if ($response->getStatusCode() === self::HTTP_STATUS_LIMIT_REACHED) {
+            if (strpos((string)$response->getBody(), 'banners limit') !== false) {
+                throw new Ex\BannerLimitException('Banners limit exceeded');
+            }
             try {
                 $decoded = f\json_decode((string)$response->getBody());
             } catch (DecodingException $e) { }
 
             if (isset($decoded["remaining"], $decoded["limits"])) {
                 $timeout = $this->rateLimitProvider->rateLimitTimeout($limitBy, $request, $context);
-
-                throw new ThrottleException($timeout ?: null, "Throttle response: limit had been reached", $request, $response);
+                throw new Ex\ThrottleException($timeout ?: null, "Throttle response: limit had been reached", $request, $response);
             }
         }
 
