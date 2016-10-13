@@ -6,7 +6,7 @@ PHP клиент для работы с MyTarget API (v1/v2).
 
 ### Install it via composer
 ```
-composer require dsl/my-target-api
+composer require dsl/my-target-sdk
 ```
 
 ### How to work with it?
