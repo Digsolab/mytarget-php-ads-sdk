@@ -5,6 +5,7 @@ namespace Dsl\MyTarget\Domain\V2\Campaign\Projection;
 use Dsl\MyTarget\Domain\V1\Campaign\Campaign;
 use Dsl\MyTarget\Domain\V1\Campaign\Package;
 use Dsl\MyTarget\Domain\V2\Campaign\Projection\Targeting\ProjectionTargetingSettings;
+use Dsl\MyTarget\Exception\InvalidArgumentException;
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
 class ProjectionSettings
@@ -47,9 +48,14 @@ class ProjectionSettings
      * @param ProjectionTargetingSettings $targetings
      * @param int                         $step
      * @param float                       $shareLimit
+     *
+     * @throws InvalidArgumentException
      */
-    public function __construct(Package $package, Campaign $campaign, ProjectionTargetingSettings $targetings, $step, $shareLimit)
+    public function __construct(ProjectionTargetingSettings $targetings, $step, $shareLimit, Package $package = null, Campaign $campaign = null)
     {
+        if (null === $package && null === $campaign) {
+            throw new InvalidArgumentException('A package or a campaign must be defined');
+        }
         $this->step = $step;
         $this->shareLimit = $shareLimit;
         $this->package = $package;
