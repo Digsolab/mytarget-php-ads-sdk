@@ -5,9 +5,11 @@ use Dsl\MyTarget\Domain\V1\Enum\Education;
 use Dsl\MyTarget\Domain\V1\Enum\Employment;
 use Dsl\MyTarget\Domain\V1\Enum\MobileType;
 use Dsl\MyTarget\Domain\V1\Enum as V1Enum;
+use Dsl\MyTarget\Domain\V1\Targeting\CampaignTargeting;
 use Dsl\MyTarget\Domain\V1\Targeting\Fulltime;
 use Dsl\MyTarget\Domain\V1\Targeting\Pad\Pad;
 use Dsl\MyTarget\Domain\V1\Targeting\RemarketingTargeting;
+use Dsl\MyTarget\Domain\V1\Enum\Sex as V1Sex;
 use Dsl\MyTarget\Domain\V2\Enum\Sex;
 use Dsl\MyTarget\Mapper\Annotation\Field;
 
@@ -235,6 +237,47 @@ class ProjectionTargetingSettings
     public function getMobileVendors()
     {
         return $this->mobileVendors;
+    }
+
+    public static function fromV1(CampaignTargeting $targeting)
+    {
+        $res = new self();
+        $res->age = $targeting->getAge();
+        $res->fulltime = $targeting->getFulltime();
+        $res->interests = $targeting->getInterests();
+        $res->tvViewer = $targeting->getTvViewer();
+        $res->psEducation = $targeting->getEducation();
+        $res->employment = $targeting->getEmployment();
+        $res->martialStatus = $targeting->getMaritalStatus();
+        $res->personalIncome = $targeting->getPersonalIncome();
+        $res->remarketing = $targeting->getRemarketing();
+        $res->pads = $targeting->getPads();
+        $res->mobileTypes = $targeting->getMobileTypes();
+        $res->mobileOperatingSystems = $targeting->getMobileOperatingSystems();
+        $res->mobileOperators = $targeting->getMobileOperators();
+        $res->mobileVendors = $targeting->getMobileVendors();
+
+        if ($targeting->getSex()) {
+            $sex = [];
+            switch ($targeting->getSex()->getValue()) {
+                case V1Sex::both()->getValue():
+                    $sex[] = Sex::female();
+                case V1Sex::male()->getValue():
+                    $sex[] = Sex::male();
+                    break;
+                case V1Sex::female()->getValue():
+                    $sex[] = Sex::female();
+                    break;
+            }
+            $res->sex = $sex;
+        }
+        $res->regions = [];
+        foreach ($targeting->getRegions() as $id) {
+            $res->regions[] = new Region($id);
+        }
+        if ($targeting->getUserGeo()) {
+            $res->regions[] = new Region(null, $targeting->getUserGeo());
+        }
     }
 
 }
