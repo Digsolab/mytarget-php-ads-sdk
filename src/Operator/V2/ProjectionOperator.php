@@ -4,7 +4,7 @@ namespace Dsl\MyTarget\Operator\V2;
 
 use Dsl\MyTarget\Client;
 use Dsl\MyTarget\Domain\V2\Campaign\Projection\Projection;
-use Dsl\MyTarget\Domain\V2\Campaign\Projection\ProjectionCampaign;
+use Dsl\MyTarget\Domain\V2\Campaign\Projection\ProjectionSettings;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class ProjectionOperator
@@ -26,11 +26,12 @@ class ProjectionOperator
     }
 
     /**
-     * @param ProjectionCampaign $campaign
-     * @param array|null $context
+     * @param ProjectionSettings $campaign
+     * @param array|null         $context
+     *
      * @return Projection
      */
-    public function projection(ProjectionCampaign $campaign, array $context = null)
+    public function projection(ProjectionSettings $campaign, array $context = null)
     {
         $context = (array)$context + ["limit-by" => "projection2"];
         $data = $this->mapper->snapshot($campaign);
