@@ -272,12 +272,15 @@ class ProjectionTargetingSettings
             $res->sex = $sex;
         }
         $res->regions = [];
-        foreach ($targeting->getRegions() as $id) {
-            $res->regions[] = new Region($id);
+        if ($targeting->getRegions()) {
+            foreach ($targeting->getRegions() as $id) {
+                $res->regions[] = new Region($id);
+            }
         }
         if ($targeting->getUserGeo()) {
             $res->regions[] = new Region(null, $targeting->getUserGeo());
         }
+        return $res;
     }
 
 }
