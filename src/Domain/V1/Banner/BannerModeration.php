@@ -8,13 +8,13 @@ class BannerModeration
 {
     /**
      * @var string
-     * @Field(name="comment", type="string")
+     * @Field(name="moderation_comment", type="string")
      */
     private $comment;
 
     /**
      * @var string
-     * @Field(name="reason", type="string")
+     * @Field(name="moderation_reason", type="string")
      */
     private $reason;
 
