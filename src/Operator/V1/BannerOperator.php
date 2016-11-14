@@ -177,6 +177,44 @@ class BannerOperator
     }
 
     /**
+     * @param integer           $campaignId
+     * @param BannerFields|null $fields
+     * @param array|null        $withStatuses
+     * @param array|null        $withCampaignStatuses
+     * @param array|null        $context
+     *
+     * @return BannerStat[]
+     */
+    public function findForCampaign($campaignId, BannerFields $fields = null, array $withStatuses = null, array $withCampaignStatuses = null, array $context = null)
+    {
+        $context = (array)$context + ["limit-by" => "banners-find"];
+        $fields = $fields ?: BannerFields::create();
+        $request = new BannerRequest(null, $withStatuses, $withCampaignStatuses);
+
+        $query = ["fields" => $this->mapFields($fields->getFields())];
+
+        if ($request->getWithStatuses() && null !== ($status = Status::inApiFormat($request->getWithStatuses()))) {
+            $query["status"] = $status;
+        }
+        if ($request->getWithCampaignStatuses() && null !== ($campaignStatus = Status::inApiFormat($request->getWithCampaignStatuses()))) {
+            $query["campaign__status"] = $campaignStatus;
+        }
+        if ($request->getStatsChangedAfter()) {
+            $query["last_stats_updated__gte"] = $request->getStatsChangedAfter()->format("Y-m-d H:i:s");
+        }
+        if ($request->getUpdatedAfter()) {
+            $query["updated__gte"] = $request->getUpdatedAfter()->format("Y-m-d H:i:s");
+        }
+
+        $path = sprintf("/api/v1/campaigns/%d/banners.json", $campaignId);
+        $json = $this->client->get($path, $query, $context);
+
+        return array_map(function ($json) {
+            return $this->mapper->hydrateNew(BannerStat::class, $json);
+        }, $json);
+    }
+
+    /**
      * TODO to be changed
      *
      * @param array $fields
