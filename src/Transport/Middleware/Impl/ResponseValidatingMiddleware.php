@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Transport\Middleware\Impl;
 
+use Dsl\MyTarget\Limiting\Exception\BannerLimitException;
 use Dsl\MyTarget\Limiting\LimitingMiddleware;
 use Dsl\MyTarget\Transport\Exception as ex;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
@@ -28,6 +29,10 @@ class ResponseValidatingMiddleware implements HttpMiddleware
         }
 
         if ($code >= 400 && $code < 500) {
+            $body = $response->getBody();
+            if (stripos($body, 'Active banners limit exceeded') !== false) {
+                throw new BannerLimitException('Banners limit exceeded');
+            }
             throw ex\ClientErrorException::fromResponse($request, $response);
         }
 
