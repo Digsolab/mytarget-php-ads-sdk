@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Transport\Middleware\Impl;
 
+use Dsl\MyTarget\Limiting\Exception\BannerLimitException;
 use GuzzleHttp\Psr7\Request;
 use Dsl\MyTarget\Transport\Exception as ex;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
@@ -46,6 +47,30 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
             ->willReturn($response);
 
         $this->setExpectedException($exception);
+
+        $middleware = new ResponseValidatingMiddleware();
+        $middleware->request($request, $stack);
+    }
+
+    public function testBodyParsing()
+    {
+        $request = new Request('GET', '/', ['X-Phpunit' => ['a', 'b']], 'some request data');
+
+        $response = $this->getMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn(400);
+        $response->method('getBody')->willReturn('Active banners limit exceeded.');
+
+        /** @var HttpMiddlewareStack|\PHPUnit_Framework_MockObject_MockObject $stack */
+        $stack = $this->getMockBuilder(HttpMiddlewareStack::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+
+        $stack->expects(self::once())
+              ->method('request')
+              ->with($request)
+              ->willReturn($response);
+
+        $this->setExpectedException(BannerLimitException::class);
 
         $middleware = new ResponseValidatingMiddleware();
         $middleware->request($request, $stack);
