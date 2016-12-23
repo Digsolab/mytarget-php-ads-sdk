@@ -30,7 +30,7 @@ class ResponseValidatingMiddleware implements HttpMiddleware
 
         if ($code >= 400 && $code < 500) {
             $body = $response->getBody();
-            if (strpos($body, 'Active banners limit exceeded.') !== false) {
+            if (stripos($body, 'Active banners limit exceeded') !== false) {
                 throw new BannerLimitException('Banners limit exceeded');
             }
             throw ex\ClientErrorException::fromResponse($request, $response);

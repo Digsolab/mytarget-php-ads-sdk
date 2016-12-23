@@ -26,39 +26,15 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
      * @dataProvider testDataProvider
      *
      * @param int    $code
-     * @param string $exception
+     * @param string|null $exception
      */
     public function testRequestStatusCode($code, $exception)
     {
         $request = new Request('GET', '/', ['X-Phpunit' => ['a', 'b']], 'some request data');
 
-        $response = $this->getMock(ResponseInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
         $response->method('getStatusCode')
-            ->willReturn($code);
-
-        /** @var HttpMiddlewareStack|\PHPUnit_Framework_MockObject_MockObject $stack */
-        $stack = $this->getMockBuilder(HttpMiddlewareStack::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $stack->expects(self::once())
-            ->method('request')
-            ->with($request)
-            ->willReturn($response);
-
-        $this->setExpectedException($exception);
-
-        $middleware = new ResponseValidatingMiddleware();
-        $middleware->request($request, $stack);
-    }
-
-    public function testBodyParsing()
-    {
-        $request = new Request('GET', '/', ['X-Phpunit' => ['a', 'b']], 'some request data');
-
-        $response = $this->getMock(ResponseInterface::class);
-        $response->method('getStatusCode')->willReturn(400);
-        $response->method('getBody')->willReturn('Active banners limit exceeded.');
+                 ->willReturn($code);
 
         /** @var HttpMiddlewareStack|\PHPUnit_Framework_MockObject_MockObject $stack */
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)
@@ -70,9 +46,50 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
               ->with($request)
               ->willReturn($response);
 
-        $this->setExpectedException(BannerLimitException::class);
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
         $middleware = new ResponseValidatingMiddleware();
         $middleware->request($request, $stack);
+    }
+
+    /**
+     * @dataProvider bodyParsingProvider
+     *
+     * @param string $body
+     */
+    public function testBodyParsing($body)
+    {
+        $request = new Request('GET', '/', ['X-Phpunit' => ['a', 'b']], 'some request data');
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn(400);
+        $response->method('getBody')->willReturn($body);
+
+        /** @var HttpMiddlewareStack|\PHPUnit_Framework_MockObject_MockObject $stack */
+        $stack = $this->getMockBuilder(HttpMiddlewareStack::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+
+        $stack->expects(self::once())
+              ->method('request')
+              ->with($request)
+              ->willReturn($response);
+
+        $this->expectException(BannerLimitException::class);
+
+        $middleware = new ResponseValidatingMiddleware();
+        $middleware->request($request, $stack);
+    }
+
+    public function bodyParsingProvider()
+    {
+        return [
+            ['Active banners limit exceeded.'],
+            ['Active banners limit exceeded'],
+            ['active banners limit exceeded'],
+            ['ACTIVE banners LIMIT exceeded'],
+        ];
     }
 }
