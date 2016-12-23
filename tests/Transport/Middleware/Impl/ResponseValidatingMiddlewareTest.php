@@ -32,7 +32,7 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request('GET', '/', ['X-Phpunit' => ['a', 'b']], 'some request data');
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->getMock(ResponseInterface::class);
         $response->method('getStatusCode')
                  ->willReturn($code);
 
@@ -47,7 +47,7 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
               ->willReturn($response);
 
         if ($exception !== null) {
-            $this->expectException($exception);
+            $this->setExpectedException($exception);
         }
 
         $middleware = new ResponseValidatingMiddleware();
@@ -63,7 +63,7 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request('GET', '/', ['X-Phpunit' => ['a', 'b']], 'some request data');
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->getMock(ResponseInterface::class);
         $response->method('getStatusCode')->willReturn(400);
         $response->method('getBody')->willReturn($body);
 
@@ -77,7 +77,7 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
               ->with($request)
               ->willReturn($response);
 
-        $this->expectException(BannerLimitException::class);
+        $this->setExpectedException(BannerLimitException::class);
 
         $middleware = new ResponseValidatingMiddleware();
         $middleware->request($request, $stack);
