@@ -83,14 +83,15 @@ class ObjectType implements Type
                 $property->setAccessible(true);
                 $propertyValue = $property->getValue($value);
 
-                if ($propertyValue === null) {
-                    continue;
-                }
-
                 $field = $this->annotations->getPropertyAnnotation($property, Field::class);
 
                 if ($field instanceof Field) {
                     $fieldName = $field->name ?: $property->getName();
+
+                    if ($field->nullable) {
+                        $result[$fieldName] = null;
+                        continue;
+                    }
 
                     $eachValue = $mapper->snapshot($propertyValue, $field->type);
 
