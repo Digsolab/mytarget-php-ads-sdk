@@ -8,13 +8,13 @@ class Birthday
 {
     /**
      * @var int
-     * @Field(name="days_before", type="int")
+     * @Field(name="days_before", type="nullableInt")
      */
     private $daysBefore;
 
     /**
      * @var int
-     * @Field(name="days_after", type="int")
+     * @Field(name="days_after", type="nullableInt")
      */
     private $daysAfter;
 
