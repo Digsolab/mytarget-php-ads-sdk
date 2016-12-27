@@ -21,4 +21,9 @@ class Field extends Annotation
      * @var string
      */
     public $name;
+
+    /**
+     * @var bool
+     */
+    public $nullable = false;
 }
