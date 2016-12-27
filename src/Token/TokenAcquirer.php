@@ -7,8 +7,8 @@ use Dsl\MyTarget\Token\ClientCredentials\CredentialsProvider;
 use Dsl\MyTarget\Token\Exception\TokenDeletedException;
 use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
 use Dsl\MyTarget\Token\Exception\TokenRequestException;
-use Dsl\MyTarget\Transport\HttpTransport;
 use Psr\Http\Message\RequestInterface;
+use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype as MWStack;
 use Dsl\MyTarget as f;
 use GuzzleHttp\Psr7 as guzzle;
 use Psr\Http\Message\UriInterface;
@@ -23,7 +23,7 @@ class TokenAcquirer
     private $baseAddress;
 
     /**
-     * @var HttpTransport
+     * @var MWStack
      */
     private $http;
 
@@ -32,7 +32,7 @@ class TokenAcquirer
      */
     private $credentials;
 
-    public function __construct(UriInterface $baseAddress, HttpTransport $http, CredentialsProvider $credentials)
+    public function __construct(UriInterface $baseAddress,  MWStack $http, CredentialsProvider $credentials)
     {
         $this->baseAddress = $baseAddress;
         $this->http = $http;
@@ -66,10 +66,10 @@ class TokenAcquirer
         }
 
         $tokenRequest = new Request("POST", $uri,
-            ["Content-Type" => "application/x-www-form-urlencoded"],
-            guzzle\build_query($payload));
+                                    ["Content-Type" => "application/x-www-form-urlencoded"],
+                                    guzzle\build_query($payload));
 
-        $response = $this->http->request($tokenRequest, $context);
+        $response = $this->http->freeze()->request($tokenRequest, $context);
 
         $body = (string) $response->getBody();
 
@@ -118,7 +118,7 @@ class TokenAcquirer
             ["Content-Type" => "application/x-www-form-urlencoded"],
             guzzle\build_query($payload));
 
-        $response = $this->http->request($tokenRequest, $context);
+        $response = $this->http->freeze()->request($tokenRequest, $context);
 
         $body = (string) $response->getBody();
 
