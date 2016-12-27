@@ -88,14 +88,11 @@ class ObjectType implements Type
                 if ($field instanceof Field) {
                     $fieldName = $field->name ?: $property->getName();
 
-                    if ($field->nullable) {
-                        $result[$fieldName] = null;
-                        continue;
-                    }
+                    $eachValue = $propertyValue === null
+                        ? null
+                        : $mapper->snapshot($propertyValue, $field->type);
 
-                    $eachValue = $mapper->snapshot($propertyValue, $field->type);
-
-                    if ($eachValue !== null) {
+                    if ($eachValue !== null || $field->nullable) {
                         $result[$fieldName] = $eachValue;
                     }
                 }
