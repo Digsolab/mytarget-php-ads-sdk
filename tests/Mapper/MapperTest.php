@@ -5,6 +5,7 @@ namespace tests\Dsl\MyTarget\Mapper;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Mapper\Type\ArrayType;
 use Dsl\MyTarget\Mapper\Type\ScalarType;
+use Dsl\MyTarget\Mapper\Type\NullableScalarType;
 use Dsl\MyTarget\Mapper\Type\MixedType;
 use Dsl\MyTarget\Mapper\Type\EnumType;
 use Dsl\MyTarget\Mapper\Type\ObjectType;
@@ -19,6 +20,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
         $this->types = [
             'array' => $this->getMock(ArrayType::class),
             'scalar' => $this->getMock(ScalarType::class),
+            'nullable_scalar' => $this->getMock(NullableScalarType::class),
             'mixed' => $this->getMock(MixedType::class),
             'enum' => $this->getMock(EnumType::class),
             'object' => $this->getMockBuilder(ObjectType::class)->disableOriginalConstructor()->getMock()
