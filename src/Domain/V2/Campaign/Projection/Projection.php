@@ -26,7 +26,7 @@ class Projection
 
     /**
      * @var ProjectionPoint[]
-     * @Field(type="array<Dsl\MyTarget\Domain\V1\Campaign\Projection\ProjectionPoint>", name="histogramm")
+     * @Field(type="array<Dsl\MyTarget\Domain\V1\Campaign\Projection\ProjectionPoint>", name="histogram")
      */
     private $histogram;
 
