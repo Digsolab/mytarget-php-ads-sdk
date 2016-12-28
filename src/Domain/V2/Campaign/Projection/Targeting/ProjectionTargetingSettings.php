@@ -82,8 +82,8 @@ class ProjectionTargetingSettings
     private $remarketing;
 
     /**
-     * @var Pad[]
-     * @Field(name="pads", type="array<Dsl\MyTarget\Domain\V1\Targeting\Pad\Pad>")
+     * @var int[]
+     * @Field(name="pads", type="array<int>")
      */
     private $pads;
 
@@ -200,7 +200,7 @@ class ProjectionTargetingSettings
     }
 
     /**
-     * @return \Dsl\MyTarget\Domain\V1\Targeting\Pad\Pad[]
+     * @return int[]
      */
     public function getPads()
     {
@@ -251,7 +251,10 @@ class ProjectionTargetingSettings
         $res->martialStatus = $targeting->getMaritalStatus();
         $res->personalIncome = $targeting->getPersonalIncome();
         $res->remarketing = $targeting->getRemarketing();
-        $res->pads = $targeting->getPads();
+        $res->pads = [];
+        foreach($targeting->getPads() as $pad) {
+            $res->pads[] = $pad->getId();
+        }
         $res->mobileTypes = $targeting->getMobileTypes();
         $res->mobileOperatingSystems = $targeting->getMobileOperatingSystems();
         $res->mobileOperators = $targeting->getMobileOperators();
