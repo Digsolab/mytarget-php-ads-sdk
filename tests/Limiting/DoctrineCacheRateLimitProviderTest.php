@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Limiting;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Limiting\DoctrineCacheRateLimitProvider;
 use Dsl\MyTarget\Limiting\LimitExtractor;
 use Doctrine\Common\Cache\Cache;
@@ -68,7 +69,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
             ->with("{$limitBy}#{$username}")
             ->willReturn($limits->toArray());
 
-        $result = $limitProvider->rateLimitTimeout($limitBy, $this->request, ["username" => $username]);
+        $result = $limitProvider->rateLimitTimeout($limitBy, $this->request, Context::forClient($username));
 
         $this->assertSame($shouldReturn, $result);
     }
@@ -86,7 +87,7 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->with("{$limitBy}#{$username}")
                     ->willReturn($limits);
 
-        $result = $limitProvider->rateLimitTimeout($limitBy, $this->request, ["username" => $username]);
+        $result = $limitProvider->rateLimitTimeout($limitBy, $this->request, Context::forClient($username));
 
         $this->assertFalse($result);
     }
@@ -110,21 +111,21 @@ class DoctrineCacheRateLimitProviderTest extends \PHPUnit_Framework_TestCase
                     ->method("save")
                     ->with($id, $limits->toArray());
 
-        $limitProvider->refreshLimits($this->request, $response, $limitBy, ["username" => $username]);
+        $limitProvider->refreshLimits($this->request, $response, $limitBy, Context::forClient($username));
     }
 
     public function testItCorrectlyUsesProvidedHashFunction()
     {
         $expectedLimitBy = "foo";
-        $expectedCtx = ["username" => "bar"];
+        $expectedCtx = Context::forClient("bar");
         $expectedId = "foobarbarfoo";
 
-        $hashFunc = function ($limitBy, RequestInterface $request, array $context)
+        $hashFunc = function ($limitBy, RequestInterface $request, Context $context)
             use ($expectedLimitBy, $expectedCtx, $expectedId) {
 
             $this->assertSame($expectedLimitBy, $limitBy);
             $this->assertSame($this->request, $request);
-            $this->assertSame($expectedCtx, $context);
+            $this->assertEquals($expectedCtx, $context);
 
             return $expectedId;
         };

@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Transport\Middleware\Impl;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Limiting\Exception\BannerLimitException;
 use Dsl\MyTarget\Limiting\LimitingMiddleware;
 use Dsl\MyTarget\Transport\Exception as ex;
@@ -14,7 +15,7 @@ class ResponseValidatingMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null)
     {
         $response = $stack->request($request, $context);
         $code = $response->getStatusCode();

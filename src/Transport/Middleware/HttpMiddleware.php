@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Transport\Middleware;
 
+use Dsl\MyTarget\Context;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -22,8 +23,8 @@ interface HttpMiddleware
      *
      * @param RequestInterface $request
      * @param HttpMiddlewareStack $stack
-     * @param array|null $context
+     * @param Context|null $context
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null);
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null);
 }

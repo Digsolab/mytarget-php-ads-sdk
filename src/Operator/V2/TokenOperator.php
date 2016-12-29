@@ -3,6 +3,7 @@
 namespace Dsl\MyTarget\Operator\V2;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V2\Token;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Token\ClientCredentials\Credentials;
@@ -33,13 +34,13 @@ class TokenOperator
 
     /**
      * @param Credentials $credentials
-     * @param array|null  $context
+     * @param Context|null $context
      *
      * @return Token
      */
-    public function acquire(Credentials $credentials, array $context = null)
+    public function acquire(Credentials $credentials, Context $context = null)
     {
-        $username = isset($context['username']) ? $context['username'] : null;
+        $username = $context->hasUsername() ? $context->getUsername() : null;
 
         $payload = [
             'grant_type'    => $username ? self::GRANT_TYPE_CLIENT : self::GRANT_TYPE_AGENCY,
@@ -59,11 +60,11 @@ class TokenOperator
     /**
      * @param Credentials $credentials
      * @param Token       $token
-     * @param array|null  $context
+     * @param Context|null $context
      *
      * @return Token
      */
-    public function refresh(Credentials $credentials, Token $token, array $context = null)
+    public function refresh(Credentials $credentials, Token $token, Context $context = null)
     {
         $payload = [
             'grant_type'    => self::GRANT_TYPE_REFRESH,
@@ -76,5 +77,4 @@ class TokenOperator
 
         return $this->mapper->hydrateNew(Token::class, $json);
     }
-
 }

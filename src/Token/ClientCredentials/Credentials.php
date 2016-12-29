@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Token\ClientCredentials;
 
+use Dsl\MyTarget\Context;
 use Psr\Http\Message\RequestInterface;
 
 class Credentials implements CredentialsProvider
@@ -44,11 +45,11 @@ class Credentials implements CredentialsProvider
 
     /**
      * @param RequestInterface $request
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return $this
      */
-    public function getCredentials(RequestInterface $request, array $context = null)
+    public function getCredentials(RequestInterface $request, Context $context = null)
     {
         return $this;
     }

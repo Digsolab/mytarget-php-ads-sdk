@@ -9,10 +9,15 @@ use Dsl\MyTarget\Domain\V1\Enum\Status;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget\Operator\V1\Fields\CampaignFields;
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget as f;
 
 class CampaignOperator
 {
+    const LIMIT_CREATE = "campaign-create";
+    const LIMIT_EDIT = "campaign-edit";
+    const LIMIT_FIND = "campaigns-find";
+
     /**
      * @var Client
      */
@@ -31,13 +36,13 @@ class CampaignOperator
 
     /**
      * @param MutateCampaign $campaign
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return Campaign
      */
-    public function create(MutateCampaign $campaign, array $context = null)
+    public function create(MutateCampaign $campaign, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "campaign-create"];
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $rawCampaign = $this->mapper->snapshot($campaign);
 
         $json = $this->client->post("/api/v1/campaigns.json", null, $rawCampaign, $context);
@@ -48,12 +53,12 @@ class CampaignOperator
     /**
      * @param int $id
      * @param MutateCampaign $campaign
-     * @param array|null $context
+     * @param Context|null $context
      * @deprecated Use edit() instead. All editing actions will be consistently named across all Operators as edit*
      *
      * @return Campaign
      */
-    public function update($id, MutateCampaign $campaign, array $context = null)
+    public function update($id, MutateCampaign $campaign, Context $context = null)
     {
         return $this->edit($id, $campaign, $context);
     }
@@ -61,13 +66,13 @@ class CampaignOperator
     /**
      * @param int $id
      * @param MutateCampaign $campaign
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return Campaign
      */
-    public function edit($id, MutateCampaign $campaign, array $context = null)
+    public function edit($id, MutateCampaign $campaign, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "campaign-edit"];
+        $context = Context::withLimitBy($context, self::LIMIT_EDIT);
         $rawCampaign = $this->mapper->snapshot($campaign);
 
         $json = $this->client->post(sprintf("/api/v1/campaigns/%d.json", $id), null, $rawCampaign, $context);
@@ -80,13 +85,13 @@ class CampaignOperator
      *
      * @param CampaignFields|null $fields
      * @param Status[]|null $withStatuses
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return CampaignStat[]
      */
-    public function all(CampaignFields $fields = null, array $withStatuses = null, array $context = null)
+    public function all(CampaignFields $fields = null, array $withStatuses = null, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "campaign-find-all"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $fields = $fields ?: CampaignFields::create();
 
         $query = ["fields" => $this->mapFields($fields->getFields())];
@@ -113,11 +118,11 @@ class CampaignOperator
      *
      * @param int $id
      * @param CampaignFields|null $fields
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return CampaignStat|null
      */
-    public function find($id, CampaignFields $fields = null, array $context = null)
+    public function find($id, CampaignFields $fields = null, Context $context = null)
     {
         $campaigns = $this->findAll([$id], $fields, null, $context);
 
@@ -130,14 +135,15 @@ class CampaignOperator
      * @param int[] $ids
      * @param CampaignFields|null $fields
      * @param Status[]|null $withStatuses
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return CampaignStat[]
      */
-    public function findAll(array $ids, CampaignFields $fields = null, array $withStatuses = null, array $context = null)
+    public function findAll(array $ids, CampaignFields $fields = null, array $withStatuses = null, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "campaigns-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
 
+        $fields = $fields ?: CampaignFields::create();
         $query = ["fields" => $this->mapFields($fields->getFields())];
         if ($fields->hasField(CampaignFields::FIELD_BANNERS)) {
             $query["with_banners"] = "1";

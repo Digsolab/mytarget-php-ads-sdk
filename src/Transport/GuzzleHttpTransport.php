@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Transport;
 
+use Dsl\MyTarget\Context;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Exception as guzzleEx;
@@ -25,7 +26,7 @@ class GuzzleHttpTransport implements HttpTransport
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, array $context = null)
+    public function request(RequestInterface $request, Context $context = null)
     {
         try {
             return $this->guzzle->send($request, ["http_errors" => false]);

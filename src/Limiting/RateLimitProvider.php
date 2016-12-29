@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Limiting;
 
+use Dsl\MyTarget\Context;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -13,11 +14,11 @@ interface RateLimitProvider
      *
      * @param string $limitBy
      * @param RequestInterface $request
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return int|bool
      */
-    public function rateLimitTimeout($limitBy, RequestInterface $request, array $context = null);
+    public function rateLimitTimeout($limitBy, RequestInterface $request, Context $context = null);
 
     /**
      * Will look into the response headers and try to find X-RateLimit-* headers and save them somewhere
@@ -25,7 +26,7 @@ interface RateLimitProvider
      * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param string $limitBy
-     * @param array|null $context
+     * @param Context|null $context
      */
-    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, array $context = null);
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, Context $context = null);
 }

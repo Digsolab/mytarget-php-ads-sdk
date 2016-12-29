@@ -10,10 +10,13 @@ use Dsl\MyTarget\Domain\V1\Statistic\ObjectDailyStat;
 use Dsl\MyTarget\Domain\V1\Statistic\ObjectHourlyStat;
 use Dsl\MyTarget\Domain\V1\Statistic\ObjectStat;
 use Dsl\MyTarget\Mapper\Mapper;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget as f;
 
 class StatisticOperator
 {
+    const LIMIT_FIND = "statistic-find";
+
     const DATE_FORMAT = "d.m.Y";
 
     /**
@@ -37,13 +40,13 @@ class StatisticOperator
      * @param ObjectType $objectType
      * @param StatisticType $statType
      * @param DateRange|null $datesPredicate
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return ObjectStat
      */
-    public function one($id, ObjectType $objectType, StatisticType $statType, DateRange $datesPredicate = null, array $context = null)
+    public function one($id, ObjectType $objectType, StatisticType $statType, DateRange $datesPredicate = null, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "statistic-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $path = $this->path($id, $objectType, $statType, $datesPredicate);
         $json = $this->client->get($path, null, $context);
 
@@ -56,13 +59,13 @@ class StatisticOperator
      * @param ObjectType $objectType
      * @param StatisticType $statType
      * @param DateRange|null $datesPredicate
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return ObjectStat[]
      */
-    public function all(array $ids, ObjectType $objectType, StatisticType $statType, DateRange $datesPredicate = null, array $context = null)
+    public function all(array $ids, ObjectType $objectType, StatisticType $statType, DateRange $datesPredicate = null, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "statistic-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $path = $this->path($ids, $objectType, $statType, $datesPredicate);
         $json = $this->client->get($path, null, $context);
         $json = f\objects_array_fixup($json, count($ids));

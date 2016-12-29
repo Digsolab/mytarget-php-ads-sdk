@@ -3,12 +3,15 @@
 namespace Dsl\MyTarget\Operator\V2;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V2\Campaign\Projection\Projection;
 use Dsl\MyTarget\Domain\V2\Campaign\Projection\ProjectionSettings;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class ProjectionOperator
 {
+    const LIMIT_PROJECTION = "v2-projection";
+
     /**
      * @var Client
      */
@@ -27,13 +30,13 @@ class ProjectionOperator
 
     /**
      * @param ProjectionSettings $campaign
-     * @param array|null         $context
+     * @param Context|null       $context
      *
      * @return Projection
      */
-    public function projection(ProjectionSettings $campaign, array $context = null)
+    public function projection(ProjectionSettings $campaign, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "v2-projection"];
+        $context = Context::withLimitBy($context, self::LIMIT_PROJECTION);
         $data = $this->mapper->snapshot($campaign);
 
         $json = $this->client->post("/api/v2/projection.json", null, $data, $context);

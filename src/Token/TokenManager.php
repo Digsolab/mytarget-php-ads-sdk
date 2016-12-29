@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Token;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Token\ClientCredentials\CredentialsProvider;
 use Dsl\MyTarget\Token\Exception\TokenDeletedException;
 use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
@@ -63,39 +64,7 @@ class TokenManager
 
     /**
      * @param RequestInterface $request
-     * @param string           $username
-     * @param array|null       $context
-     *
-     * @return Token|null
-     *
-     * @throws TokenLockException
-     * @throws TokenRequestException
-     * @throws TokenLimitReachedException
-     */
-    public function getClientToken(RequestInterface $request, $username, array $context = null)
-    {
-        return $this->doGetToken($request, $username, $context);
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param array|null $context
-     *
-     * @return Token|null
-     *
-     * @throws TokenLockException
-     * @throws TokenRequestException
-     * @throws TokenLimitReachedException
-     */
-    public function getToken(RequestInterface $request, array $context = null)
-    {
-        return $this->doGetToken($request, null, $context);
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param string|null      $username
-     * @param array|null       $context
+     * @param Context|null       $context
      *
      * @return Token|null
      *
@@ -104,10 +73,11 @@ class TokenManager
      * @throws TokenLimitReachedException
      * @throws \Exception
      */
-    private function doGetToken(RequestInterface $request, $username = null, array $context = null)
+    public function getToken(RequestInterface $request, Context $context = null)
     {
+        $context = $context ?: new Context();
         $credentials = $this->credentials->getCredentials($request, $context);
-        $id = $username ?: $credentials->getClientId();
+        $id = $context->hasUsername() ? $context->getUsername() : $credentials->getClientId();
 
         $now = call_user_func($this->momentGenerator);
         $token = $this->storage->getToken($id, $request, $context);
@@ -130,7 +100,7 @@ class TokenManager
                 }
 
                 if ( ! $token) {
-                    $token = $this->acquirer->acquire($request, $now, $username, $context);
+                    $token = $this->acquirer->acquire($request, $now, $context);
                     $this->storage->updateToken($id, $token, $request, $context);
                 }
 
@@ -157,9 +127,9 @@ class TokenManager
      * @param RequestInterface $request
      * @param string|null      $account
      * @param string|null      $username
-     * @param array|null       $context
+     * @param Context|null       $context
      */
-    public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, array $context = null)
+    public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, Context $context = null)
     {
         $moment = call_user_func($this->momentGenerator);
 
