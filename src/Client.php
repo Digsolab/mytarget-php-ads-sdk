@@ -32,10 +32,10 @@ class Client
      *
      * @param string $path
      * @param array|null $query
-     * @param Context|null $context
+     * @param Context $context
      * @return mixed
      */
-    public function get($path, array $query = null, Context $context = null)
+    public function get($path, array $query = null, Context $context)
     {
         $request = $this->requestFactory->create('GET', $path, $query);
 
@@ -50,10 +50,10 @@ class Client
      * @param string $path
      * @param array|null $query
      * @param array|null $body
-     * @param Context|null $context
+     * @param Context $context
      * @return mixed
      */
-    public function post($path, array $query = null, $body = null, Context $context = null)
+    public function post($path, array $query = null, $body = null, Context $context)
     {
         $request = $this->requestFactory->create('POST', $path, $query);
 
@@ -72,12 +72,12 @@ class Client
      *
      * @param string $path
      * @param array|null $query
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function delete($path, array $query = null, Context $context = null)
+    public function delete($path, array $query = null, Context $context)
     {
         $request = $this->requestFactory->create("DELETE", $path, $query);
 
@@ -90,12 +90,12 @@ class Client
      * @param string $path
      * @param array $body
      * @param array|null $query
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function postMultipart($path, array $body, array $query = null, Context $context = null)
+    public function postMultipart($path, array $body, array $query = null, Context $context)
     {
         $request = $this->requestFactory->create("POST", $path, $query);
         $request = $request->withBody(new psr\MultipartStream($body));

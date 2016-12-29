@@ -34,24 +34,24 @@ class Context
     /**
      * @param string $username
      * @param array|null $parameters
-     * @return Context
+     * @return static
      */
     public static function forClient($username, array $parameters = null)
     {
-        return new Context($username, null, $parameters);
+        return new static($username, null, $parameters);
     }
 
     /**
      * @param Context|null $ctx
      * @param string $limitBy
-     * @return Context
+     * @return static
      */
     public static function withLimitBy(Context $ctx = null, $limitBy)
     {
         if ($ctx) {
             $ctx->limitBy = $limitBy;
         } else {
-            $ctx = new Context(null, $limitBy);
+            $ctx = new static(null, $limitBy);
         }
 
         return $ctx;

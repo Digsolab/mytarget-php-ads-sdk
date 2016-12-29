@@ -25,7 +25,7 @@ class CallbackMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context)
     {
         return call_user_func($this->callback, $request, $stack, $context);
     }

@@ -10,17 +10,17 @@ interface TokenStorage
     /**
      * @param string $id
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return Token
      */
-    public function getToken($id,  RequestInterface $request, Context $context = null);
+    public function getToken($id,  RequestInterface $request, Context $context);
 
     /**
      * @param string $id
      * @param Token $token
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      */
-    public function updateToken($id, Token $token, RequestInterface $request, Context $context = null);
+    public function updateToken($id, Token $token, RequestInterface $request, Context $context);
 }

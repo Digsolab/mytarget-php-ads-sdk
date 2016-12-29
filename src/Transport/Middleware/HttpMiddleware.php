@@ -23,8 +23,8 @@ interface HttpMiddleware
      *
      * @param RequestInterface $request
      * @param HttpMiddlewareStack $stack
-     * @param Context|null $context
+     * @param Context $context
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null);
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context);
 }

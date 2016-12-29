@@ -45,11 +45,11 @@ class Credentials implements CredentialsProvider
 
     /**
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return $this
      */
-    public function getCredentials(RequestInterface $request, Context $context = null)
+    public function getCredentials(RequestInterface $request, Context $context)
     {
         return $this;
     }

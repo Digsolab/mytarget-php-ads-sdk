@@ -11,10 +11,10 @@ interface HttpTransport
 {
     /**
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return ResponseInterface
      * @throws NetworkException
      */
-    public function request(RequestInterface $request, Context $context = null);
+    public function request(RequestInterface $request, Context $context);
 }

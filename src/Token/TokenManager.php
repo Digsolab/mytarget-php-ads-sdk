@@ -64,7 +64,7 @@ class TokenManager
 
     /**
      * @param RequestInterface $request
-     * @param Context|null       $context
+     * @param Context $context
      *
      * @return Token|null
      *
@@ -73,9 +73,8 @@ class TokenManager
      * @throws TokenLimitReachedException
      * @throws \Exception
      */
-    public function getToken(RequestInterface $request, Context $context = null)
+    public function getToken(RequestInterface $request, Context $context)
     {
-        $context = $context ?: new Context();
         $credentials = $this->credentials->getCredentials($request, $context);
         $id = $context->hasUsername() ? $context->getUsername() : $credentials->getClientId();
 
@@ -123,13 +122,13 @@ class TokenManager
     }
 
     /**
-     * @param Token            $token
+     * @param Token $token
      * @param RequestInterface $request
-     * @param string|null      $account
-     * @param string|null      $username
-     * @param Context|null       $context
+     * @param string|null $account
+     * @param string|null $username
+     * @param Context $context
      */
-    public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, Context $context = null)
+    public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, Context $context)
     {
         $moment = call_user_func($this->momentGenerator);
 

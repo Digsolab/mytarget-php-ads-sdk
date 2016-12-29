@@ -27,9 +27,9 @@ class LimitingMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context)
     {
-        if ( ! $context || ! $context->getLimitBy()) {
+        if ( ! $context->getLimitBy()) {
             return $stack->request($request, $context);
         }
 
@@ -46,9 +46,6 @@ class LimitingMiddleware implements HttpMiddleware
         $this->rateLimitProvider->refreshLimits($request, $response, $limitBy, $context);
 
         if ($response->getStatusCode() === self::HTTP_STATUS_LIMIT_REACHED) {
-            if (strpos((string)$response->getBody(), 'banners limit') !== false) {
-                throw new Ex\BannerLimitException('Banners limit exceeded');
-            }
             try {
                 $decoded = f\json_decode((string)$response->getBody());
             } catch (DecodingException $e) { }

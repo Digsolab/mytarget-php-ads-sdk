@@ -9,9 +9,9 @@ interface CredentialsProvider
 {
     /**
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return Credentials
      */
-    public function getCredentials(RequestInterface $request, Context $context = null);
+    public function getCredentials(RequestInterface $request, Context $context);
 }

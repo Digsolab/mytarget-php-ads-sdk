@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Transport\Middleware\Impl;
 
+use Dsl\MyTarget\Context;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception as guzzleEx;
 use GuzzleHttp\Psr7 as psr;
@@ -46,7 +47,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             HttpMiddlewareStackPrototype::newEmpty($http)
         );
 
-        self::assertNotEmpty($client->get('/any/path'));
+        self::assertNotEmpty($client->get('/any/path', null, new Context()));
     }
 
     /**
@@ -65,6 +66,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(ex\NetworkException::class);
 
-        $client->get('/any/path');
+        $client->get('/any/path', null, new Context());
     }
 }
