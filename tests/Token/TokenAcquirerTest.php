@@ -4,7 +4,6 @@ namespace tests\Dsl\MyTarget\Token;
 
 use Dsl\MyTarget\Token\Token;
 use Dsl\MyTarget\Token\TokenAcquirer;
-use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStackPrototype;
 use GuzzleHttp\Psr7\Uri;
 use Dsl\MyTarget\Token\ClientCredentials\Credentials;
 use Dsl\MyTarget\Token\Exception\TokenDeletedException;
@@ -38,8 +37,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->baseAddress = new Uri('http://socialkey.ru/');
-        $this->http = $this->getMockBuilder(HttpMiddlewareStackPrototype::class)->disableOriginalConstructor()->getMock();
-        $this->http->expects(self::any())->method('freeze')->willReturn($this->http);
+        $this->http = $this->getMock(HttpTransport::class);
         $this->credentials = new Credentials('id-132', 'secret-t-t-t');
 
         $this->acquirer = new TokenAcquirer($this->baseAddress, $this->http, $this->credentials);
