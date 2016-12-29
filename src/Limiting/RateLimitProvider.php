@@ -14,11 +14,11 @@ interface RateLimitProvider
      *
      * @param string $limitBy
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return int|bool
      */
-    public function rateLimitTimeout($limitBy, RequestInterface $request, Context $context = null);
+    public function rateLimitTimeout($limitBy, RequestInterface $request, Context $context);
 
     /**
      * Will look into the response headers and try to find X-RateLimit-* headers and save them somewhere
@@ -26,7 +26,7 @@ interface RateLimitProvider
      * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param string $limitBy
-     * @param Context|null $context
+     * @param Context $context
      */
-    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, Context $context = null);
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, Context $context);
 }

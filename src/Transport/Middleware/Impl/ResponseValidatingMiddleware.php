@@ -15,7 +15,7 @@ class ResponseValidatingMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context)
     {
         $response = $stack->request($request, $context);
         $code = $response->getStatusCode();

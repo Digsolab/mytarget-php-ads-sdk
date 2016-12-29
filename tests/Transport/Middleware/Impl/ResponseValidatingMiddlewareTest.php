@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Transport\Middleware\Impl;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Limiting\Exception\BannerLimitException;
 use GuzzleHttp\Psr7\Request;
 use Dsl\MyTarget\Transport\Exception as ex;
@@ -51,7 +52,7 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
         }
 
         $middleware = new ResponseValidatingMiddleware();
-        $middleware->request($request, $stack);
+        $middleware->request($request, $stack, new Context());
     }
 
     /**
@@ -80,7 +81,7 @@ class ResponseValidatingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(BannerLimitException::class);
 
         $middleware = new ResponseValidatingMiddleware();
-        $middleware->request($request, $stack);
+        $middleware->request($request, $stack, new Context());
     }
 
     public function bodyParsingProvider()

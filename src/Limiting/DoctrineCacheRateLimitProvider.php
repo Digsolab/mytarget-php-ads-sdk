@@ -61,9 +61,9 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function rateLimitTimeout($limitBy, RequestInterface $request, Context $context = null)
+    public function rateLimitTimeout($limitBy, RequestInterface $request, Context $context)
     {
-        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: new Context());
+        $id = call_user_func($this->hashFunction, $limitBy, $request, $context);
         $limitsArray = $this->cache->fetch($id);
 
         if ( ! is_array($limitsArray) || ! $limitsArray) {
@@ -101,11 +101,11 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, Context $context = null)
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, Context $context)
     {
         $limits = $this->limitExtractor->extractLimits($response, call_user_func($this->momentGenerator));
 
-        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: new Context());
+        $id = call_user_func($this->hashFunction, $limitBy, $request, $context);
 
         $this->cache->save($id, $limits->toArray());
     }

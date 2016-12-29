@@ -32,11 +32,11 @@ class HttpMiddlewareStack
 
     /**
      * @param RequestInterface $request
-     * @param Context|null $context
+     * @param Context $context
      *
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, Context $context = null)
+    public function request(RequestInterface $request, Context $context)
     {
         return $this->pop()->request($request, $this, $context);
     }

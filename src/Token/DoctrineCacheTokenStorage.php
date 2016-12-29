@@ -35,7 +35,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function getToken($id, RequestInterface $request, Context $context = null)
+    public function getToken($id, RequestInterface $request, Context $context)
     {
         $id = call_user_func($this->hashFunction, $id, $request, $context);
         $tokenArray = $this->cache->fetch($id);
@@ -50,7 +50,7 @@ class DoctrineCacheTokenStorage implements TokenStorage
     /**
      * @inheritdoc
      */
-    public function updateToken($id, Token $token, RequestInterface $request, Context $context = null)
+    public function updateToken($id, Token $token, RequestInterface $request, Context $context)
     {
         $id = call_user_func($this->hashFunction, $id, $request, $context);
 

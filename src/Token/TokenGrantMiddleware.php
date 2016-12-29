@@ -29,7 +29,7 @@ class TokenGrantMiddleware implements HttpMiddleware
      * @throws TokenLimitReachedException
      * @throws TokenRequestException
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context)
     {
         $token = $this->tokens->getToken($request, $context);
 

@@ -45,14 +45,14 @@ class HttpMiddlewareStackTest extends \PHPUnit_Framework_TestCase
         $this->middleware->expects($this->once())->method("request")
             ->with($this->identicalTo($this->request))
             ->willReturnCallback(function (RequestInterface $request, HttpMiddlewareStack $stack) {
-                return $stack->request($request);
+                return $stack->request($request, new Context());
             });
 
         $this->http->expects($this->once())->method("request")
             ->with($this->identicalTo($this->request))
             ->willReturn($response);
 
-        $this->assertSame($response, $stack->request($this->request), "Result assertion");
+        $this->assertSame($response, $stack->request($this->request, new Context()), "Result assertion");
     }
 
     public function testRequestCallsManyMiddlewares()
