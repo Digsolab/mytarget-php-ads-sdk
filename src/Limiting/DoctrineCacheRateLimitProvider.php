@@ -3,6 +3,7 @@
 namespace Dsl\MyTarget\Limiting;
 
 use Doctrine\Common\Cache\Cache;
+use Dsl\MyTarget\Context;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -33,16 +34,15 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
      *
      * @param Cache               $cache
      * @param LimitExtractor|null $limitExtractor
-     * @param callable|null       $hashFunction callable(string $limitBy, RequestInterface, array $context)
+     * @param callable|null       $hashFunction callable(string $limitBy, RequestInterface, Context $context)
      */
     public function __construct(Cache $cache, LimitExtractor $limitExtractor = null, callable $hashFunction = null)
     {
         $this->cache = $cache;
         $this->limitExtractor = $limitExtractor ?: new HeaderLimitExtractor();
 
-        $this->hashFunction = $hashFunction ?: function($limitBy, RequestInterface $request, array $context) {
-            $username = isset($context["username"]) ? $context["username"] : "";
-            return sprintf("%s#%s", $limitBy, $username);
+        $this->hashFunction = $hashFunction ?: function($limitBy, RequestInterface $request, Context $context) {
+            return sprintf("%s#%s", $limitBy, $context->getUsername());
         };
 
         $this->momentGenerator = function () {
@@ -61,9 +61,9 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function rateLimitTimeout($limitBy, RequestInterface $request, array $context = null)
+    public function rateLimitTimeout($limitBy, RequestInterface $request, Context $context = null)
     {
-        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
+        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: new Context());
         $limitsArray = $this->cache->fetch($id);
 
         if ( ! is_array($limitsArray) || ! $limitsArray) {
@@ -101,11 +101,11 @@ class DoctrineCacheRateLimitProvider implements RateLimitProvider
     /**
      * @inheritdoc
      */
-    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, array $context = null)
+    public function refreshLimits(RequestInterface $request, ResponseInterface $response, $limitBy, Context $context = null)
     {
         $limits = $this->limitExtractor->extractLimits($response, call_user_func($this->momentGenerator));
 
-        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: []);
+        $id = call_user_func($this->hashFunction, $limitBy, $request, $context ?: new Context());
 
         $this->cache->save($id, $limits->toArray());
     }

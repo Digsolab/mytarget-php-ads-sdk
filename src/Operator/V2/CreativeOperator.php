@@ -9,9 +9,12 @@ use Dsl\MyTarget\Domain\V2\Creative;
 use Dsl\MyTarget\Domain\V2\UploadCreative;
 use Psr\Http\Message\StreamInterface;
 use Dsl\MyTarget as f;
+use Dsl\MyTarget\Context;
 
 class CreativeOperator
 {
+    const LIMIT_CREATE = "v2-creative-create";
+
     /**
      * @var Client
      */
@@ -33,13 +36,13 @@ class CreativeOperator
      * @param CreativeType $type
      * @param UploadCreative $creative
      * @param string|null $filename
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return Creative
      */
-    public function create($file, CreativeType $type, UploadCreative $creative, $filename = null, array $context = null)
+    public function create($file, CreativeType $type, UploadCreative $creative, $filename = null, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "v2-creative-create"];
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $file = f\streamOrResource($file);
 
         $rawCreative = $this->mapper->snapshot($creative);

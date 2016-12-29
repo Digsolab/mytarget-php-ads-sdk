@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Transport\Middleware;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Transport\HttpTransport;
 use Dsl\MyTarget\Transport\Middleware\Impl\TerminatingMiddleware;
 use Psr\Http\Message\RequestInterface;
@@ -31,11 +32,11 @@ class HttpMiddlewareStack
 
     /**
      * @param RequestInterface $request
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return ResponseInterface
      */
-    public function request(RequestInterface $request, array $context = null)
+    public function request(RequestInterface $request, Context $context = null)
     {
         return $this->pop()->request($request, $this, $context);
     }

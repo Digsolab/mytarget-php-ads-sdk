@@ -32,12 +32,10 @@ class Client
      *
      * @param string $path
      * @param array|null $query
-     * @param array|null $context Arbitrary context-table
-     *
+     * @param Context|null $context
      * @return mixed
-     * @throws MyTargetException
      */
-    public function get($path, array $query = null, array $context = null)
+    public function get($path, array $query = null, Context $context = null)
     {
         $request = $this->requestFactory->create('GET', $path, $query);
 
@@ -52,12 +50,10 @@ class Client
      * @param string $path
      * @param array|null $query
      * @param array|null $body
-     * @param array|null $context
-     *
+     * @param Context|null $context
      * @return mixed
-     * @throws MyTargetException
      */
-    public function post($path, array $query = null, $body = null, array $context = null)
+    public function post($path, array $query = null, $body = null, Context $context = null)
     {
         $request = $this->requestFactory->create('POST', $path, $query);
 
@@ -76,12 +72,12 @@ class Client
      *
      * @param string $path
      * @param array|null $query
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function delete($path, array $query = null, array $context = null)
+    public function delete($path, array $query = null, Context $context = null)
     {
         $request = $this->requestFactory->create("DELETE", $path, $query);
 
@@ -94,12 +90,12 @@ class Client
      * @param string $path
      * @param array $body
      * @param array|null $query
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return mixed
      * @throws MyTargetException
      */
-    public function postMultipart($path, array $body, array $query = null, array $context = null)
+    public function postMultipart($path, array $body, array $query = null, Context $context = null)
     {
         $request = $this->requestFactory->create("POST", $path, $query);
         $request = $request->withBody(new psr\MultipartStream($body));

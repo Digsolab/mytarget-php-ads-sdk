@@ -13,6 +13,11 @@ class BannerRequest
     private $ids;
 
     /**
+     * @var int|null
+     */
+    private $campaignId;
+
+    /**
      * @var Status[]|null
      */
     private $withStatuses;
@@ -38,15 +43,17 @@ class BannerRequest
      * @param Status[]|null $withCampaignStatuses
      * @param \DateTimeInterface|null $statsChangedAfter
      * @param \DateTimeInterface|null $updatedAfter
+     * @param int|null $campaignId
      */
     public function __construct(array $ids = null, array $withStatuses = null, array $withCampaignStatuses = null,
-        \DateTimeInterface $statsChangedAfter = null, \DateTimeInterface $updatedAfter = null)
+        \DateTimeInterface $statsChangedAfter = null, \DateTimeInterface $updatedAfter = null, $campaignId = null)
     {
         $this->ids = $ids;
         $this->withStatuses = $withStatuses;
         $this->withCampaignStatuses = $withCampaignStatuses;
         $this->statsChangedAfter = $statsChangedAfter ? f\date_immutable($statsChangedAfter) : null;
         $this->updatedAfter = $updatedAfter ? f\date_immutable($updatedAfter) : null;
+        $this->campaignId = $campaignId;
     }
 
     /**
@@ -65,6 +72,20 @@ class BannerRequest
     {
         $self = clone $this;
         $self->ids = $ids;
+        $self->campaignId = null;
+
+        return $self;
+    }
+
+    /**
+     * @param int $id
+     * @return BannerRequest
+     */
+    public function withCampaignId($id)
+    {
+        $self = clone $this;
+        $self->campaignId = $id;
+        $self->ids = null;
 
         return $self;
     }
@@ -155,5 +176,13 @@ class BannerRequest
     public function getUpdatedAfter()
     {
         return $this->updatedAfter;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCampaignId()
+    {
+        return $this->campaignId;
     }
 }

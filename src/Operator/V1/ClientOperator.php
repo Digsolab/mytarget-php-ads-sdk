@@ -3,12 +3,16 @@
 namespace Dsl\MyTarget\Operator\V1;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\AdditionalUserInfo;
 use Dsl\MyTarget\Domain\V1\AgencyClient;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class ClientOperator
 {
+    const LIMIT_FIND = "client-find";
+    const LIMIT_CREATE = "campaign-create";
+
     /**
      * @var Client
      */
@@ -26,12 +30,12 @@ class ClientOperator
     }
 
     /**
-     * @param array|null $context
+     * @param Context|null $context
      * @return AgencyClient[]
      */
-    public function all(array $context = null)
+    public function all(Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "client-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $json = $this->client->get("/api/v1/clients.json", null, $context);
 
         return array_map(function ($json) {
@@ -41,13 +45,13 @@ class ClientOperator
 
     /**
      * @param AdditionalUserInfo $userInfo
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return AgencyClient
      */
-    public function create(AdditionalUserInfo $userInfo, array $context = null)
+    public function create(AdditionalUserInfo $userInfo, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "campaign-create"];
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $rawUserInfo = $this->mapper->snapshot($userInfo);
         $body = ["additional_info" => $rawUserInfo];
 

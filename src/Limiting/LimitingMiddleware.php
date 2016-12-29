@@ -8,6 +8,7 @@ use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
 use Psr\Http\Message\RequestInterface;
 use Dsl\MyTarget\Exception\DecodingException;
 use Dsl\MyTarget as f;
+use Dsl\MyTarget\Context;
 
 class LimitingMiddleware implements HttpMiddleware
 {
@@ -26,13 +27,13 @@ class LimitingMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context = null)
     {
-        if ( ! is_array($context) || ! isset($context["limit-by"])) {
+        if ( ! $context || ! $context->getLimitBy()) {
             return $stack->request($request, $context);
         }
 
-        $limitBy = $context["limit-by"];
+        $limitBy = $context->getLimitBy();
 
         $timeout = $this->rateLimitProvider->rateLimitTimeout($limitBy, $request, $context);
 

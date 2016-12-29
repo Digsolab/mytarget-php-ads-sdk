@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Token;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Token\Token;
 use Dsl\MyTarget\Token\TokenAcquirer;
 use GuzzleHttp\Psr7\Uri;
@@ -52,23 +53,23 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
     public function successfulAcquireDataProvider()
     {
         return [
-            [null, [], 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
-            ['user@agency', ['test' => 123], 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
+            [new Context(), 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
+            [new Context('user@agency', null, ["test" => 123]), 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
         ];
     }
 
     /**
-     * @param string|null $username
-     * @param array|null  $context
+     * @param Context|null  $context
      * @param int         $statusCode
      * @param string      $body
      *
      * @dataProvider successfulAcquireDataProvider
      */
-    public function testSuccessfulAcquire($username, $context, $statusCode, $body)
+    public function testSuccessfulAcquire($context, $statusCode, $body)
     {
         $now = new \DateTimeImmutable();
 
+        $username = $context->getUsername();
         $payload = [
             'grant_type'    => $username === null ? 'client_credentials' : 'agency_client_credentials',
             'client_id'     => $this->credentials->getClientId(),
@@ -93,7 +94,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
             })
         );
 
-        $token = $this->acquirer->acquire($this->request, $now, $username, $context);
+        $token = $this->acquirer->acquire($this->request, $now, $context);
 
         $this->assertEquals(new Token('secret', 'super type', $now->add(new \DateInterval('PT100S')), 'refresh secret'), $token);
     }
@@ -104,25 +105,25 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
     public function failedAcquireDataProvider()
     {
         return [
-            ['user@agency', ['test' => 123], 200, '', TokenRequestException::class],
-            ['user@agency', ['test' => 123], 200, '{}', TokenRequestException::class],
-            ['user@agency', ['test' => 123], 200, '{"access_token": "secret"}', TokenRequestException::class],
-            [null, null, 403, '', TokenRequestException::class],
-            [null, null, 403, 'limit reached', TokenLimitReachedException::class],
-            [null, null, -1, '', TokenRequestException::class],
+            [new Context(null, null, ["test" => 123]), 200, '', TokenRequestException::class],
+            [new Context(null, null, ["test" => 123]), 200, '{}', TokenRequestException::class],
+            [new Context(null, null, ["test" => 123]), 200, '{"access_token": "secret"}', TokenRequestException::class],
+            [new Context(), 403, '', TokenRequestException::class],
+            [new Context(), 403, 'limit reached', TokenLimitReachedException::class],
+            [new Context(), -1, '', TokenRequestException::class],
         ];
     }
 
     /**
      * @param string|null $username
-     * @param array|null  $context
+     * @param Context|null  $context
      * @param int         $statusCode
      * @param string      $body
      * @param string      $exception
      *
      * @dataProvider failedAcquireDataProvider
      */
-    public function testFailedAcquire($username, $context, $statusCode, $body, $exception)
+    public function testFailedAcquire($context, $statusCode, $body, $exception)
     {
         $now = new \DateTimeImmutable();
 
@@ -134,7 +135,7 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
 
         $this->http->method('request')->willReturn($this->response);
 
-        $this->acquirer->acquire($this->request, $now, $username, $context);
+        $this->acquirer->acquire($this->request, $now, $context);
     }
 
     /**
@@ -143,8 +144,8 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
     public function successfulRefreshDataProvider()
     {
         return [
-            [[], 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
-            [['test' => 123], 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
+            [new Context(), 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
+            [new Context(null, null, ["test" => 123]), 200, '{"access_token": "secret", "token_type": "super type", "expires_in": 100, "refresh_token": "refresh secret"}'],
         ];
     }
 
@@ -192,12 +193,12 @@ class TokenAcquirerTest extends \PHPUnit_Framework_TestCase
     public function failedRefreshDataProvider()
     {
         return [
-            [['test' => 123], 200, '', TokenRequestException::class],
-            [['test' => 123], 200, '{}', TokenRequestException::class],
-            [['test' => 123], 200, '{"access_token": "secret"}', TokenRequestException::class],
-            [null, 401, '', TokenRequestException::class],
-            [null, 401, 'deleted', TokenDeletedException::class],
-            [null, -1, '', TokenRequestException::class],
+            [new Context(null, null, ["test" => 123]), 200, '', TokenRequestException::class],
+            [new Context(null, null, ["test" => 123]), 200, '{}', TokenRequestException::class],
+            [new Context(null, null, ["test" => 123]), 200, '{"access_token": "secret"}', TokenRequestException::class],
+            [new Context(), 401, '', TokenRequestException::class],
+            [new Context(), 401, 'deleted', TokenDeletedException::class],
+            [new Context(), -1, '', TokenRequestException::class],
         ];
     }
 

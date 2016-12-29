@@ -7,9 +7,12 @@ use Dsl\MyTarget\Domain\DateRange;
 use Dsl\MyTarget\Domain\V1\Demography\DetailedExactDemographyCampaigns;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget as f;
+use Dsl\MyTarget\Context;
 
 class DetailedExactDemographyOperator
 {
+    const LIMIT_FIND = "detailed-exact-demography-find";
+
     const DATE_FORMAT = "d.m.Y";
 
     /**
@@ -35,13 +38,13 @@ class DetailedExactDemographyOperator
     /**
      * @param array      $ids
      * @param DateRange  $dateRange
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return DetailedExactDemographyCampaigns
      */
-    public function findAll(array $ids, DateRange $dateRange, array $context = null)
+    public function findAll(array $ids, DateRange $dateRange, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "detailed-exact-demography-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $query = [
             'date_from' => $dateRange->getFrom()->format(self::DATE_FORMAT),
             'date_to' => $dateRange->getTo()->format(self::DATE_FORMAT),

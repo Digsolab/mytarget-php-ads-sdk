@@ -3,12 +3,17 @@
 namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingContextPhrases;
 use Dsl\MyTarget\Mapper\Mapper;
 use Psr\Http\Message\StreamInterface;
 
 class RemarketingCtxPhrasesOperator
 {
+    const LIMIT_CREATE = "remarketing-phrases-create";
+    const LIMIT_FIND = "remarketing-phrases-find";
+    const LIMIT_DELETE = "remarketing-phrases-delete";
+
     /**
      * @var Client
      */
@@ -28,13 +33,13 @@ class RemarketingCtxPhrasesOperator
     /**
      * @param resource|StreamInterface|string $file
      * @param string $name
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingContextPhrases
      */
-    public function create($file, $name, array $context = null)
+    public function create($file, $name, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "remarketing-phrases-create"];
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $file = \Dsl\MyTarget\streamOrResource($file);
 
         $body = [
@@ -48,13 +53,13 @@ class RemarketingCtxPhrasesOperator
     }
 
     /**
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingContextPhrases[]
      */
-    public function all(array $context = null)
+    public function all(Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "remarketing-phrases-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $json = $this->client->get("/api/v1/remarketing_context_phrases.json", null, $context);
 
         return array_map(function ($json) {
@@ -64,11 +69,11 @@ class RemarketingCtxPhrasesOperator
 
     /**
      * @param int $id
-     * @param array|null $context
+     * @param Context|null $context
      */
-    public function delete($id, array $context = null)
+    public function delete($id, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "remarketing-phrases-delete"];
+        $context = Context::withLimitBy($context, self::LIMIT_DELETE);
         $path = sprintf("/api/v1/remarketing_context/phrases/%d.json", $id);
         $this->client->delete($path, null, $context);
     }

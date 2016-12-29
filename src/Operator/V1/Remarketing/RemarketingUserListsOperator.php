@@ -3,6 +3,7 @@
 namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingUserList;
 use Dsl\MyTarget\Domain\V1\Remarketing\UploadUserList;
 use Dsl\MyTarget\Mapper\Mapper;
@@ -10,6 +11,10 @@ use Psr\Http\Message\StreamInterface;
 
 class RemarketingUserListsOperator
 {
+    const LIMIT_CREATE = "remarketing-user-list-upload";
+    const LIMIT_FIND = "remarketing-user-list-find";
+    const LIMIT_DELETE = "remarketing-user-list-delete";
+
     /**
      * @var Client
      */
@@ -29,12 +34,12 @@ class RemarketingUserListsOperator
     /**
      * @param resource|string|StreamInterface $file
      * @param UploadUserList $upload
-     * @param array|null $context
+     * @param Context|null $context
      * @return RemarketingUserList
      */
-    public function create($file, UploadUserList $upload, array $context = null)
+    public function create($file, UploadUserList $upload, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "remarketing-user-list-upload"];
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $file = \Dsl\MyTarget\streamOrResource($file);
 
         $body = [
@@ -50,13 +55,13 @@ class RemarketingUserListsOperator
     }
 
     /**
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingUserList[]
      */
-    public function all(array $context = null)
+    public function all(Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "remarketing-user-list-find"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $json = $this->client->get("/api/v1/remarketing_users_lists.json", null, $context);
 
         return array_map(function ($json) {
@@ -66,12 +71,11 @@ class RemarketingUserListsOperator
 
     /**
      * @param int $id
-     * @param array|null $context
+     * @param Context|null $context
      */
-    public function delete($id, array $context = null)
+    public function delete($id, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "remarketing-user-list-delete"];
         $path = sprintf("/api/v1/remarketing_users_list/%d.json", $id);
-        $this->client->delete($path, null, $context);
+        $this->client->delete($path, null, Context::withLimitBy($context, self::LIMIT_DELETE));
     }
 }

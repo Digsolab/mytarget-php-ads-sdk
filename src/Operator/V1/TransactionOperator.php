@@ -3,11 +3,15 @@
 namespace Dsl\MyTarget\Operator\V1;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\Transaction;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class TransactionOperator
 {
+    const LIMIT_GIVE = "transaction-give";
+    const LIMIT_TAKE = "transaction-take";
+
     /**
      * @var Client
      */
@@ -27,13 +31,13 @@ class TransactionOperator
     /**
      * @param string|int $userId Numeric ID or an email
      * @param string $amount
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return Transaction
      */
-    public function give($userId, $amount, array $context = null)
+    public function give($userId, $amount, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "transaction-give"];
+        $context = Context::withLimitBy($context, self::LIMIT_GIVE);
         $path = sprintf("/api/v1/transactions/to/%s.json", rawurlencode($userId));
 
         $json = $this->client->post($path, null, ["amount" => $amount], $context);
@@ -44,13 +48,13 @@ class TransactionOperator
     /**
      * @param string|int $userId Numeric ID or an email
      * @param string $amount
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return Transaction
      */
-    public function take($userId, $amount, array $context = null)
+    public function take($userId, $amount, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "transaction-take"];
+        $context = Context::withLimitBy($context, self::LIMIT_TAKE);
         $path = sprintf("/api/v1/transactions/from/%s.json", rawurlencode($userId));
 
         $json = $this->client->post($path, null, ["amount" => $amount], $context);
