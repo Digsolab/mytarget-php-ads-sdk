@@ -91,7 +91,7 @@ class MutateCampaign
 
     /**
      * @var AutobiddingMode
-     * @Field(name="auto_bidding_mode", type="Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode")
+     * @Field(name="autobidding_mode", type="Dsl\MyTarget\Domain\V1\Enum\AutobiddingMode")
      */
     private $autoBiddingMode;
 
