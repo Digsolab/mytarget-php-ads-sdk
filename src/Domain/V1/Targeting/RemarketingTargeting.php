@@ -20,6 +20,15 @@ class RemarketingTargeting
 
     /**
      * @param int $id
+     * @return RemarketingTargeting
+     */
+    public static function withId($id)
+    {
+        return new RemarketingTargeting($id, null);
+    }
+
+    /**
+     * @param int $id
      * @param string $name
      */
     public function __construct($id, $name)

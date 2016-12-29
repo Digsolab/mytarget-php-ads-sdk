@@ -88,7 +88,7 @@ class BannerOperator
      */
     public function editAll(array $banners, BannerFields $fields = null, array $context = null)
     {
-        $context = (array)$context + ["limit-by" => "banner-create"];
+        $context = (array)$context + ["limit-by" => "banner-edit"];
         $fields = $fields ?: BannerFields::create();
 
         $banners = array_values($banners);
@@ -98,12 +98,8 @@ class BannerOperator
         $query = ["fields" => $this->mapFields($fields->getFields())];
         $path = sprintf("/api/v1/banners/%s.json", implode(";", $ids));
         $json = $this->client->post($path, $query, $rawBanners, $context);
+        $json = f\objects_array_fixup($json, count($banners));
 
-        // MyTarget would return an object instead of array in case there is only one banner in result
-        if (0 !== count($json) && !is_array(reset($json))) {
-            $json = [$json];
-        }
-        
         return array_map(function ($json) {
             return $this->mapper->hydrateNew(Banner::class, $json);
         }, $json);

@@ -41,6 +41,7 @@ class DetailedExactDemographyOperator
      */
     public function findAll(array $ids, DateRange $dateRange, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "detailed-exact-demography-find"];
         $query = [
             'date_from' => $dateRange->getFrom()->format(self::DATE_FORMAT),
             'date_to' => $dateRange->getTo()->format(self::DATE_FORMAT),

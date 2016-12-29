@@ -34,6 +34,7 @@ class SharingKeysOperator
      */
     public function share(ShareObjects $share, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "v2-sharing-keys-share"];
         $rawShare = $this->mapper->snapshot($share);
 
         $json = $this->client->post("/api/v2/sharing_keys.json", null, $rawShare, $context);
@@ -50,6 +51,7 @@ class SharingKeysOperator
      */
     public function approve($sharingKey, $username, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "v2-sharing-keys-approve"];
         $path = sprintf("/api/v2/sharing_keys/%s/users/%s.json", $sharingKey, $username);
         $json = $this->client->post($path, null, ["status" => "active"], $context);
 
@@ -63,6 +65,7 @@ class SharingKeysOperator
      */
     public function revokeAccess($usersListId, $userId, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "v2-sharing-keys-revoke"];
         $path = sprintf("/api/v2/remarketing/users_lists/%d/users/%d.json", $usersListId, $userId);
         $this->client->delete($path, null, $context);
     }

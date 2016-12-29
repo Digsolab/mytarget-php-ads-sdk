@@ -30,6 +30,7 @@ class PackagesOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "packages-all"];
         $json = $this->client->get('/api/v1/packages.json', null, $context);
 
         return array_map(function ($json) {

@@ -31,6 +31,7 @@ class RemarketingGroupsOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-groups-find"];
         $json = $this->client->get("/api/v1/remarketing_groups.json", null, $context);
 
         return array_map(function ($json) {
@@ -46,6 +47,7 @@ class RemarketingGroupsOperator
      */
     public function create(RemarketingGroup $group, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-groups-create"];
         $rawGroup = $this->mapper->snapshot($group);
 
         $json = $this->client->post("/api/v1/remarketing_groups.json", null, $rawGroup, $context);
@@ -59,6 +61,7 @@ class RemarketingGroupsOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-groups-delete"];
         $this->client->delete(sprintf("/api/v1/remarketing_groups/%d.json", $id), null, $context);
     }
 }

@@ -5,10 +5,10 @@ namespace Dsl\MyTarget\Operator\V2;
 use Dsl\MyTarget\Client;
 use Dsl\MyTarget\Domain\V2\Enum\CreativeType;
 use Dsl\MyTarget\Mapper\Mapper;
-use Dsl\MyTarget\Operator\Exception\UnexpectedFileArgumentException;
 use Dsl\MyTarget\Domain\V2\Creative;
 use Dsl\MyTarget\Domain\V2\UploadCreative;
 use Psr\Http\Message\StreamInterface;
+use Dsl\MyTarget as f;
 
 class CreativeOperator
 {
@@ -32,27 +32,20 @@ class CreativeOperator
      * @param resource|string|StreamInterface $file Can be a StreamInterface instance, resource or a file path
      * @param CreativeType $type
      * @param UploadCreative $creative
+     * @param string|null $filename
      * @param array|null $context
-     * @param str|null $filename
      *
      * @return Creative
      */
-    public function create($file, CreativeType $type, UploadCreative $creative, array $context = null, $filename = null)
+    public function create($file, CreativeType $type, UploadCreative $creative, $filename = null, array $context = null)
     {
-        if (is_string($file)) { // assume it's a file path
-            $file = fopen($file, 'r');
-        }
-        if ( ! $file instanceof StreamInterface && ! is_resource($file)) {
-            throw new UnexpectedFileArgumentException($file);
-        }
+        $context = (array)$context + ["limit-by" => "v2-creative-create"];
+        $file = f\streamOrResource($file);
 
         $rawCreative = $this->mapper->snapshot($creative);
         $body = [
-            ["name" => "file", "contents" => $file],
+            ["name" => "file", "contents" => $file, "filename" => $filename],
             ["name" => "data", "contents" => \json_encode($rawCreative)]];
-        if (null !== $filename) {
-            $body[0]['filename'] = $filename;
-        }
 
         $path = sprintf("/api/v2/content/%s.json", $type->getValue());
         $json = $this->client->postMultipart($path, $body, null, $context);

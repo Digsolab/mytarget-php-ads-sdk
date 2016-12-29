@@ -28,25 +28,16 @@ class ImageOperator
     }
 
     /**
-     * @param string $username
-     *
-     * @return ClientImageOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientImageOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
      * @param resource|string|StreamInterface $file Can be a StreamInterface instance, resource or a file path
      * @param UploadImage $image
+     * @param string|null $filename
      * @param array|null $context
-     * @param str|null $filename
      *
      * @return Image
      */
-    public function upload($file, UploadImage $image, array $context = null, $filename = null)
+    public function upload($file, UploadImage $image, $filename = null, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "image-upload"];
         $file = f\streamOrResource($file);
 
         $imageInfo = $this->mapper->snapshot($image);

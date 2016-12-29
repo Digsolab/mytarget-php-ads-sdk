@@ -32,6 +32,7 @@ class ReservedAmountsOperator
      */
     public function find($clientId, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "v2-reserved-amounts-find"];
         $uri = sprintf("/api/v2/reserved_amounts/%d.json", $clientId);
         $json = $this->client->get($uri, null, $context);
 

@@ -33,16 +33,6 @@ class StatisticOperator
     }
 
     /**
-     * @param string $username
-     *
-     * @return ClientStatisticOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientStatisticOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
      * @param int $id
      * @param ObjectType $objectType
      * @param StatisticType $statType
@@ -53,6 +43,7 @@ class StatisticOperator
      */
     public function one($id, ObjectType $objectType, StatisticType $statType, DateRange $datesPredicate = null, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "statistic-find"];
         $path = $this->path($id, $objectType, $statType, $datesPredicate);
         $json = $this->client->get($path, null, $context);
 
@@ -71,6 +62,7 @@ class StatisticOperator
      */
     public function all(array $ids, ObjectType $objectType, StatisticType $statType, DateRange $datesPredicate = null, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "statistic-find"];
         $path = $this->path($ids, $objectType, $statType, $datesPredicate);
         $json = $this->client->get($path, null, $context);
         $json = f\objects_array_fixup($json, count($ids));

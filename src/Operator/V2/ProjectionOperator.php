@@ -33,16 +33,11 @@ class ProjectionOperator
      */
     public function projection(ProjectionSettings $campaign, array $context = null)
     {
-        $context = (array)$context + ["limit-by" => "projection2"];
+        $context = (array)$context + ["limit-by" => "v2-projection"];
         $data = $this->mapper->snapshot($campaign);
 
-        $json = $this->client->post($this->getEndpoint(), null, $data, $context);
+        $json = $this->client->post("/api/v2/projection.json", null, $data, $context);
 
         return $this->mapper->hydrateNew(Projection::class, $json);
-    }
-
-    public function getEndpoint()
-    {
-        return "/api/v2/projection.json";
     }
 }

@@ -26,21 +26,13 @@ class RemarketingOperator
     }
 
     /**
-     * @param string $username
-     * @return ClientRemarketingOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientRemarketingOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
      * @param array|null $context
      *
      * @return RemarketingStat[]
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-find"];
         $json = $this->client->get("/api/v1/remarketings.json", null, $context);
 
         return array_map(function ($json) {
@@ -56,6 +48,7 @@ class RemarketingOperator
      */
     public function create(Remarketing $remarketing, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-create"];
         $rawRemarketing = $this->mapper->snapshot($remarketing);
 
         $json = $this->client->post("/api/v1/remarketings.json", null, $rawRemarketing, $context);
@@ -72,6 +65,7 @@ class RemarketingOperator
      */
     public function edit($id, Remarketing $remarketing, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-edit"];
         $rawRemarketing = $this->mapper->snapshot($remarketing, Remarketing::class);
 
         $path = sprintf("/api/v1/remarketings/%d.json", $id);
@@ -86,6 +80,7 @@ class RemarketingOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-delete"];
         $this->client->delete(sprintf("/api/v1/remarketings/%d.json", $id), null, $context);
     }
 }

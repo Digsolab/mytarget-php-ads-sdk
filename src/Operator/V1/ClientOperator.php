@@ -31,6 +31,7 @@ class ClientOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "client-find"];
         $json = $this->client->get("/api/v1/clients.json", null, $context);
 
         return array_map(function ($json) {
@@ -46,6 +47,7 @@ class ClientOperator
      */
     public function create(AdditionalUserInfo $userInfo, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "campaign-create"];
         $rawUserInfo = $this->mapper->snapshot($userInfo);
         $body = ["additional_info" => $rawUserInfo];
 

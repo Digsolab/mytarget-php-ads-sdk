@@ -30,15 +30,6 @@ class CampaignOperator
     }
 
     /**
-     * @param string $username
-     * @return ClientCampaignOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientCampaignOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
      * @param MutateCampaign $campaign
      * @param array|null $context
      *
@@ -46,6 +37,7 @@ class CampaignOperator
      */
     public function create(MutateCampaign $campaign, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "campaign-create"];
         $rawCampaign = $this->mapper->snapshot($campaign);
 
         $json = $this->client->post("/api/v1/campaigns.json", null, $rawCampaign, $context);
@@ -57,11 +49,25 @@ class CampaignOperator
      * @param int $id
      * @param MutateCampaign $campaign
      * @param array|null $context
+     * @deprecated Use edit() instead. All editing actions will be consistently named across all Operators as edit*
      *
      * @return Campaign
      */
     public function update($id, MutateCampaign $campaign, array $context = null)
     {
+        return $this->edit($id, $campaign, $context);
+    }
+
+    /**
+     * @param int $id
+     * @param MutateCampaign $campaign
+     * @param array|null $context
+     *
+     * @return Campaign
+     */
+    public function edit($id, MutateCampaign $campaign, array $context = null)
+    {
+        $context = (array)$context + ["limit-by" => "campaign-edit"];
         $rawCampaign = $this->mapper->snapshot($campaign);
 
         $json = $this->client->post(sprintf("/api/v1/campaigns/%d.json", $id), null, $rawCampaign, $context);
@@ -80,6 +86,7 @@ class CampaignOperator
      */
     public function all(CampaignFields $fields = null, array $withStatuses = null, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "campaign-find-all"];
         $fields = $fields ?: CampaignFields::create();
 
         $query = ["fields" => $this->mapFields($fields->getFields())];
@@ -91,8 +98,6 @@ class CampaignOperator
         if ($fields->hasField(CampaignFields::FIELD_BANNERS)) {
             $query["with_banners"] = "1";
         }
-
-        $context = (array)$context + ["limit-by" => "campaigns-all"];
 
         $json = $this->client->get("/api/v1/campaigns.json", $query, $context);
 

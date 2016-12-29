@@ -32,6 +32,7 @@ class RemarketingCounterOperator
      */
     public function create(RemarketingCounter $counter, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-counter-create"];
         $rawCounter = $this->mapper->snapshot($counter);
 
         $json = $this->client->post("/api/v1/remarketing_counters.json", null, $rawCounter, $context);
@@ -48,6 +49,7 @@ class RemarketingCounterOperator
      */
     public function edit($id, RemarketingCounter $counter, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-counter-edit"];
         $rawCounter = $this->mapper->snapshot($counter);
 
         $json = $this->client->post(sprintf("/api/v1/remarketing_counters/%d.json", $id), null, $rawCounter, $context);
@@ -62,6 +64,7 @@ class RemarketingCounterOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-counter-find"];
         $json = $this->client->get("/api/v1/remarketing_counters.json", null, $context);
 
         return array_map(function ($json) {
@@ -75,6 +78,7 @@ class RemarketingCounterOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-counter-delete"];
         $path = sprintf("/api/v1/remarketing_counters/%d.json", $id);
         $this->client->delete($path, null, $context);
     }

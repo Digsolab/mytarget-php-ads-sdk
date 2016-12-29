@@ -32,6 +32,7 @@ class RemarketingAppsOperator
      */
     public function create(RemarketingApp $app, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-apps-create"];
         $rawApp = $this->mapper->snapshot($app);
 
         $json = $this->client->post("/api/v1/remarketing_apps.json", null, $rawApp, $context);
@@ -46,6 +47,7 @@ class RemarketingAppsOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-apps-find"];
         $json = $this->client->get("/api/v1/remarketing_apps.json", null, $context);
 
         return array_map(function ($json) {
@@ -59,6 +61,7 @@ class RemarketingAppsOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-apps-delete"];
         $path = sprintf("/api/v1/remarketing_apps/%d.json", $id);
         $this->client->delete($path, null, $context);
     }

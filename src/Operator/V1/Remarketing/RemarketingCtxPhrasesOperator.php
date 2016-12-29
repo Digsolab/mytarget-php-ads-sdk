@@ -34,6 +34,7 @@ class RemarketingCtxPhrasesOperator
      */
     public function create($file, $name, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-phrases-create"];
         $file = \Dsl\MyTarget\streamOrResource($file);
 
         $body = [
@@ -53,6 +54,7 @@ class RemarketingCtxPhrasesOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-phrases-find"];
         $json = $this->client->get("/api/v1/remarketing_context_phrases.json", null, $context);
 
         return array_map(function ($json) {
@@ -66,6 +68,7 @@ class RemarketingCtxPhrasesOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-phrases-delete"];
         $path = sprintf("/api/v1/remarketing_context/phrases/%d.json", $id);
         $this->client->delete($path, null, $context);
     }

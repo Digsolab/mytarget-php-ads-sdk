@@ -26,22 +26,13 @@ class RemarketingVkGroupsOperator
     }
 
     /**
-     * @param string $username
-     *
-     * @return ClientRemarketingVkGroupsOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientRemarketingVkGroupsOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
      * @param array|null $context
      *
      * @return RemarketingVkGroupStat[]
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-vk-groups-find"];
         $json = $this->client->get("/api/v1/remarketing_vk_groups.json", null, $context);
 
         return array_map(function ($json) {
@@ -57,6 +48,7 @@ class RemarketingVkGroupsOperator
      */
     public function create(RemarketingVkGroup $group, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-vk-groups-find"];
         $rawGroup = $this->mapper->snapshot($group);
 
         $json = $this->client->post("/api/v1/remarketing_vk_groups.json", null, $rawGroup, $context);
@@ -71,6 +63,7 @@ class RemarketingVkGroupsOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-vk-groups-delete"];
         $path = sprintf("/api/v1/remarketing_vk_groups/%d.json", $id);
         $this->client->delete($path, null, $context);
     }

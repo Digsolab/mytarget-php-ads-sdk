@@ -34,6 +34,7 @@ class RemarketingUserListsOperator
      */
     public function create($file, UploadUserList $upload, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-user-list-upload"];
         $file = \Dsl\MyTarget\streamOrResource($file);
 
         $body = [
@@ -55,6 +56,7 @@ class RemarketingUserListsOperator
      */
     public function all(array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-user-list-find"];
         $json = $this->client->get("/api/v1/remarketing_users_lists.json", null, $context);
 
         return array_map(function ($json) {
@@ -68,6 +70,7 @@ class RemarketingUserListsOperator
      */
     public function delete($id, array $context = null)
     {
+        $context = (array)$context + ["limit-by" => "remarketing-user-list-delete"];
         $path = sprintf("/api/v1/remarketing_users_list/%d.json", $id);
         $this->client->delete($path, null, $context);
     }
