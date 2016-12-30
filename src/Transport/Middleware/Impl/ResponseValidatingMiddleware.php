@@ -20,11 +20,6 @@ class ResponseValidatingMiddleware implements HttpMiddleware
         $response = $stack->request($request, $context);
         $code = $response->getStatusCode();
 
-        // let's leave all the work with 429 to LimitingMiddleware
-        if ($code === LimitingMiddleware::HTTP_STATUS_LIMIT_REACHED) {
-            return $response;
-        }
-
         if ($code >= 500 && $code < 600) {
             throw new ex\ServerErrorException("MyTarget: {$code} Server Error", $request, $response);
         }
