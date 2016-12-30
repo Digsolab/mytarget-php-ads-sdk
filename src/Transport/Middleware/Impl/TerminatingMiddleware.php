@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Transport\Middleware\Impl;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Transport\HttpTransport;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
@@ -22,7 +23,7 @@ class TerminatingMiddleware implements HttpMiddleware
     /**
      * @inheritdoc
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context)
     {
         return $this->http->request($request, $context);
     }

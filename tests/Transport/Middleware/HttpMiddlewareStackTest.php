@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Transport\Middleware;
 
+use Dsl\MyTarget\Context;
 use GuzzleHttp\Psr7\Response;
 use Dsl\MyTarget\Transport\HttpTransport;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
@@ -44,14 +45,14 @@ class HttpMiddlewareStackTest extends \PHPUnit_Framework_TestCase
         $this->middleware->expects($this->once())->method("request")
             ->with($this->identicalTo($this->request))
             ->willReturnCallback(function (RequestInterface $request, HttpMiddlewareStack $stack) {
-                return $stack->request($request);
+                return $stack->request($request, new Context());
             });
 
         $this->http->expects($this->once())->method("request")
             ->with($this->identicalTo($this->request))
             ->willReturn($response);
 
-        $this->assertSame($response, $stack->request($this->request), "Result assertion");
+        $this->assertSame($response, $stack->request($this->request, new Context()), "Result assertion");
     }
 
     public function testRequestCallsManyMiddlewares()
@@ -65,11 +66,13 @@ class HttpMiddlewareStackTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $resultingResponse = $response->withHeader("X-Added-In-Final", "foo");
         $stack = new HttpMiddlewareStack($middlewares, $this->http);
+        $ctx = new Context();
 
         $this->middleware->expects($this->once())->method("request")
             ->with($this->identicalTo($this->request))
-            ->willReturnCallback(function (RequestInterface $request, HttpMiddlewareStack $stack) {
-                $res = $stack->request($request, ["off" => "to final"]); // add context
+            ->willReturnCallback(function (RequestInterface $request, HttpMiddlewareStack $stack, Context $ctx) {
+                $ctx->addParameter("off", "to final");
+                $res = $stack->request($request, $ctx);
 
                 $this->assertSame($res->getHeaderLine("X-Added-In-Final"), "foo", "Check header added in the next middleware");
 
@@ -78,8 +81,8 @@ class HttpMiddlewareStackTest extends \PHPUnit_Framework_TestCase
 
         $finalMiddleware->expects($this->once())->method("request")
             ->with($this->identicalTo($this->request))
-            ->willReturnCallback(function (RequestInterface $request, HttpMiddlewareStack $stack, array $context) {
-                $this->assertSame(["off" => "to final"], $context, "check context added in the prev middleware");
+            ->willReturnCallback(function (RequestInterface $request, HttpMiddlewareStack $stack, Context $context) {
+                $this->assertSame(["off" => "to final"], $context->getParameters(), "check context added in the prev middleware");
 
                 $res = $stack->request($request, $context);
 
@@ -87,9 +90,9 @@ class HttpMiddlewareStackTest extends \PHPUnit_Framework_TestCase
             });
 
         $this->http->expects($this->once())->method("request")
-            ->with($this->identicalTo($this->request), ["off" => "to final"])
+            ->with($this->identicalTo($this->request), $this->identicalTo($ctx))
             ->willReturn($response);
 
-        $this->assertEquals($resultingResponse, $stack->request($this->request));
+        $this->assertEquals($resultingResponse, $stack->request($this->request, $ctx));
     }
 }

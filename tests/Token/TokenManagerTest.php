@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Token;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Token\ClientCredentials\Credentials;
 use Dsl\MyTarget\Token\Exception\TokenDeletedException;
 use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
@@ -54,11 +55,13 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
         $this->storageToken->method('isExpiredAt')->willReturn(false);
         $this->storageToken->expects($this->once())->method('isExpiredAt')->with($now);
 
-        $this->storage->method('getToken')->willReturn($this->storageToken);
+        $ctx = Context::forClient($this->id);
+        $this->storage->expects($this->once())
+            ->method('getToken')
+            ->with($this->id, $this->request, $ctx)
+            ->willReturn($this->storageToken);
 
-        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
-
-        $token = $this->manager->getClientToken($this->request, $this->id, null);
+        $token = $this->manager->getToken($this->request, Context::forClient($this->id));
 
         $this->assertTrue($momentGeneratorCall);
         $this->assertEquals($this->storageToken, $token);
@@ -76,17 +79,18 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
 
         $this->storage->method('getToken')->willReturn($this->storageToken);
 
+        $ctx = Context::forClient($this->id);
         $this->acquirer->method('refresh')->willReturn($this->responseToken);
-        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
+        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, $ctx);
 
-        $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', null);
+        $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', $ctx);
 
-        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, $ctx);
 
         $this->lockManager->expects($this->once())->method('lock')->with($this->id);
         $this->lockManager->expects($this->once())->method('unlock')->with($this->id);
 
-        $token = $this->manager->getClientToken($this->request, $this->id, null);
+        $token = $this->manager->getToken($this->request, $ctx);
 
         $this->assertTrue($momentGeneratorCall);
         $this->assertEquals($this->responseToken, $token);
@@ -104,19 +108,20 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
 
         $this->storage->method('getToken')->willReturn($this->storageToken);
 
+        $ctx = Context::forClient($this->id);
         $this->acquirer->method('refresh')->willThrowException(new TokenDeletedException('', $this->request));
-        $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', null);
+        $this->acquirer->expects($this->once())->method('refresh')->with($this->request, $now, 'refresh secret', $ctx);
 
         $this->acquirer->method('acquire')->willReturn($this->responseToken);
-        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
+        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, $ctx);
 
-        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $this->id, null);
+        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $ctx);
 
-        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, $ctx);
 
         $this->lockManager->expects($this->once())->method('lock')->with($this->id);
         $this->lockManager->expects($this->once())->method('unlock')->with($this->id);
-        $token = $this->manager->getClientToken($this->request, $this->id, null);
+        $token = $this->manager->getToken($this->request, $ctx);
 
         $this->assertTrue($momentGeneratorCall);
         $this->assertEquals($this->responseToken, $token);
@@ -128,17 +133,18 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
         $momentGeneratorCall = false;
         $this->manager->setMomentGenerator(function () use (& $momentGeneratorCall, $now) { $momentGeneratorCall = true; return $now; });
 
+        $ctx = Context::forClient($this->id);
         $this->acquirer->method('acquire')->willReturn($this->responseToken);
-        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, null);
+        $this->storage->expects($this->once())->method('updateToken')->with($this->id, $this->responseToken, $this->request, $ctx);
 
-        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $this->id, null);
+        $this->acquirer->expects($this->once())->method('acquire')->with($this->request, $now, $ctx);
 
-        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, null);
+        $this->storage->expects($this->once())->method('getToken')->with($this->id, $this->request, $ctx);
 
         $this->lockManager->expects($this->once())->method('lock')->with($this->id);
         $this->lockManager->expects($this->once())->method('unlock')->with($this->id);
 
-        $token = $this->manager->getClientToken($this->request, $this->id, null);
+        $token = $this->manager->getToken($this->request, $ctx);
 
         $this->assertTrue($momentGeneratorCall);
         $this->assertTrue($token instanceof Token);
@@ -172,7 +178,7 @@ class TokenManagerTest extends  \PHPUnit_Framework_TestCase
             $this->acquirer->method('acquire')->willThrowException(new TokenLimitReachedException('', $this->request));
         }
 
-        $this->manager->getClientToken($this->request, $this->id, null);
+        $this->manager->getToken($this->request, Context::forClient($this->id));
     }
 
 }

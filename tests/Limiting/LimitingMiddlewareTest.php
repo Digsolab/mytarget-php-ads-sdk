@@ -2,6 +2,7 @@
 
 namespace tests\Dsl\MyTarget\Limiting;
 
+use Dsl\MyTarget\Context;
 use GuzzleHttp\Psr7\Request;
 use Dsl\MyTarget\Limiting\LimitingMiddleware;
 use Dsl\MyTarget\Limiting\RateLimitProvider;
@@ -26,12 +27,12 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $request = new Request("GET", "/");
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)->disableOriginalConstructor()->getMock();
         $username = "12345@agency_client";
-        $context = ["limit-by" => "campaigns-all", "username" => $username];
+        $context = new Context($username, "campaigns-all");
         $limitTimeout = 1;
 
         $this->rateLimitProvider->expects($this->once())
             ->method("rateLimitTimeout")
-            ->with($context["limit-by"], $request, $context)
+            ->with($context->getLimitBy(), $request, $context)
             ->willReturn($limitTimeout);
 
         $this->setExpectedException(ThrottleException::class);
@@ -47,12 +48,12 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
         $response = $this->getMock(ResponseInterface::class);
         $stack = $this->getMockBuilder(HttpMiddlewareStack::class)->disableOriginalConstructor()->getMock();
         $username = "12345@agency_client";
-        $context = ["limit-by" => "campaigns-all", "username" => $username];
+        $context = new Context($username, "12345@agency_client");
         $isLimitReached = false;
 
         $this->rateLimitProvider->expects($this->once())
                                 ->method("rateLimitTimeout")
-                                ->with($context["limit-by"], $request, $context)
+                                ->with($context->getLimitBy(), $request, $context)
                                 ->willReturn($isLimitReached);
 
         $stack->expects($this->once())
@@ -62,7 +63,7 @@ class LimitingMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->rateLimitProvider->expects($this->once())
                                 ->method("refreshLimits")
-                                ->with($request, $response, $context["limit-by"], $context);
+                                ->with($request, $response, $context->getLimitBy(), $context);
 
         $middleware->request($request, $stack, $context);
     }

@@ -2,6 +2,7 @@
 
 namespace Dsl\MyTarget\Token;
 
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddleware;
 use Dsl\MyTarget\Transport\Middleware\HttpMiddlewareStack;
@@ -28,13 +29,9 @@ class TokenGrantMiddleware implements HttpMiddleware
      * @throws TokenLimitReachedException
      * @throws TokenRequestException
      */
-    public function request(RequestInterface $request, HttpMiddlewareStack $stack, array $context = null)
+    public function request(RequestInterface $request, HttpMiddlewareStack $stack, Context $context)
     {
-        if (empty($context['username'])) {
-            $token = $this->tokens->getToken($request, $context);
-        } else {
-            $token = $this->tokens->getClientToken($request, $context["username"], $context);
-        }
+        $token = $this->tokens->getToken($request, $context);
 
         /** @var RequestInterface $request */
         $request = $request->withHeader('Authorization', sprintf('Bearer %s', $token->getAccessToken()));

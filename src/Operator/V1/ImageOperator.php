@@ -7,10 +7,13 @@ use Dsl\MyTarget\Domain\V1\Image\Image;
 use Dsl\MyTarget\Domain\V1\Image\UploadImage;
 use Dsl\MyTarget\Mapper\Mapper;
 use Dsl\MyTarget as f;
+use Dsl\MyTarget\Context;
 use Psr\Http\Message\StreamInterface;
 
 class ImageOperator
 {
+    const LIMIT_UPLOAD = "image-upload";
+
     /**
      * @var Client
      */
@@ -28,25 +31,16 @@ class ImageOperator
     }
 
     /**
-     * @param string $username
-     *
-     * @return ClientImageOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientImageOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
      * @param resource|string|StreamInterface $file Can be a StreamInterface instance, resource or a file path
      * @param UploadImage $image
-     * @param array|null $context
-     * @param str|null $filename
+     * @param string|null $filename
+     * @param Context|null $context
      *
      * @return Image
      */
-    public function upload($file, UploadImage $image, array $context = null, $filename = null)
+    public function upload($file, UploadImage $image, $filename = null, Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_UPLOAD);
         $file = f\streamOrResource($file);
 
         $imageInfo = $this->mapper->snapshot($image);

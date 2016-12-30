@@ -3,11 +3,16 @@
 namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingGroup;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class RemarketingGroupsOperator
 {
+    const LIMIT_CREATE = "remarketing-groups-create";
+    const LIMIT_FIND = "remarketing-groups-find";
+    const LIMIT_DELETE = "remarketing-groups-delete";
+
     /**
      * @var Client
      */
@@ -25,12 +30,13 @@ class RemarketingGroupsOperator
     }
 
     /**
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingGroup[]
      */
-    public function all(array $context = null)
+    public function all(Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $json = $this->client->get("/api/v1/remarketing_groups.json", null, $context);
 
         return array_map(function ($json) {
@@ -40,12 +46,13 @@ class RemarketingGroupsOperator
 
     /**
      * @param RemarketingGroup $group
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingGroup
      */
-    public function create(RemarketingGroup $group, array $context = null)
+    public function create(RemarketingGroup $group, Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $rawGroup = $this->mapper->snapshot($group);
 
         $json = $this->client->post("/api/v1/remarketing_groups.json", null, $rawGroup, $context);
@@ -55,10 +62,11 @@ class RemarketingGroupsOperator
 
     /**
      * @param int $id
-     * @param array|null $context
+     * @param Context|null $context
      */
-    public function delete($id, array $context = null)
+    public function delete($id, Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_DELETE);
         $this->client->delete(sprintf("/api/v1/remarketing_groups/%d.json", $id), null, $context);
     }
 }

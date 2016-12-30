@@ -3,12 +3,17 @@
 namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingVkGroup;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingVkGroupStat;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class RemarketingVkGroupsOperator
 {
+    const LIMIT_FIND = "remarketing-vk-groups-find";
+    const LIMIT_CREATE = "remarketing-vk-groups-create";
+    const LIMIT_DELETE = "remarketing-vk-groups-delete";
+
     /**
      * @var Client
      */
@@ -26,22 +31,13 @@ class RemarketingVkGroupsOperator
     }
 
     /**
-     * @param string $username
-     *
-     * @return ClientRemarketingVkGroupsOperator
-     */
-    public function forClient($username)
-    {
-        return new ClientRemarketingVkGroupsOperator($username, $this->client, $this->mapper);
-    }
-
-    /**
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingVkGroupStat[]
      */
-    public function all(array $context = null)
+    public function all(Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $json = $this->client->get("/api/v1/remarketing_vk_groups.json", null, $context);
 
         return array_map(function ($json) {
@@ -51,12 +47,13 @@ class RemarketingVkGroupsOperator
 
     /**
      * @param RemarketingVkGroup $group
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingVkGroupStat
      */
-    public function create(RemarketingVkGroup $group, array $context = null)
+    public function create(RemarketingVkGroup $group, Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $rawGroup = $this->mapper->snapshot($group);
 
         $json = $this->client->post("/api/v1/remarketing_vk_groups.json", null, $rawGroup, $context);
@@ -67,11 +64,11 @@ class RemarketingVkGroupsOperator
     /**
      * @param int $id RemarketingVkGroupStat->id value (not vk's group_id)
      *
-     * @param array|null $context
+     * @param Context|null $context
      */
-    public function delete($id, array $context = null)
+    public function delete($id, Context $context = null)
     {
         $path = sprintf("/api/v1/remarketing_vk_groups/%d.json", $id);
-        $this->client->delete($path, null, $context);
+        $this->client->delete($path, null, Context::withLimitBy($context, self::LIMIT_DELETE));
     }
 }

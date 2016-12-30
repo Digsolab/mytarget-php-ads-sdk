@@ -10,6 +10,7 @@ use Dsl\MyTarget\Token\Exception\TokenRequestException;
 use Dsl\MyTarget\Transport\HttpTransport;
 use Psr\Http\Message\RequestInterface;
 use Dsl\MyTarget as f;
+use Dsl\MyTarget\Context;
 use GuzzleHttp\Psr7 as guzzle;
 use Psr\Http\Message\UriInterface;
 
@@ -42,27 +43,26 @@ class TokenAcquirer
     /**
      * @param RequestInterface $request
      * @param \DateTimeInterface $now
-     * @param string|null $username
-     * @param array $context
+     * @param Context $context
      *
      * @return Token|null
      *
      * @throws TokenLimitReachedException
      * @throws TokenRequestException
      */
-    public function acquire(RequestInterface $request, \DateTimeInterface $now, $username = null, array $context = null)
+    public function acquire(RequestInterface $request, \DateTimeInterface $now, Context $context)
     {
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);
 
         $payload = [
-            "grant_type" => $username === null ? "client_credentials" : "agency_client_credentials",
+            "grant_type" => ! $context->hasUsername() ? "client_credentials" : "agency_client_credentials",
             "client_id" => $credentials->getClientId(),
             "client_secret" => $credentials->getClientSecret()
         ];
 
-        if ($username !== null) {
-            $payload["agency_client_name"] = $username;
+        if ($context->hasUsername()) {
+            $payload["agency_client_name"] = $context->getUsername();
         }
 
         $tokenRequest = new Request("POST", $uri,
@@ -74,11 +74,11 @@ class TokenAcquirer
         $body = (string) $response->getBody();
 
         if ($response->getStatusCode() === 403 && false !== stripos($body, 'limit reached')) {
-            throw TokenLimitReachedException::forCredentials($tokenRequest, $response, $username);
+            throw TokenLimitReachedException::forCredentials($tokenRequest, $response, $context->getUsername());
         }
 
         if ($response->getStatusCode() !== 200) {
-            throw TokenRequestException::forCredentials($tokenRequest, $response, $username);
+            throw TokenRequestException::forCredentials($tokenRequest, $response, $context->getUsername());
         }
 
         $tokenArray = f\json_decode($body);
@@ -87,7 +87,7 @@ class TokenAcquirer
         }
 
         if (empty($token)) {
-            throw TokenRequestException::invalidResponse($tokenRequest, $response, $username);
+            throw TokenRequestException::invalidResponse($tokenRequest, $response, $context->getUsername());
         }
 
         return $token;
@@ -97,12 +97,12 @@ class TokenAcquirer
      * @param RequestInterface $request
      * @param \DateTimeInterface $now
      * @param string $refreshToken
-     * @param array|null $context
+     * @param Context $context
      *
      * @return Token|null
      * @throws TokenRequestException
      */
-    public function refresh(RequestInterface $request, \DateTimeInterface $now, $refreshToken, array $context = null)
+    public function refresh(RequestInterface $request, \DateTimeInterface $now, $refreshToken, Context $context)
     {
         $credentials = $this->credentials->getCredentials($request, $context);
         $uri = $this->baseAddress->withPath(self::TOKEN_URL);

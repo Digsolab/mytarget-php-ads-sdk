@@ -3,12 +3,16 @@
 namespace Dsl\MyTarget\Operator\V1;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\OdklGroup;
 use Dsl\MyTarget\Domain\V1\VkGroup;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class GroupsOperator
 {
+    const LIMIT_FIND_ODKL = "groups-find-odkl";
+    const LIMIT_FIND_VK = "groups-find-vk";
+
     /**
      * @var Client
      */
@@ -28,13 +32,13 @@ class GroupsOperator
     /**
      * @param string $query
      * @param int $limit
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return OdklGroup[]
      */
-    public function getOdklGroups($query, $limit = 10, array $context = null)
+    public function getOdklGroups($query, $limit = 10, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "groups-get-odkl"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND_ODKL);
 
         $json = $this->client->get("/api/v1/odkl_groups.json", ["q" => $query, "limit" => $limit], $context);
 
@@ -45,13 +49,13 @@ class GroupsOperator
 
     /**
      * @param string $query
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return VkGroup[]
      */
-    public function getVkGroups($query, array $context = null)
+    public function getVkGroups($query, Context $context = null)
     {
-        $context = (array)$context + ["limit-by" => "groups-get-vk"];
+        $context = Context::withLimitBy($context, self::LIMIT_FIND_VK);
 
         $json = $this->client->get("/api/v1/vk_groups.json", ["q" => $query], $context);
 

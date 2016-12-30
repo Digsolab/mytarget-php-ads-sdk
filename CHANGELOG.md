@@ -1,3 +1,12 @@
+### 0.6.0
+
+#### Breaking changes
+
+1. Eradicated `Client*Operator` operators completely, use context instead to pass client's username.
+2. Every method that was expecting `array $context` will now expect `Context $context`, if you want e.g. to make a request for client with username `"foo"` you can now do it via `$operator->requestMethod(... params, Context::forClient("foo"))`.
+
+...
+
 ### 0.2.0
 
 #### Breaking changes

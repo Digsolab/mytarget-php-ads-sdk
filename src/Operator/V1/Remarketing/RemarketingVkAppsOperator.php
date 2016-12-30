@@ -3,12 +3,17 @@
 namespace Dsl\MyTarget\Operator\V1\Remarketing;
 
 use Dsl\MyTarget\Client;
+use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingVkApp;
 use Dsl\MyTarget\Domain\V1\Remarketing\RemarketingVkAppStat;
 use Dsl\MyTarget\Mapper\Mapper;
 
 class RemarketingVkAppsOperator
 {
+    const LIMIT_CREATE = "remarketing-vk-apps-create";
+    const LIMIT_FIND = "remarketing-vk-apps-find";
+    const LIMIT_DELETE = "remarketing-vk-apps-delete";
+
     /**
      * @var Client
      */
@@ -27,12 +32,13 @@ class RemarketingVkAppsOperator
 
     /**
      * @param RemarketingVkApp $app
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingVkAppStat
      */
-    public function create(RemarketingVkApp $app, array $context = null)
+    public function create(RemarketingVkApp $app, Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_CREATE);
         $rawApp = $this->mapper->snapshot($app);
 
         $json = $this->client->post("/api/v1/remarketing_vk_apps.json", null, $rawApp, $context);
@@ -41,12 +47,13 @@ class RemarketingVkAppsOperator
     }
 
     /**
-     * @param array|null $context
+     * @param Context|null $context
      *
      * @return RemarketingVkAppStat[]
      */
-    public function all(array $context = null)
+    public function all(Context $context = null)
     {
+        $context = Context::withLimitBy($context, self::LIMIT_FIND);
         $json = $this->client->get("/api/v1/remarketing_vk_apps.json", null, $context);
 
         return array_map(function ($json) {
@@ -56,11 +63,11 @@ class RemarketingVkAppsOperator
 
     /**
      * @param int $id
-     * @param array|null $context
+     * @param Context|null $context
      */
-    public function delete($id, array $context = null)
+    public function delete($id, Context $context = null)
     {
         $path = sprintf("/api/v1/remarketing_vk_apps/%d.json", $id);
-        $this->client->delete($path, null, $context);
+        $this->client->delete($path, null, Context::withLimitBy($context, self::LIMIT_DELETE));
     }
 }
