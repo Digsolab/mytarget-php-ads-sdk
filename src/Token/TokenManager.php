@@ -9,6 +9,8 @@ use Dsl\MyTarget\Token\Exception\TokenLimitReachedException;
 use Dsl\MyTarget\Token\Exception\TokenLockException;
 use Dsl\MyTarget\Token\Exception\TokenRequestException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class TokenManager
 {
@@ -33,6 +35,11 @@ class TokenManager
     private $lockManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var callable callable(): \DateTimeInterface Returns current moment
      */
     private $momentGenerator;
@@ -52,6 +59,7 @@ class TokenManager
         $this->momentGenerator = function () {
             return new \DateTimeImmutable();
         };
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -60,6 +68,11 @@ class TokenManager
     public function setMomentGenerator(callable $cb)
     {
         $this->momentGenerator = $cb;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -83,8 +96,21 @@ class TokenManager
 
         if ( ! $token || $token->isExpiredAt($now)) {
 
+            if ($token) {
+                $this->logger->debug("Token({$id}) was found but is expired, will refresh it");
+            } else {
+                $this->logger->debug("Token({$id}) was not found, will acquire it");
+            }
+
             if ($this->lockManager) {
-                $this->lockManager->lock($id);
+                $this->logger->debug("Token({$id}) trying to get a lock");
+                try {
+                    $this->lockManager->lock($id);
+                    $this->logger->debug("Token({$id}) locked");
+                } catch (TokenLockException $e) {
+                    $this->logger->debug("Token({$id}) couldn't get a lock");
+                    throw $e;
+                }
             }
 
             try {
@@ -92,7 +118,10 @@ class TokenManager
                     try {
                         $token = $this->acquirer->refresh($request, $now, $token->getRefreshToken(), $context);
                         $this->storage->updateToken($id, $token, $request, $context);
+                        $this->logger->debug("Token({$id}) refreshed the token and put it in the storage");
                     } catch (TokenDeletedException $e) {
+                        $this->logger->debug("Token({$id}) was deleted, will try to acquire a new one");
+
                         // 30 days token expire, we should get new token
                         $token = null;
                     }
@@ -101,17 +130,24 @@ class TokenManager
                 if ( ! $token) {
                     $token = $this->acquirer->acquire($request, $now, $context);
                     $this->storage->updateToken($id, $token, $request, $context);
+                    $this->logger->debug("Token({$id}) was acquired and put in the storage");
                 }
 
                 if ($this->lockManager) {
                     $this->lockManager->unlock($id);
+                    $this->logger->debug("Token({$id}) unlocked");
                 }
             } catch (TokenLimitReachedException $e) {
+                $this->logger->debug("Token({$id}) limit reached");
                 throw $e;
             } catch (\Exception $e) {
+                $exClass = get_class($e);
+                $this->logger->debug("Token({$id}) exception {$exClass} with message: {$e->getMessage()}");
+
                 // finally works incorrectly with Redis in php5.5
                 if ($this->lockManager) {
                     $this->lockManager->unlock($id);
+                    $this->logger->debug("Token({$id}) unlocked");
                 }
 
                 throw $e;
@@ -135,5 +171,6 @@ class TokenManager
         $expired = new Token($token->getAccessToken(), $token->getTokenType(), $moment, $token->getRefreshToken());
         $id = $username ?: $account;
         $this->storage->updateToken($id, $expired, $request, $context);
+        $this->logger->debug("Token({$id}) forcibly expired the token");
     }
 }
