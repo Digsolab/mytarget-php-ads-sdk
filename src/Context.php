@@ -42,6 +42,15 @@ class Context
     }
 
     /**
+     * @param array|null $parameters
+     * @return static
+     */
+    public static function params(array $parameters = null)
+    {
+        return new static(null, null, $parameters);
+    }
+
+    /**
      * @param Context|null $ctx
      * @param string $limitBy
      * @return static
