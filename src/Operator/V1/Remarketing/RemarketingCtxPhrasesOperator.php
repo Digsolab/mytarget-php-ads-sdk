@@ -44,7 +44,7 @@ class RemarketingCtxPhrasesOperator
 
         $body = [
             ["name" => "name", "contents" => $name],
-            ["name" => "file", "contents" => $file]
+            ["name" => "file", "contents" => $file, "filename" => $name]
         ];
 
         $json = $this->client->postMultipart("/api/v1/remarketing_context_phrases.json", $body, null, $context);

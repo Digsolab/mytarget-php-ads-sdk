@@ -46,7 +46,7 @@ class RemarketingUserListsOperator
             ["name" => "name", "contents" => $upload->getName()],
             ["name" => "type", "contents" => $upload->getType()],
             ["name" => "base", "contents" => $upload->getBase()],
-            ["name" => "file", "contents" => $file]
+            ["name" => "file", "contents" => $file, "filename" => $upload->getName()]
         ];
 
         $json = $this->client->postMultipart("/api/v1/remarketing_users_lists.json", $body, null, $context);
