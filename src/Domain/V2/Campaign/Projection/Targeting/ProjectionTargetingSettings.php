@@ -251,14 +251,15 @@ class ProjectionTargetingSettings
         $res->martialStatus = $targeting->getMaritalStatus();
         $res->personalIncome = $targeting->getPersonalIncome();
         $res->remarketing = $targeting->getRemarketing();
-        $res->pads = [];
-        foreach($targeting->getPads() as $pad) {
-            $res->pads[] = $pad->getId();
-        }
         $res->mobileTypes = $targeting->getMobileTypes();
         $res->mobileOperatingSystems = $targeting->getMobileOperatingSystems();
         $res->mobileOperators = $targeting->getMobileOperators();
         $res->mobileVendors = $targeting->getMobileVendors();
+
+        $res->pads = [];
+        foreach ($targeting->getPads() ?: [] as $pad) {
+            $res->pads[] = $pad->getId();
+        }
 
         if ($targeting->getSex()) {
             $sex = [];
@@ -275,14 +276,13 @@ class ProjectionTargetingSettings
             $res->sex = $sex;
         }
         $res->regions = [];
-        if ($targeting->getRegions()) {
-            foreach ($targeting->getRegions() as $id) {
-                $res->regions[] = new Region($id);
-            }
+        foreach ($targeting->getRegions() ?: [] as $id) {
+            $res->regions[] = new Region($id);
         }
         if ($targeting->getUserGeo()) {
             $res->regions[] = new Region(null, $targeting->getUserGeo());
         }
+
         return $res;
     }
 
