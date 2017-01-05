@@ -1,6 +1,6 @@
 {
-  "name": "dsl/my-target-sdk",
-  "description": "API bindings for MyTarget",
+  "name": "coyl/sdk-framework",
+  "description": "A framework for an SDK building",
   "type": "library",
   "require": {
     "doctrine/instantiator": "^1",
