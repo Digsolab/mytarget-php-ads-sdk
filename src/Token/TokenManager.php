@@ -88,12 +88,10 @@ class TokenManager
      */
     public function getToken(RequestInterface $request, Context $context)
     {
-        $credentials = $this->credentials->getCredentials($request, $context);
-        $id = $context->hasUsername() ? $context->getUsername() : $credentials->getClientId();
-
+        $id = $this->generateId($request, $context);
         $now = call_user_func($this->momentGenerator);
-        $token = $this->storage->getToken($id, $request, $context);
 
+        $token = $this->storage->getToken($id, $request, $context);
         if ( ! $token || $token->isExpiredAt($now)) {
 
             if ($token) {
@@ -158,19 +156,39 @@ class TokenManager
     }
 
     /**
-     * @param Token $token
      * @param RequestInterface $request
-     * @param string|null $account
-     * @param string|null $username
      * @param Context $context
+     *
+     * @return Token|null
      */
-    public function expireToken(Token $token, RequestInterface $request, $account = null, $username = null, Context $context)
+    public function expireToken(RequestInterface $request, Context $context)
     {
-        $moment = call_user_func($this->momentGenerator);
+        $id = $this->generateId($request, $context);
 
-        $expired = new Token($token->getAccessToken(), $token->getTokenType(), $moment, $token->getRefreshToken());
-        $id = $username ?: $account;
-        $this->storage->updateToken($id, $expired, $request, $context);
-        $this->logger->debug("Token({$id}) forcibly expired the token");
+        $token = $this->storage->getToken($id, $request, $context);
+        if (null !== $token) {
+            $now = call_user_func($this->momentGenerator);
+            $expired = new Token($token->getAccessToken(), $token->getTokenType(), $now, $token->getRefreshToken());
+
+            $this->storage->updateToken($id, $expired, $request, $context);
+            $this->logger->debug("Token({$id}) has been forcibly expired");
+        } else {
+            $this->logger->debug("Token({$id}) not found, can not expire");
+        }
+
+        return $token;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param Context          $context
+     *
+     * @return int|null|string
+     */
+    private function generateId(RequestInterface $request, Context $context)
+    {
+        $credentials = $this->credentials->getCredentials($request, $context);
+
+        return $context->hasUsername() ? $context->getUsername() : $credentials->getClientId();
     }
 }
