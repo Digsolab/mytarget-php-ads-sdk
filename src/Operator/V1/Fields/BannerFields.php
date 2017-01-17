@@ -25,6 +25,7 @@ use Dsl\MyTarget\Operator\AbstractFields;
  * @method BannerFields withCategory()
  * @method BannerFields withModerationReasonDisplay()
  * @method BannerFields withModerationReasonsDisplay()
+ * @method BannerFields withAutomoderationReasonDisplay()
  * @method BannerFields withBannerModeration()
  * @method BannerFields withImage()
  * @method BannerFields withUrlObjectId()
@@ -58,8 +59,9 @@ class BannerFields extends AbstractFields
     {
         return ['id', 'status', 'systemStatus', 'created', 'updated', 'moderationStatus', 'title',
             'text', 'telephone', 'companyName', 'url', 'urlTypes', 'jsonUrl', 'editUrl', 'previewImageUrl',
-            'user', 'campaign', 'category', 'moderationReasonDisplay', 'moderationReasonsDisplay',
-            'bannerModeration', 'image', 'urlObjectId', 'promoImage', 'vkFeed', 'backgroundImage', 'html5',
-            'videoParams', 'products', 'bannerFields', 'links', 'pixels', 'deeplink', 'callToAction', 'content'];
+            'user', 'campaign', 'category', 'moderationReasonDisplay', 'moderationReasonsDisplay', 'bannerModeration',
+            'automoderationReasonDisplay', 'image', 'urlObjectId', 'promoImage', 'vkFeed', 'backgroundImage', 'html5',
+            'videoParams', 'products', 'bannerFields', 'links', 'pixels', 'deeplink',
+            'callToAction', 'content'];
     }
 }
