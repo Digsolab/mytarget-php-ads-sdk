@@ -140,6 +140,12 @@ class Banner
     private $bannerModeration;
 
     /**
+     * @var string
+     * @Field(name="automoderation_reason_display", type="string")
+     */
+    private $automoderationReasonDisplay;
+
+    /**
      * @var Image
      * @Field(name="image", type="Dsl\MyTarget\Domain\V1\Image\Image")
      */
@@ -557,6 +563,22 @@ class Banner
     public function setBannerModeration($bannerModeration)
     {
         $this->bannerModeration = $bannerModeration;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAutomoderationReasonDisplay()
+    {
+        return $this->automoderationReasonDisplay;
+    }
+
+    /**
+     * @param string $automoderationReasonDisplay
+     */
+    public function setAutomoderationReasonDisplay($automoderationReasonDisplay)
+    {
+        $this->automoderationReasonDisplay = $automoderationReasonDisplay;
     }
 
     /**
