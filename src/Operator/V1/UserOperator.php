@@ -28,6 +28,13 @@ class UserOperator
         $this->mapper = $mapper;
     }
 
+    /**
+     * @param UserApi       $user
+     * @param UserApiFields $fields
+     * @param Context|null  $context
+     *
+     * @return UserApi
+     */
     public function edit(UserApi $user, UserApiFields $fields, Context $context = null)
     {
         $path = '/api/v1/user.json';
