@@ -14,7 +14,7 @@ class Language extends AbstractEnum
      */
     public static function en()
     {
-        return ImageType::fromValue(self::EN);
+        return Language::fromValue(self::EN);
     }
 
     /**
@@ -22,6 +22,6 @@ class Language extends AbstractEnum
      */
     public static function ru()
     {
-        return ImageType::fromValue(self::RU);
+        return Language::fromValue(self::RU);
     }
 }
