@@ -21,7 +21,10 @@ class ResponseValidatingMiddleware implements HttpMiddleware
         $code = $response->getStatusCode();
 
         if ($code >= 500 && $code < 600) {
-            throw new ex\ServerErrorException("MyTarget: {$code} Server Error", $request, $response);
+            if (503 === $code) {
+                throw new ex\ServiceTemporarilyUnavailableException("MyTarget: {$code} Server Error", $request, $response);
+            }
+            throw new ex\ServerErrorException("503 Service Temporarily Unavailable", $request, $response);
         }
 
         if ($code >= 400 && $code < 500) {
