@@ -6,7 +6,7 @@ use Dsl\MyTarget\Client;
 use Dsl\MyTarget\Context;
 use Dsl\MyTarget\Domain\V1\UserApi;
 use Dsl\MyTarget\Mapper\Mapper;
-use Dsl\MyTarget\Operator\V1\Fields\UserFields;
+use Dsl\MyTarget\Operator\V1\Fields\UserApiFields;
 
 class UserOperator
 {
