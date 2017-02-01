@@ -23,7 +23,7 @@ class ProjectionTargetingSettings
 
     /**
      * @var Sex[]
-     * @Field(name="sex", type="Dsl\MyTarget\Domain\V2\Enum\Sex")
+     * @Field(name="sex", type="array<Dsl\MyTarget\Domain\V2\Enum\Sex>")
      */
     private $sex;
 
