@@ -9,6 +9,7 @@ class Sex extends AbstractEnum
     const MALE = 'M';
     const FEMALE = 'F';
     const BOTH = 'FM';
+    const ANY = 'FMU';
 
     /**
      * @return Sex
@@ -32,5 +33,10 @@ class Sex extends AbstractEnum
     public static function both()
     {
         return Sex::fromValue(self::BOTH);
+    }
+
+    public static function any()
+    {
+        return Sex::fromValue(self::ANY);
     }
 }
